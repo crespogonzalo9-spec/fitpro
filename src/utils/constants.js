@@ -109,6 +109,8 @@ export const NAV_ROUTES = {
     { path: '/rankings', name: 'Rankings', icon: 'Trophy' },
     { path: '/prs', name: 'Marcas Personales', icon: 'TrendingUp' },
     { path: '/invites', name: 'Invitaciones', icon: 'Link' },
+    { path: '/gym-info', name: 'Info Gimnasio', icon: 'Building2' },
+    { path: '/profile', name: 'Mi Perfil', icon: 'User' },
     { path: '/settings', name: 'Configuración', icon: 'Settings' }
   ],
   admin: [
@@ -124,6 +126,8 @@ export const NAV_ROUTES = {
     { path: '/rankings', name: 'Rankings', icon: 'Trophy' },
     { path: '/prs', name: 'Marcas Personales', icon: 'TrendingUp' },
     { path: '/invites', name: 'Invitaciones', icon: 'Link' },
+    { path: '/gym-info', name: 'Info Gimnasio', icon: 'Building2' },
+    { path: '/profile', name: 'Mi Perfil', icon: 'User' },
     { path: '/settings', name: 'Configuración', icon: 'Settings' }
   ],
   profesor: [
@@ -136,7 +140,9 @@ export const NAV_ROUTES = {
     { path: '/calendar', name: 'Calendario', icon: 'CalendarDays' },
     { path: '/news', name: 'Novedades', icon: 'Megaphone' },
     { path: '/prs', name: 'Validar PRs', icon: 'CheckCircle' },
-    { path: '/rankings', name: 'Rankings', icon: 'Trophy' }
+    { path: '/rankings', name: 'Rankings', icon: 'Trophy' },
+    { path: '/gym-info', name: 'Info Gimnasio', icon: 'Building2' },
+    { path: '/profile', name: 'Mi Perfil', icon: 'User' }
   ],
   alumno: [
     { path: '/dashboard', name: 'Dashboard', icon: 'LayoutDashboard' },
@@ -144,10 +150,12 @@ export const NAV_ROUTES = {
     { path: '/my-classes', name: 'Mis Clases', icon: 'CheckSquare' },
     { path: '/exercises', name: 'Ejercicios', icon: 'Dumbbell' },
     { path: '/my-routines', name: 'Mis Rutinas', icon: 'ClipboardList' },
+    { path: '/wods', name: 'WODs', icon: 'Flame' },
     { path: '/calendar', name: 'Calendario', icon: 'CalendarDays' },
     { path: '/news', name: 'Novedades', icon: 'Megaphone' },
     { path: '/my-prs', name: 'Mis PRs', icon: 'TrendingUp' },
     { path: '/rankings', name: 'Rankings', icon: 'Trophy' },
+    { path: '/gym-info', name: 'Info Gimnasio', icon: 'Building2' },
     { path: '/profile', name: 'Mi Perfil', icon: 'User' }
   ]
 };

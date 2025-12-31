@@ -77,8 +77,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     <Dumbbell size={20} className="text-white" />
                   </div>
                 )}
-                <div>
-                  <h1 className="font-bold text-lg">FitPro</h1>
+                <div className="min-w-0 flex-1">
+                  <h1 className="font-bold text-lg truncate">
+                    {currentGym?.name || 'FitPro'}
+                  </h1>
                   <Badge className="badge-primary text-xs">{getRoleName(getHighestRole())}</Badge>
                 </div>
               </div>

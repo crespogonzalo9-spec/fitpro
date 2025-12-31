@@ -33,7 +33,7 @@ const EQUIPMENT = [
 ];
 
 const ExercisesContent = () => {
-  const { userData, isProfesor, isSysadmin } = useAuth();
+  const { userData, isAdmin, isProfesor, isSysadmin, canManageExercises } = useAuth();
   const { currentGym } = useGym();
   const { success, error: showError } = useToast();
   
@@ -48,7 +48,8 @@ const ExercisesContent = () => {
   const [selected, setSelected] = useState(null);
   const [editMode, setEditMode] = useState(false);
 
-  const canEdit = isProfesor() || isSysadmin();
+  // Solo admin, profesor o sysadmin pueden editar ejercicios
+  const canEdit = canManageExercises();
 
   // Reset estados cuando cambia el gimnasio
   useEffect(() => {

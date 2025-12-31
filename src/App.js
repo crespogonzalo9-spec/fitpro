@@ -27,10 +27,13 @@ import WODs from './pages/WODs';
 import PRs from './pages/PRs';
 import Rankings from './pages/Rankings';
 import Schedule from './pages/Schedule';
+import MyClasses from './pages/MyClasses';
 import Calendar from './pages/Calendar';
 import News from './pages/News';
 import Invites from './pages/Invites';
 import Settings from './pages/Settings';
+import GymInfo from './pages/GymInfo';
+import Profile from './pages/Profile';
 
 const LoadingSpinner = () => (
   <div className="min-h-screen flex items-center justify-center bg-slate-900">
@@ -129,12 +132,13 @@ function AppRoutes() {
         
         {/* Alumno */}
         <Route path="schedule" element={<Schedule />} />
-        <Route path="my-classes" element={<Schedule />} />
+        <Route path="my-classes" element={<MyClasses />} />
         <Route path="my-routines" element={<Routines />} />
         <Route path="my-prs" element={<PRs />} />
         
         {/* Common */}
-        <Route path="profile" element={<ComingSoon title="Mi Perfil" />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path="gym-info" element={<GymInfo />} />
         <Route path="settings" element={<Settings />} />
       </Route>
       

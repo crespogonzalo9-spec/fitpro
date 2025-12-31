@@ -163,25 +163,65 @@ export const ConfirmDialog = ({ isOpen, onClose, onConfirm, title, message, conf
 export const Dropdown = ({ trigger, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
+  
   useEffect(() => {
-    const handleClick = (e) => { if (ref.current && !ref.current.contains(e.target)) setIsOpen(false); };
+    const handleClick = (e) => { 
+      if (ref.current && !ref.current.contains(e.target)) setIsOpen(false); 
+    };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
+  
+  const handleTriggerClick = (e) => {
+    e.stopPropagation();
+    setIsOpen(!isOpen);
+  };
+  
+  // Clone children to add close functionality
+  const childrenWithClose = React.Children.map(children, child => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, {
+        onClickWrapper: (originalOnClick) => (e) => {
+          setIsOpen(false);
+          if (originalOnClick) originalOnClick(e);
+        }
+      });
+    }
+    return child;
+  });
+  
   return (
     <div ref={ref} className="relative">
-      <div onClick={() => setIsOpen(!isOpen)}>{trigger}</div>
-      {isOpen && <div className="absolute right-0 mt-1 w-48 bg-gray-800 border border-gray-700 rounded-xl shadow-lg z-50 py-1 animate-fadeIn">{children}</div>}
+      <div onClick={handleTriggerClick}>{trigger}</div>
+      {isOpen && (
+        <div className="absolute right-0 mt-1 w-48 bg-gray-800 border border-gray-700 rounded-xl shadow-lg z-50 py-1 animate-fadeIn">
+          {childrenWithClose}
+        </div>
+      )}
     </div>
   );
 };
 
 // DropdownItem
-export const DropdownItem = ({ icon: Icon, children, danger, onClick }) => (
-  <button onClick={onClick} className={`flex items-center gap-2 w-full px-3 py-2 text-sm text-left hover:bg-gray-700 ${danger ? 'text-red-400' : 'text-gray-300'}`}>
-    {Icon && <Icon size={16} />}{children}
-  </button>
-);
+export const DropdownItem = ({ icon: Icon, children, danger, onClick, onClickWrapper }) => {
+  const handleClick = (e) => {
+    e.stopPropagation();
+    if (onClickWrapper) {
+      onClickWrapper(onClick)(e);
+    } else if (onClick) {
+      onClick(e);
+    }
+  };
+  
+  return (
+    <button 
+      onClick={handleClick} 
+      className={`flex items-center gap-2 w-full px-3 py-2 text-sm text-left hover:bg-gray-700 transition-colors ${danger ? 'text-red-400 hover:bg-red-500/10' : 'text-gray-300'}`}
+    >
+      {Icon && <Icon size={16} />}{children}
+    </button>
+  );
+};
 
 // StatCard
 export const StatCard = ({ icon: Icon, label, value, color = 'emerald' }) => {
