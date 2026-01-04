@@ -1,0 +1,115 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && getUserData().roles.hasAny(['admin', 'sysadmin']);
+    }
+
+    function isSysadmin() {
+      return isAuthenticated() && getUserData().roles.hasAny(['sysadmin']);
+    }
+
+    function isProfesor() {
+      return isAuthenticated() && getUserData().roles.hasAny(['profesor', 'admin', 'sysadmin']);
+    }
+
+    function belongsToGym(gymId) {
+      return isAuthenticated() && (getUserData().gymId == gymId || isSysadmin());
+    }
+
+    match /gyms/{gymId} {
+      allow read: if true;
+      allow create, delete: if isSysadmin();
+      allow update: if isSysadmin() ||
+                      (isAuthenticated() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['updatedAt']));
+    }
+
+    match /invites/{inviteId} {
+      allow get: if true;
+      allow list: if isAuthenticated() || request.query.limit <= 1;
+      allow create, delete: if isAdmin();
+      allow update: if isAuthenticated();
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if request.auth.uid == userId;
+      allow update: if request.auth.uid == userId || isAdmin();
+      allow delete: if isSysadmin();
+    }
+
+    match /classes/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /exercises/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isProfesor();
+    }
+
+    match /routines/{docId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isProfesor();
+    }
+
+    match /routine_sessions/{docId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    match /wods/{docId} {
+      allow read: if isAuthenticated() && (
+        belongsToGym(resource.data.gymId) &&
+        (
+          isProfesor() ||
+          !resource.data.keys().hasAny(['assignedTo']) ||
+          request.auth.uid in resource.data.assignedTo
+        )
+      );
+      allow create, update, delete: if isProfesor();
+    }
+
+    match /prs/{docId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    match /rankings/{docId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isProfesor();
+      allow delete: if isAdmin();
+    }
+
+    match /news/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /members/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isProfesor();
+    }
+
+    match /schedules/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /events/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}

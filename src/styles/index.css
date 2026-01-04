@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: 16, 185, 129;
+  --color-primary-hex: #10B981;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Colores dinámicos basados en la paleta */
+.bg-primary { background-color: rgba(var(--color-primary), 1) !important; }
+.bg-primary-10 { background-color: rgba(var(--color-primary), 0.1) !important; }
+.bg-primary-20 { background-color: rgba(var(--color-primary), 0.2) !important; }
+.text-primary { color: rgba(var(--color-primary), 1) !important; }
+.border-primary { border-color: rgba(var(--color-primary), 1) !important; }
+.border-primary-30 { border-color: rgba(var(--color-primary), 0.3) !important; }
+.ring-primary { --tw-ring-color: rgba(var(--color-primary), 1) !important; }
+.hover\:bg-primary:hover { background-color: rgba(var(--color-primary), 1) !important; }
+.hover\:bg-primary-dark:hover { background-color: rgba(var(--color-primary), 0.9) !important; }
+.focus\:border-primary:focus { border-color: rgba(var(--color-primary), 1) !important; }
+.from-primary { --tw-gradient-from: rgba(var(--color-primary), 1); }
+.to-primary { --tw-gradient-to: rgba(var(--color-primary), 1); }
+
+/* Gradientes con color primario */
+.gradient-primary {
+  background: linear-gradient(135deg, rgba(var(--color-primary), 1), rgba(var(--color-primary), 0.7));
+}
+
+/* ============ MODO OSCURO (default) ============ */
+.dark body,
+body.dark-mode {
+  background-color: #0F172A;
+  color: #F8FAFC;
+}
+
+.dark .bg-base { background-color: #0F172A; }
+.dark .bg-card { background-color: #1E293B; }
+.dark .bg-card-hover:hover { background-color: #334155; }
+.dark .bg-input { background-color: #1E293B; }
+.dark .bg-sidebar { background-color: #0F172A; }
+.dark .border-base { border-color: #334155; }
+.dark .text-base { color: #F8FAFC; }
+.dark .text-muted { color: #94A3B8; }
+.dark .text-subtle { color: #64748B; }
+
+/* ============ MODO CLARO ============ */
+.light body,
+body.light-mode {
+  background-color: #F8FAFC;
+  color: #1E293B;
+}
+
+.light .bg-base { background-color: #F8FAFC; }
+.light .bg-card { background-color: #FFFFFF; }
+.light .bg-card-hover:hover { background-color: #F1F5F9; }
+.light .bg-input { background-color: #FFFFFF; }
+.light .bg-sidebar { background-color: #FFFFFF; }
+.light .border-base { border-color: #E2E8F0; }
+.light .text-base { color: #1E293B; }
+.light .text-muted { color: #64748B; }
+.light .text-subtle { color: #94A3B8; }
+
+/* Override específicos para modo claro */
+.light .bg-slate-900 { background-color: #F8FAFC; }
+.light .bg-slate-800 { background-color: #FFFFFF; }
+.light .bg-slate-800\/50 { background-color: rgba(255, 255, 255, 0.8); }
+.light .bg-gray-800 { background-color: #F1F5F9; }
+.light .bg-gray-800\/50 { background-color: rgba(241, 245, 249, 0.8); }
+.light .bg-gray-700 { background-color: #E2E8F0; }
+.light .bg-gray-900 { background-color: #F8FAFC; }
+.light .bg-gray-900\/30 { background-color: rgba(248, 250, 252, 0.3); }
+.light .border-gray-700 { border-color: #E2E8F0; }
+.light .border-gray-700\/50 { border-color: rgba(226, 232, 240, 0.5); }
+.light .border-gray-800 { border-color: #E2E8F0; }
+.light .text-white { color: #1E293B; }
+.light .text-gray-100 { color: #334155; }
+.light .text-gray-200 { color: #475569; }
+.light .text-gray-300 { color: #475569; }
+.light .text-gray-400 { color: #64748B; }
+.light .text-gray-500 { color: #94A3B8; }
+.light .text-gray-600 { color: #94A3B8; }
+.light .placeholder-gray-500::placeholder { color: #94A3B8; }
+.light .hover\:bg-gray-700:hover { background-color: #E2E8F0; }
+.light .hover\:bg-gray-800:hover { background-color: #F1F5F9; }
+
+/* Botón primario dinámico */
+.btn-primary {
+  background-color: rgba(var(--color-primary), 1);
+  color: white;
+  transition: all 0.2s;
+}
+.btn-primary:hover {
+  background-color: rgba(var(--color-primary), 0.85);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+}
+
+/* Inputs con focus dinámico */
+input:focus, select:focus, textarea:focus {
+  border-color: rgba(var(--color-primary), 1) !important;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(var(--color-primary), 0.2);
+}
+
+/* Links activos en sidebar */
+.nav-link-active {
+  background-color: rgba(var(--color-primary), 0.1);
+  color: rgba(var(--color-primary), 1);
+  border-left: 3px solid rgba(var(--color-primary), 1);
+}
+
+/* Badges dinámicos */
+.badge-primary {
+  background-color: rgba(var(--color-primary), 0.1);
+  color: rgba(var(--color-primary), 1);
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Transiciones suaves */
+.transition-theme {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}

@@ -1,0 +1,226 @@
+========================================
+FIREBASE SECURITY RULES - FITPRO
+Versión Final Actualizada
+========================================
+
+INSTRUCCIONES:
+1. Ir a: https://console.firebase.google.com
+2. Seleccionar proyecto: fitpro-gym-84932
+3. Firestore Database → Rules
+4. Copiar y pegar TODO el contenido de abajo
+5. Click en "Publish"
+
+========================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ==========================================
+    // FUNCIONES HELPER
+    // ==========================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && getUserData().roles.hasAny(['admin', 'sysadmin']);
+    }
+
+    function isSysadmin() {
+      return isAuthenticated() && getUserData().roles.hasAny(['sysadmin']);
+    }
+
+    function isProfesor() {
+      return isAuthenticated() && getUserData().roles.hasAny(['profesor', 'admin', 'sysadmin']);
+    }
+
+    function belongsToGym(gymId) {
+      return isAuthenticated() && (getUserData().gymId == gymId || isSysadmin());
+    }
+
+    // ==========================================
+    // REGLAS DE COLECCIONES
+    // ==========================================
+
+    // GIMNASIOS
+    // - Lectura pública (necesario para registro)
+    // - Solo sysadmin puede crear/modificar
+    match /gyms/{gymId} {
+      allow read: if true;
+      allow create, update, delete: if isSysadmin();
+    }
+
+    // INVITACIONES
+    // - Query pública por código específico (seguro)
+    // - Listar todas requiere autenticación (previene scraping)
+    // - Solo admin puede crear/borrar
+    match /invites/{inviteId} {
+      allow get: if true; // Leer documento individual (público)
+      allow list: if isAuthenticated(); // Listar todas (solo autenticados)
+      allow create, delete: if isAdmin();
+      allow update: if isAuthenticated(); // Para marcar como usada
+    }
+
+    // USUARIOS
+    // - Lectura para autenticados (ver listas de usuarios)
+    // - Solo puede crear su propio documento
+    // - Solo puede editar su propio documento O ser admin
+    // - Solo sysadmin puede eliminar
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if request.auth.uid == userId;
+      allow update: if request.auth.uid == userId || isAdmin();
+      allow delete: if isSysadmin();
+    }
+
+    // CLASES
+    // - Lectura para todos autenticados (ver horarios)
+    // - Solo admin puede gestionar
+    match /classes/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // EJERCICIOS
+    // - Lectura para todos autenticados
+    // - Solo profesores/admins pueden crear/editar
+    match /exercises/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isProfesor();
+    }
+
+    // RUTINAS
+    // - Lectura para todos autenticados (alumnos ven las asignadas)
+    // - Solo profesores/admins pueden crear/editar/borrar
+    match /routines/{docId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isProfesor();
+    }
+
+    // SESIONES DE RUTINAS
+    // - Lectura para todos autenticados
+    // - Solo el usuario puede crear sus propias sesiones
+    // - Solo el usuario puede editar/borrar sus sesiones
+    match /routine_sessions/{docId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // WODS (Workout of the Day)
+    // - Lectura basada en gimnasio y asignación
+    //   * Profesores/admins ven todos los WODs de su gimnasio
+    //   * Alumnos ven WODs generales (sin assignedTo) de su gimnasio
+    //   * Alumnos ven WODs personalizados donde están en assignedTo
+    // - Solo profesores/admins pueden crear/editar/borrar
+    match /wods/{docId} {
+      allow read: if isAuthenticated() && (
+        belongsToGym(resource.data.gymId) &&
+        (
+          isProfesor() ||
+          !resource.data.keys().hasAny(['assignedTo']) ||
+          request.auth.uid in resource.data.assignedTo
+        )
+      );
+      allow create, update, delete: if isProfesor();
+    }
+
+    // PERSONAL RECORDS
+    // - Lectura para todos autenticados
+    // - Solo el usuario puede crear sus propios PRs
+    // - Solo el usuario puede editar/borrar sus PRs
+    match /prs/{docId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // RANKINGS
+    // - Lectura para todos autenticados
+    // - Solo profesores pueden crear/editar rankings
+    // - Solo admins pueden eliminar rankings
+    match /rankings/{docId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isProfesor();
+      allow delete: if isAdmin();
+    }
+
+    // NOTICIAS
+    // - Lectura para todos autenticados
+    // - Solo admins pueden crear/editar/borrar
+    match /news/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // MIEMBROS (si existe esta colección)
+    // - Lectura para todos autenticados
+    // - Solo profesores/admins pueden gestionar
+    match /members/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isProfesor();
+    }
+
+    // CALENDARIO/SCHEDULE (si existe)
+    match /schedules/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}
+
+========================================
+IMPORTANTE: CREAR ÍNDICE COMPUESTO
+========================================
+
+Después de publicar las reglas, necesitás crear un índice
+para el campo 'code' en la colección 'invites'.
+
+OPCIÓN 1: Automático (Recomendado)
+1. Intentá registrarte con un código de invitación
+2. Si aparece error, abrí la consola del navegador (F12)
+3. Firebase mostrará un link como:
+   "https://console.firebase.google.com/...createIndex..."
+4. Hacé click en ese link
+5. Firebase creará el índice automáticamente
+
+OPCIÓN 2: Manual
+1. Ir a: Firestore Database → Indexes
+2. Click en "Create Index"
+3. Configurar:
+   - Collection ID: invites
+   - Field 1: code | Ascending
+   - Query scopes: Collection
+4. Click en "Create"
+5. Esperar 1-2 minutos a que se complete
+
+========================================
+VERIFICACIÓN
+========================================
+
+Después de implementar:
+
+1. Probar registro con invitación:
+   - Crear una invitación en /invites
+   - Copiar el link
+   - Abrir ventana incógnito
+   - Pegar el link → Debería funcionar
+
+2. Probar seguridad:
+   - Abrí consola del navegador (F12)
+   - Ejecutá:
+     getDocs(collection(db, 'invites'))
+   - Debería dar error "Missing permissions"
+
+3. Verificar roles:
+   - Login como alumno → No debería ver /members
+   - Login como profesor → Debería ver /members
+   - Login como admin → Debería ver todo
+
+========================================

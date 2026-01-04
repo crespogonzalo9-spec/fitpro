@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#10b981" />
+  <meta name="description" content="FitPro - Sistema de gestión de gimnasios con clases, WODs, PRs y más" />
+  
+  <!-- PWA Meta Tags -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="FitPro" />
+  <meta name="application-name" content="FitPro" />
+  <meta name="msapplication-TileColor" content="#10b981" />
+  <meta name="msapplication-tap-highlight" content="no" />
+  <meta name="format-detection" content="telephone=no" />
+  
+  <!-- iOS Icons - Multiple sizes for different devices -->
+  <link rel="apple-touch-icon" href="/icons/icon-152x152.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="/icons/icon-128x128.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
+  <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-192x192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+  
+  <!-- Fallback SVG icon -->
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
+  
+  <!-- Splash screens para iOS -->
+  <link rel="apple-touch-startup-image" href="/icons/icon-512x512.png" />
+  
+  <!-- Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-72x72.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-72x72.png" />
+  
+  <title>FitPro</title>
+  
+  <!-- Preconnect to Firebase -->
+  <link rel="preconnect" href="https://firebaseio.com" />
+  <link rel="preconnect" href="https://www.googleapis.com" />
+  
+  <style>
+    /* Loading screen mientras carga React */
+    #root-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    #root-loader.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .loader-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #10b981, #3b82f6);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .loader-icon svg {
+      width: 32px;
+      height: 32px;
+      color: white;
+    }
+    .loader-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: #10b981;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+  </style>
+</head>
+<body>
+  <noscript>Necesitás habilitar JavaScript para usar FitPro.</noscript>
+  
+  <!-- Loading screen -->
+  <div id="root-loader">
+    <div class="loader-icon">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+      </svg>
+    </div>
+    <div class="loader-spinner"></div>
+  </div>
+  
+  <div id="root"></div>
+  
+  <script>
+    // =============================================
+    // REGISTRO DE SERVICE WORKER + GESTIÓN DE CACHÉ
+    // =============================================
+    
+    // Limpiar caché problemático al inicio
+    (function() {
+      // Detectar si la app está "rota" (pantalla blanca)
+      setTimeout(function() {
+        var root = document.getElementById('root');
+        var loader = document.getElementById('root-loader');
+        
+        // Si después de 10 segundos el root está vacío, limpiar caché
+        if (root && root.innerHTML.trim() === '' && loader && !loader.classList.contains('hidden')) {
+          console.log('[App] Detected potential white screen, clearing cache...');
+          
+          // Limpiar localStorage parcialmente (mantener datos de usuario)
+          var keysToKeep = ['fitpro-selected-gym'];
+          var savedData = {};
+          keysToKeep.forEach(function(key) {
+            var value = localStorage.getItem(key);
+            if (value) savedData[key] = value;
+          });
+          
+          // Limpiar caches del Service Worker
+          if ('caches' in window) {
+            caches.keys().then(function(names) {
+              names.forEach(function(name) {
+                caches.delete(name);
+              });
+            }).then(function() {
+              // Restaurar datos importantes
+              Object.keys(savedData).forEach(function(key) {
+                localStorage.setItem(key, savedData[key]);
+              });
+              // Recargar
+              window.location.reload(true);
+            });
+          } else {
+            window.location.reload(true);
+          }
+        }
+      }, 10000);
+    })();
+    
+    // Registrar Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(function(registration) {
+            console.log('[SW] Registered:', registration.scope);
+            
+            // Verificar actualizaciones cada vez que se carga
+            registration.update();
+            
+            // Escuchar actualizaciones
+            registration.addEventListener('updatefound', function() {
+              var newWorker = registration.installing;
+              console.log('[SW] Update found, installing...');
+              
+              newWorker.addEventListener('statechange', function() {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // Hay una nueva versión disponible
+                  console.log('[SW] New version available');
+                  showUpdateNotification();
+                }
+              });
+            });
+          })
+          .catch(function(error) {
+            console.log('[SW] Registration failed:', error);
+          });
+        
+        // Escuchar mensajes del Service Worker
+        navigator.serviceWorker.addEventListener('message', function(event) {
+          if (event.data && event.data.type === 'SW_UPDATED') {
+            console.log('[SW] Updated to version:', event.data.version);
+          }
+          if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
+            showUpdateNotification();
+          }
+        });
+      });
+    }
+    
+    function showUpdateNotification() {
+      // Crear notificación de actualización
+      var notification = document.createElement('div');
+      notification.id = 'update-notification';
+      notification.innerHTML = '\
+        <div style="position:fixed;bottom:20px;left:20px;right:20px;max-width:400px;margin:0 auto;background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;z-index:10000;box-shadow:0 10px 40px rgba(0,0,0,0.5);">\
+          <div style="flex:1">\
+            <p style="color:white;font-weight:500;margin:0 0 4px 0;">Nueva versión disponible</p>\
+            <p style="color:#94a3b8;font-size:14px;margin:0;">Actualizá para obtener las últimas mejoras</p>\
+          </div>\
+          <button onclick="updateApp()" style="background:#10b981;color:white;border:none;padding:8px 16px;border-radius:8px;font-weight:500;cursor:pointer;">Actualizar</button>\
+        </div>\
+      ';
+      document.body.appendChild(notification);
+    }
+    
+    window.updateApp = function() {
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        // Decirle al SW que se active inmediatamente
+        navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+      }
+      // Limpiar caché y recargar
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          return Promise.all(names.map(function(name) {
+            return caches.delete(name);
+          }));
+        }).then(function() {
+          window.location.reload(true);
+        });
+      } else {
+        window.location.reload(true);
+      }
+    };
+    
+    // Ocultar loader cuando React cargue
+    window.hideLoader = function() {
+      var loader = document.getElementById('root-loader');
+      if (loader) {
+        loader.classList.add('hidden');
+        setTimeout(function() {
+          loader.remove();
+        }, 300);
+      }
+    };
+  </script>
+</body>
+</html>
