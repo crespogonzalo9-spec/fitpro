@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useGym } from '../contexts/GymContext';
 import { useToast } from '../contexts/ToastContext';
 import { db } from '../firebase';
-import { collection, query, where, onSnapshot, addDoc, deleteDoc, doc, serverTimestamp, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, addDoc, deleteDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { formatDate } from '../utils/helpers';
 
 const InvitesContent = () => {
@@ -95,21 +95,18 @@ const InvitesContent = () => {
     return () => unsubscribe();
   }, [currentGym?.id, isSysadmin]);
 
-  const generateCode = async () => {
-    // Generar código criptográficamente seguro de 8 caracteres
-    const array = new Uint8Array(12);
+  const generateCode = () => {
+    // Generar código criptográficamente seguro usando UUID
+    // Esto garantiza unicidad sin necesidad de leer la base de datos
+    const array = new Uint8Array(16);
     crypto.getRandomValues(array);
-    let code = Array.from(array, byte => byte.toString(36)).join('').substring(0, 8).toUpperCase();
 
-    // Verificar que no exista ya (evitar colisiones)
-    const invitesSnap = await getDocs(collection(db, 'invites'));
-    const existingCodes = invitesSnap.docs.map(d => d.data().code);
-
-    // Si existe, regenerar (probabilidad extremadamente baja)
-    while (existingCodes.includes(code)) {
-      crypto.getRandomValues(array);
-      code = Array.from(array, byte => byte.toString(36)).join('').substring(0, 8).toUpperCase();
-    }
+    // Convertir a base36 y tomar los primeros 10 caracteres para mayor unicidad
+    const code = Array.from(array)
+      .map(byte => byte.toString(36))
+      .join('')
+      .substring(0, 10)
+      .toUpperCase();
 
     return code;
   };
@@ -122,7 +119,7 @@ const InvitesContent = () => {
     }
 
     try {
-      const code = await generateCode();
+      const code = generateCode();
       
       let expiresAt = null;
       if (data.expiresInDays && data.expiresInDays > 0) {

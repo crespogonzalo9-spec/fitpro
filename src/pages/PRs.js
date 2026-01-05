@@ -131,8 +131,9 @@ const PRsContent = () => {
   const handleSave = async (data) => {
     try {
       const exercise = exercises.find(e => e.id === data.exerciseId);
-      
+
       if (editMode && selected) {
+        // Modo edición: actualizar el PR existente
         await updateDoc(doc(db, 'prs', selected.id), {
           ...data,
           exerciseName: exercise?.name || 'Ejercicio',
@@ -141,17 +142,56 @@ const PRsContent = () => {
         });
         success('PR actualizado');
       } else {
-        await addDoc(collection(db, 'prs'), {
-          ...data,
-          exerciseName: exercise?.name || 'Ejercicio',
-          measureType: exercise?.measureType || 'kg',
-          gymId: currentGym.id,
-          userId: userData.id,
-          userName: userData.name,
-          status: 'pending',
-          createdAt: serverTimestamp()
-        });
-        success('PR registrado! Pendiente de validación');
+        // Buscar si ya existe un PR para este ejercicio y usuario
+        const existingPR = prs.find(pr =>
+          pr.exerciseId === data.exerciseId &&
+          pr.userId === userData.id &&
+          pr.status === 'validated'
+        );
+
+        if (existingPR) {
+          // Existe un PR anterior - calcular mejora
+          const oldValue = parseFloat(existingPR.value);
+          const newValue = parseFloat(data.value);
+          let improvement = 0;
+
+          if (exercise?.measureType === 'time') {
+            // Para tiempo, menor es mejor
+            improvement = ((oldValue - newValue) / oldValue) * 100;
+          } else {
+            // Para peso, reps, distancia, calorías: mayor es mejor
+            improvement = ((newValue - oldValue) / oldValue) * 100;
+          }
+
+          // Actualizar el PR existente con el nuevo valor
+          await updateDoc(doc(db, 'prs', existingPR.id), {
+            previousValue: oldValue,
+            value: data.value,
+            improvement: improvement,
+            date: data.date,
+            notes: data.notes || '',
+            videoUrl: data.videoUrl || '',
+            status: 'pending', // Requiere nueva validación
+            updatedAt: serverTimestamp()
+          });
+
+          success(`¡PR mejorado en ${improvement.toFixed(1)}%! Pendiente de validación`);
+        } else {
+          // No existe PR anterior - crear uno nuevo
+          await addDoc(collection(db, 'prs'), {
+            ...data,
+            exerciseName: exercise?.name || 'Ejercicio',
+            measureType: exercise?.measureType || 'kg',
+            gymId: currentGym.id,
+            userId: userData.id,
+            userName: userData.name,
+            status: 'pending',
+            previousValue: null,
+            improvement: null,
+            createdAt: serverTimestamp()
+          });
+          success('Primer PR registrado! Pendiente de validación');
+        }
       }
       setShowModal(false);
       setSelected(null);
@@ -375,10 +415,19 @@ const PRsContent = () => {
                   {/* Valor del PR */}
                   <div className="text-right">
                     <p className="text-2xl font-bold text-primary">{formatValue(pr)}</p>
-                    {pr.previousValue && (
-                      <p className="text-xs text-green-400">
-                        +{pr.value - pr.previousValue} {MEASURE_LABELS[pr.measureType]}
-                      </p>
+                    {pr.previousValue && pr.improvement != null && (
+                      <div className="text-xs">
+                        <p className="text-gray-500">
+                          Anterior: {pr.measureType === 'time' ? (() => {
+                            const mins = Math.floor(pr.previousValue / 60);
+                            const secs = pr.previousValue % 60;
+                            return `${mins}:${secs.toString().padStart(2, '0')}`;
+                          })() : `${pr.previousValue} ${MEASURE_LABELS[pr.measureType] || ''}`}
+                        </p>
+                        <p className={`font-semibold ${pr.improvement > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                          {pr.improvement > 0 ? '↑' : '↓'} {Math.abs(pr.improvement).toFixed(1)}%
+                        </p>
+                      </div>
                     )}
                   </div>
                   

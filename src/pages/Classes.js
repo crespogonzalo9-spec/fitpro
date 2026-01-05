@@ -32,9 +32,15 @@ const ClassesContent = () => {
       setLoading(false);
     });
 
-    const profesQuery = query(collection(db, 'users'), where('gymId', '==', currentGym.id), where('role', 'in', ['profesor', 'admin', 'sysadmin']));
+    // Cargar profesores (usuarios con rol profesor, admin o sysadmin)
+    const profesQuery = query(collection(db, 'users'), where('gymId', '==', currentGym.id));
     const unsubProf = onSnapshot(profesQuery, (snap) => {
-      setProfesores(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      const allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      // Filtrar solo usuarios que tengan rol de profesor, admin o sysadmin
+      const profs = allUsers.filter(u =>
+        u.roles && u.roles.some(r => ['profesor', 'admin', 'sysadmin'].includes(r))
+      );
+      setProfesores(profs);
     });
 
     return () => { unsubClasses(); unsubProf(); };

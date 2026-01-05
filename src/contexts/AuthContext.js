@@ -13,9 +13,6 @@ const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
-// Email del Sysadmin principal desde variable de entorno
-const SYSADMIN_EMAIL = process.env.REACT_APP_SYSADMIN_EMAIL || '';
-
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
@@ -117,16 +114,16 @@ export const AuthProvider = ({ children }) => {
         }
       }
       
-      // Sysadmin automático para el email especial
-      const isSysadminEmail = email.toLowerCase() === SYSADMIN_EMAIL.toLowerCase();
-      const roles = isSysadminEmail ? ['sysadmin', 'admin', 'profesor', 'alumno'] : ['alumno'];
-      
+      // Los roles se asignan por defecto como alumno
+      // NOTA: Para crear un sysadmin, usar la consola de Firebase directamente
+      const roles = ['alumno'];
+
       const newUserData = {
         email: email.toLowerCase(),
         name,
         phone,
         roles,
-        gymId: isSysadminEmail ? null : (gymId || null),
+        gymId: gymId || null,
         isActive: true,
         isBlocked: false,
         createdAt: serverTimestamp(),

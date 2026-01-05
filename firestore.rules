@@ -27,23 +27,34 @@ service cloud.firestore {
     }
 
     match /gyms/{gymId} {
-      allow read: if true;
+      allow read: if isAuthenticated();
       allow create, delete: if isSysadmin();
       allow update: if isSysadmin() ||
                       (isAuthenticated() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['updatedAt']));
     }
 
     match /invites/{inviteId} {
-      allow get: if true;
-      allow list: if isAuthenticated() || request.query.limit <= 1;
-      allow create, delete: if isAdmin();
-      allow update: if isAuthenticated();
+      allow get: if !isAuthenticated() || (isAuthenticated() && (isSysadmin() || belongsToGym(resource.data.gymId)));
+      allow list: if isAuthenticated() && (isSysadmin() || belongsToGym(request.query.gymId));
+      allow create: if isAdmin() &&
+                      belongsToGym(request.resource.data.gymId) &&
+                      request.resource.data.roles is list;
+      allow update: if (!isAuthenticated() && !resource.data.used &&
+                        request.resource.data.used == true &&
+                        request.resource.data.registeredUser.email is string) ||
+                      (isAuthenticated() && (isSysadmin() || belongsToGym(resource.data.gymId)));
+      allow delete: if isAdmin() && belongsToGym(resource.data.gymId);
     }
 
     match /users/{userId} {
       allow read: if isAuthenticated();
-      allow create: if request.auth.uid == userId;
-      allow update: if request.auth.uid == userId || isAdmin();
+      allow create: if request.auth.uid == userId &&
+                      request.resource.data.roles is list &&
+                      request.resource.data.roles.hasOnly(['alumno']);
+      allow update: if (request.auth.uid == userId &&
+                        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['roles', 'gymId', 'isBlocked'])) ||
+                      (isAdmin() && belongsToGym(resource.data.gymId)) ||
+                      isSysadmin();
       allow delete: if isSysadmin();
     }
 

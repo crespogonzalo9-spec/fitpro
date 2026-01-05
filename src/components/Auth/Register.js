@@ -148,6 +148,13 @@ const Register = ({ onToggle }) => {
     let result;
 
     if (inviteData && inviteData.gymId) {
+      // VALIDACIÓN DE EMAIL: Si la invitación tiene un email específico, verificar que coincida
+      if (inviteData.email && inviteData.email.toLowerCase() !== form.email.toLowerCase()) {
+        setError('Esta invitación es para ' + inviteData.email + '. Por favor, usá ese email.');
+        setLoading(false);
+        return;
+      }
+
       result = await registerWithInvite(
         form.email,
         form.password,

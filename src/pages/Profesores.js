@@ -27,37 +27,76 @@ const ProfesoresContent = () => {
   useEffect(() => {
     if (!currentGym?.id) { setLoading(false); return; }
 
-    const profQuery = query(collection(db, 'users'), where('gymId', '==', currentGym.id), where('role', '==', 'profesor'));
-    const unsubProf = onSnapshot(profQuery, (snap) => {
-      setProfesores(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    // Cargar todos los usuarios del gimnasio y filtrar por roles
+    const usersQuery = query(collection(db, 'users'), where('gymId', '==', currentGym.id));
+    const unsub = onSnapshot(usersQuery, (snap) => {
+      const allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      // Filtrar profesores (usuarios que tienen rol 'profesor' en el array de roles)
+      const profs = allUsers.filter(u =>
+        u.roles && u.roles.includes('profesor') && !u.roles.includes('admin') && !u.roles.includes('sysadmin')
+      );
+      setProfesores(profs);
+
+      // Filtrar alumnos (usuarios que SOLO tienen rol 'alumno')
+      const alums = allUsers.filter(u =>
+        (!u.roles || u.roles.length === 0 || (u.roles.length === 1 && u.roles.includes('alumno')))
+      );
+      setAlumnos(alums);
+
       setLoading(false);
     });
 
-    const alumQuery = query(collection(db, 'users'), where('gymId', '==', currentGym.id), where('role', '==', 'alumno'));
-    const unsubAlum = onSnapshot(alumQuery, (snap) => {
-      setAlumnos(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    });
-
-    return () => { unsubProf(); unsubAlum(); };
+    return () => unsub();
   }, [currentGym]);
 
   const handleAssign = async (alumnoId) => {
     try {
-      await updateDoc(doc(db, 'users', alumnoId), { role: 'profesor', updatedAt: serverTimestamp() });
+      // Buscar el alumno
+      const alumno = alumnos.find(a => a.id === alumnoId);
+      if (!alumno) {
+        showError('Alumno no encontrado');
+        return;
+      }
+
+      // Agregar rol 'profesor' manteniendo 'alumno'
+      const currentRoles = alumno.roles || ['alumno'];
+      const newRoles = currentRoles.includes('profesor')
+        ? currentRoles
+        : [...currentRoles, 'profesor'];
+
+      await updateDoc(doc(db, 'users', alumnoId), {
+        roles: newRoles,
+        updatedAt: serverTimestamp()
+      });
       success('Profesor asignado');
       setShowModal(false);
     } catch (err) {
+      console.error('Error al asignar profesor:', err);
       showError('Error al asignar');
     }
   };
 
   const handleRemove = async () => {
     try {
-      await updateDoc(doc(db, 'users', selected.id), { role: 'alumno', updatedAt: serverTimestamp() });
+      // Remover rol 'profesor' del array de roles
+      const currentRoles = selected.roles || [];
+      const newRoles = currentRoles.filter(r => r !== 'profesor');
+
+      // Asegurarse que al menos queda 'alumno'
+      if (newRoles.length === 0) {
+        newRoles.push('alumno');
+      }
+
+      await updateDoc(doc(db, 'users', selected.id), {
+        roles: newRoles,
+        updatedAt: serverTimestamp()
+      });
       success('Rol de profesor removido');
       setShowRemove(false);
       setSelected(null);
     } catch (err) {
+      console.error('Error al remover profesor:', err);
       showError('Error al remover');
     }
   };
