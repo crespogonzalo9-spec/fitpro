@@ -27,9 +27,33 @@ const MEASURE_TYPES = [
 ];
 
 const EQUIPMENT = [
-  'Barra olímpica', 'Mancuernas', 'Kettlebell', 'Barra fija', 'Anillas', 
-  'Cuerda', 'Remo', 'Bike', 'SkiErg', 'Box', 'Balón medicinal', 
-  'Soga de saltar', 'Banda elástica', 'TRX', 'Peso corporal', 'Ninguno'
+  // Barras y pesas
+  'Barra olímpica', 'Barra EZ', 'Barra hexagonal', 'Mancuernas', 'Kettlebell', 'Pesa rusa',
+  'Discos olímpicos', 'Bumper plates',
+
+  // Gimnasia
+  'Barra fija', 'Anillas', 'Paralelas', 'Cuerda para trepar', 'Pegboard',
+
+  // Cardio
+  'Remo', 'Bike', 'Assault Bike', 'SkiErg', 'Cinta de correr', 'Elíptica',
+
+  // Pliometría
+  'Box', 'Cajón pliométrico', 'Balón medicinal', 'Wall ball', 'Slam ball',
+
+  // Funcional
+  'Soga de saltar', 'Soga de batalla', 'Sled', 'Trineo', 'Neumático',
+  'Sandbag', 'D-Ball',
+
+  // Bandas y suspensión
+  'Banda elástica', 'Mini banda', 'TRX', 'Suspension trainer',
+
+  // Accesorios
+  'Foam roller', 'Pelota de lacrosse', 'Abmat', 'Colchoneta',
+  'Barra para dominadas', 'Dip station', 'GHD', 'Reverse hyper',
+
+  // Otros
+  'Peso corporal', 'Chaleco con peso', 'Cinturón de lastre',
+  'Bandas de resistencia', 'Rueda abdominal', 'Ninguno'
 ];
 
 const ExercisesContent = () => {
