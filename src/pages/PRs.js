@@ -142,12 +142,20 @@ const PRsContent = () => {
         });
         success('PR actualizado');
       } else {
-        // Buscar si ya existe un PR para este ejercicio y usuario
-        const existingPR = prs.find(pr =>
+        // Buscar si ya existe un PR para este ejercicio y usuario (validado o pendiente)
+        const existingPRs = prs.filter(pr =>
           pr.exerciseId === data.exerciseId &&
-          pr.userId === userData.id &&
-          pr.status === 'validated'
+          pr.userId === userData.id
         );
+
+        // Ordenar por fecha para obtener el más reciente
+        existingPRs.sort((a, b) => {
+          const dateA = a.date?.toDate?.() || a.createdAt?.toDate?.() || new Date(0);
+          const dateB = b.date?.toDate?.() || b.createdAt?.toDate?.() || new Date(0);
+          return dateB - dateA;
+        });
+
+        const existingPR = existingPRs[0]; // El más reciente
 
         if (existingPR) {
           // Existe un PR anterior - calcular mejora
@@ -164,6 +172,7 @@ const PRsContent = () => {
           }
 
           // Actualizar el PR existente con el nuevo valor
+          // Solo se guarda el anterior inmediato (no toda la cadena histórica)
           await updateDoc(doc(db, 'prs', existingPR.id), {
             previousValue: oldValue,
             value: data.value,
