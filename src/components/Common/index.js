@@ -163,20 +163,21 @@ export const ConfirmDialog = ({ isOpen, onClose, onConfirm, title, message, conf
 export const Dropdown = ({ trigger, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
-  
+
   useEffect(() => {
-    const handleClick = (e) => { 
-      if (ref.current && !ref.current.contains(e.target)) setIsOpen(false); 
+    const handleClick = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setIsOpen(false);
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
-  
+
   const handleTriggerClick = (e) => {
+    e.preventDefault();
     e.stopPropagation();
     setIsOpen(!isOpen);
   };
-  
+
   // Clone children to add close functionality
   const childrenWithClose = React.Children.map(children, child => {
     if (React.isValidElement(child)) {
@@ -189,10 +190,10 @@ export const Dropdown = ({ trigger, children }) => {
     }
     return child;
   });
-  
+
   return (
-    <div ref={ref} className="relative">
-      <div onClick={handleTriggerClick}>{trigger}</div>
+    <div ref={ref} className="relative" onClick={handleTriggerClick}>
+      {trigger}
       {isOpen && (
         <div className="absolute right-0 mt-1 w-48 bg-gray-800 border border-gray-700 rounded-xl shadow-lg z-50 py-1 animate-fadeIn">
           {childrenWithClose}

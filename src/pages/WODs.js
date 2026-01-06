@@ -234,7 +234,7 @@ const WODsContent = () => {
                   </div>
                 </div>
                 {canEdit && (
-                  <Dropdown trigger={<button onClick={e => e.stopPropagation()} className="p-2 hover:bg-gray-700 rounded-lg"><MoreVertical size={18} /></button>}>
+                  <Dropdown trigger={<button className="p-2 hover:bg-gray-700 rounded-lg"><MoreVertical size={18} /></button>}>
                     <DropdownItem icon={Edit} onClick={() => { setSelected(wod); setShowModal(true); }}>Editar</DropdownItem>
                     <DropdownItem icon={Trash2} danger onClick={() => { setSelected(wod); setShowDelete(true); }}>Eliminar</DropdownItem>
                   </Dropdown>
