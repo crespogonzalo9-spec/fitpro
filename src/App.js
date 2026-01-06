@@ -35,7 +35,6 @@ import Invites from './pages/Invites';
 import Settings from './pages/Settings';
 import GymInfo from './pages/GymInfo';
 import Profile from './pages/Profile';
-import MemberProgress from './pages/MemberProgress';
 
 const LoadingSpinner = () => (
   <div className="min-h-screen flex items-center justify-center bg-slate-900">
@@ -132,7 +131,6 @@ function AppRoutes() {
         
         {/* Admin & Profesor */}
         <Route path="members" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Members /></ProtectedRoute>} />
-        <Route path="member-progress" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><MemberProgress /></ProtectedRoute>} />
         <Route path="classes" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Classes /></ProtectedRoute>} />
         <Route path="exercises" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Exercises /></ProtectedRoute>} />
         <Route path="routines" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Routines /></ProtectedRoute>} />

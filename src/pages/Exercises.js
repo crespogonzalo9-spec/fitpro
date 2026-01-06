@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dumbbell, Plus, Search, Edit, Trash2, Filter, MoreVertical, Zap, Clock, Hash, Weight } from 'lucide-react';
+import { Dumbbell, Plus, Search, Edit, Trash2, Filter, MoreVertical, Zap, Clock, Hash, Weight, Settings } from 'lucide-react';
 import { Button, Card, Modal, Input, Textarea, Select, SearchInput, EmptyState, LoadingState, Badge, ConfirmDialog, Dropdown, DropdownItem , GymRequired } from '../components/Common';
 import { useAuth } from '../contexts/AuthContext';
 import { useGym } from '../contexts/GymContext';
@@ -26,34 +26,108 @@ const MEASURE_TYPES = [
   { value: 'calories', label: 'Calorías', icon: '🔥', description: 'Para máquinas de cardio' },
 ];
 
-const EQUIPMENT = [
-  // Barras y pesas
-  'Barra olímpica', 'Barra EZ', 'Barra hexagonal', 'Mancuernas', 'Kettlebell', 'Pesa rusa',
-  'Discos olímpicos', 'Bumper plates',
+const DEFAULT_EQUIPMENT = [
+  // Barras
+  'Barra olímpica 20kg',
+  'Barra olímpica 15kg',
+  'Barra EZ',
+  'Barra hexagonal',
+  'Barra recta corta',
+
+  // Discos
+  'Discos olímpicos 1.25kg',
+  'Discos olímpicos 2.5kg',
+  'Discos olímpicos 5kg',
+  'Discos olímpicos 10kg',
+  'Discos olímpicos 15kg',
+  'Discos olímpicos 20kg',
+  'Discos olímpicos 25kg',
+  'Bumper plates 10kg',
+  'Bumper plates 15kg',
+  'Bumper plates 20kg',
+  'Bumper plates 25kg',
+
+  // Mancuernas
+  'Mancuernas 2kg (par)',
+  'Mancuernas 4kg (par)',
+  'Mancuernas 6kg (par)',
+  'Mancuernas 8kg (par)',
+  'Mancuernas 10kg (par)',
+  'Mancuernas 12kg (par)',
+  'Mancuernas 14kg (par)',
+  'Mancuernas 16kg (par)',
+  'Mancuernas 18kg (par)',
+  'Mancuernas 20kg (par)',
+  'Mancuernas ajustables',
+
+  // Kettlebells
+  'Kettlebell 4kg',
+  'Kettlebell 8kg',
+  'Kettlebell 12kg',
+  'Kettlebell 16kg',
+  'Kettlebell 20kg',
+  'Kettlebell 24kg',
+  'Kettlebell 28kg',
+  'Kettlebell 32kg',
 
   // Gimnasia
-  'Barra fija', 'Anillas', 'Paralelas', 'Cuerda para trepar', 'Pegboard',
+  'Barra fija',
+  'Anillas',
+  'Paralelas',
+  'Cuerda para trepar',
+  'Pegboard',
 
   // Cardio
-  'Remo', 'Bike', 'Assault Bike', 'SkiErg', 'Cinta de correr', 'Elíptica',
+  'Remo Concept2',
+  'Bike',
+  'Assault Bike',
+  'SkiErg',
+  'Cinta de correr',
+  'Elíptica',
 
   // Pliometría
-  'Box', 'Cajón pliométrico', 'Balón medicinal', 'Wall ball', 'Slam ball',
+  'Box 50cm',
+  'Box 60cm',
+  'Box 75cm',
+  'Cajón pliométrico',
+  'Wall ball 6kg',
+  'Wall ball 9kg',
+  'Balón medicinal',
+  'Slam ball 10kg',
+  'Slam ball 15kg',
 
   // Funcional
-  'Soga de saltar', 'Soga de batalla', 'Sled', 'Trineo', 'Neumático',
-  'Sandbag', 'D-Ball',
+  'Soga de saltar',
+  'Soga de batalla',
+  'Sled',
+  'Trineo',
+  'Neumático',
+  'Sandbag',
+  'D-Ball',
 
   // Bandas y suspensión
-  'Banda elástica', 'Mini banda', 'TRX', 'Suspension trainer',
+  'Banda elástica ligera',
+  'Banda elástica media',
+  'Banda elástica pesada',
+  'Mini banda',
+  'TRX',
 
   // Accesorios
-  'Foam roller', 'Pelota de lacrosse', 'Abmat', 'Colchoneta',
-  'Barra para dominadas', 'Dip station', 'GHD', 'Reverse hyper',
+  'Foam roller',
+  'Pelota de lacrosse',
+  'Abmat',
+  'Colchoneta',
+  'Barra para dominadas',
+  'Dip station',
+  'GHD',
+  'Reverse hyper',
 
   // Otros
-  'Peso corporal', 'Chaleco con peso', 'Cinturón de lastre',
-  'Bandas de resistencia', 'Rueda abdominal', 'Ninguno'
+  'Peso corporal',
+  'Chaleco con peso',
+  'Cinturón de lastre',
+  'Rueda abdominal',
+  'Ninguno'
 ];
 
 const ExercisesContent = () => {
@@ -66,11 +140,14 @@ const ExercisesContent = () => {
   const [search, setSearch] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterMeasure, setFilterMeasure] = useState('all');
-  
+
   const [showModal, setShowModal] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [selected, setSelected] = useState(null);
   const [editMode, setEditMode] = useState(false);
+
+  const [equipmentList, setEquipmentList] = useState([]);
+  const [showEquipmentManager, setShowEquipmentManager] = useState(false);
 
   // Solo admin, profesor o sysadmin pueden editar ejercicios
   const canEdit = canManageExercises();
@@ -85,18 +162,19 @@ const ExercisesContent = () => {
   }, [currentGym?.id]);
 
   useEffect(() => {
-    if (!currentGym?.id) { 
+    if (!currentGym?.id) {
       setExercises([]);
-      setLoading(false); 
-      return; 
+      setEquipmentList([]);
+      setLoading(false);
+      return;
     }
 
     const q = query(
-      collection(db, 'exercises'), 
+      collection(db, 'exercises'),
       where('gymId', '==', currentGym.id)
     );
-    
-    const unsubscribe = onSnapshot(q, (snap) => {
+
+    const unsubExercises = onSnapshot(q, (snap) => {
       setExercises(snap.docs.map(d => ({ id: d.id, ...d.data() })));
       setLoading(false);
     }, (err) => {
@@ -111,7 +189,19 @@ const ExercisesContent = () => {
       });
     });
 
-    return () => unsubscribe();
+    // Cargar equipamiento del gimnasio
+    const equipmentQuery = query(
+      collection(db, 'equipment'),
+      where('gymId', '==', currentGym.id)
+    );
+
+    const unsubEquipment = onSnapshot(equipmentQuery, (snap) => {
+      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      items.sort((a, b) => a.name?.localeCompare(b.name));
+      setEquipmentList(items);
+    });
+
+    return () => { unsubExercises(); unsubEquipment(); };
   }, [currentGym]);
 
   const handleSave = async (data) => {
@@ -209,9 +299,14 @@ const ExercisesContent = () => {
           <p className="text-gray-400">{filteredExercises.length} ejercicios en {currentGym.name}</p>
         </div>
         {canEdit && (
-          <Button icon={Plus} onClick={openCreate}>
-            Nuevo Ejercicio
-          </Button>
+          <div className="flex gap-2">
+            <Button icon={Settings} variant="secondary" onClick={() => setShowEquipmentManager(true)}>
+              Gestionar Equipamiento
+            </Button>
+            <Button icon={Plus} onClick={openCreate}>
+              Nuevo Ejercicio
+            </Button>
+          </div>
         )}
       </div>
 
@@ -325,26 +420,34 @@ const ExercisesContent = () => {
         </div>
       )}
 
-      <ExerciseModal 
-        isOpen={showModal} 
-        onClose={() => { setShowModal(false); setSelected(null); setEditMode(false); }} 
-        onSave={handleSave} 
+      <ExerciseModal
+        isOpen={showModal}
+        onClose={() => { setShowModal(false); setSelected(null); setEditMode(false); }}
+        onSave={handleSave}
         exercise={editMode ? selected : null}
+        equipmentList={equipmentList}
       />
 
-      <ConfirmDialog 
-        isOpen={showDelete} 
-        onClose={() => setShowDelete(false)} 
-        onConfirm={handleDelete} 
-        title="Eliminar Ejercicio" 
+      <ConfirmDialog
+        isOpen={showDelete}
+        onClose={() => setShowDelete(false)}
+        onConfirm={handleDelete}
+        title="Eliminar Ejercicio"
         message={`¿Eliminar "${selected?.name}"? Los PRs asociados no se eliminarán.`}
-        confirmText="Eliminar" 
+        confirmText="Eliminar"
+      />
+
+      <EquipmentManager
+        isOpen={showEquipmentManager}
+        onClose={() => setShowEquipmentManager(false)}
+        equipmentList={equipmentList}
+        gymId={currentGym.id}
       />
     </div>
   );
 };
 
-const ExerciseModal = ({ isOpen, onClose, onSave, exercise }) => {
+const ExerciseModal = ({ isOpen, onClose, onSave, exercise, equipmentList }) => {
   const [form, setForm] = useState({
     name: '',
     description: '',
@@ -443,22 +546,29 @@ const ExerciseModal = ({ isOpen, onClose, onSave, exercise }) => {
 
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">Equipamiento</label>
-          <div className="flex flex-wrap gap-2">
-            {EQUIPMENT.map(eq => (
-              <button
-                key={eq}
-                type="button"
-                onClick={() => toggleEquipment(eq)}
-                className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                  form.equipment.includes(eq)
-                    ? 'bg-primary/20 border border-primary text-primary'
-                    : 'bg-gray-800 border border-gray-700 text-gray-400 hover:bg-gray-700'
-                }`}
-              >
-                {eq}
-              </button>
-            ))}
-          </div>
+          {equipmentList.length === 0 ? (
+            <div className="p-4 bg-gray-800/50 rounded-lg text-center">
+              <p className="text-sm text-gray-400">No hay equipamiento cargado.</p>
+              <p className="text-xs text-gray-500 mt-1">Usá "Gestionar Equipamiento" para cargar equipos.</p>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-2 bg-gray-800/30 rounded-lg">
+              {equipmentList.map(item => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => toggleEquipment(item.name)}
+                  className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                    form.equipment.includes(item.name)
+                      ? 'bg-primary/20 border border-primary text-primary'
+                      : 'bg-gray-800 border border-gray-700 text-gray-400 hover:bg-gray-700'
+                  }`}
+                >
+                  {item.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <Input 
@@ -492,6 +602,224 @@ const ExerciseModal = ({ isOpen, onClose, onSave, exercise }) => {
         </div>
       </form>
     </Modal>
+  );
+};
+
+const EquipmentManager = ({ isOpen, onClose, equipmentList, gymId }) => {
+  const { userData } = useAuth();
+  const { success, error: showError } = useToast();
+  const [newEquipmentName, setNewEquipmentName] = useState('');
+  const [editingId, setEditingId] = useState(null);
+  const [editingName, setEditingName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [selectedEquipment, setSelectedEquipment] = useState(null);
+
+  const handleAdd = async () => {
+    if (!newEquipmentName.trim()) return;
+
+    try {
+      setLoading(true);
+      await addDoc(collection(db, 'equipment'), {
+        name: newEquipmentName.trim(),
+        gymId,
+        createdAt: serverTimestamp(),
+        createdBy: userData.id
+      });
+      success('Equipamiento agregado');
+      setNewEquipmentName('');
+    } catch (err) {
+      showError('Error al agregar equipamiento');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLoadDefaults = async () => {
+    if (!gymId || !userData?.id) {
+      showError('No se pudo identificar el gimnasio o usuario');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      let loadedCount = 0;
+      let errorCount = 0;
+
+      // Cargar uno por uno para mejor control
+      for (const name of DEFAULT_EQUIPMENT) {
+        try {
+          await addDoc(collection(db, 'equipment'), {
+            name,
+            gymId,
+            createdAt: serverTimestamp(),
+            createdBy: userData.id
+          });
+          loadedCount++;
+        } catch (err) {
+          console.error(`Error adding ${name}:`, err);
+          errorCount++;
+        }
+      }
+
+      if (loadedCount > 0) {
+        success(`${loadedCount} equipos cargados correctamente${errorCount > 0 ? ` (${errorCount} errores)` : ''}`);
+      } else {
+        showError('No se pudo cargar ningún equipo. Verificá los permisos de Firebase.');
+      }
+    } catch (err) {
+      console.error('Error loading default equipment:', err);
+      showError('Error al cargar equipamiento: ' + (err.message || 'Error desconocido'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdate = async (id) => {
+    if (!editingName.trim()) return;
+
+    try {
+      await updateDoc(doc(db, 'equipment', id), {
+        name: editingName.trim(),
+        updatedAt: serverTimestamp(),
+        updatedBy: userData.id
+      });
+      success('Equipamiento actualizado');
+      setEditingId(null);
+      setEditingName('');
+    } catch (err) {
+      showError('Error al actualizar');
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteDoc(doc(db, 'equipment', selectedEquipment.id));
+      success('Equipamiento eliminado');
+      setShowDeleteConfirm(false);
+      setSelectedEquipment(null);
+    } catch (err) {
+      showError('Error al eliminar');
+    }
+  };
+
+  const startEdit = (item) => {
+    setEditingId(item.id);
+    setEditingName(item.name);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditingName('');
+  };
+
+  return (
+    <>
+      <Modal isOpen={isOpen} onClose={onClose} title="Gestionar Equipamiento" size="lg">
+        <div className="space-y-4">
+          {/* Agregar nuevo */}
+          <div className="flex gap-2">
+            <Input
+              value={newEquipmentName}
+              onChange={e => setNewEquipmentName(e.target.value)}
+              placeholder="Nombre del nuevo equipamiento..."
+              className="flex-1"
+              onKeyPress={e => e.key === 'Enter' && handleAdd()}
+            />
+            <Button
+              icon={Plus}
+              onClick={handleAdd}
+              disabled={!newEquipmentName.trim() || loading}
+            >
+              Agregar
+            </Button>
+          </div>
+
+          {/* Lista de equipamiento */}
+          <div className="space-y-2 max-h-96 overflow-y-auto">
+            {equipmentList.length === 0 ? (
+              <div className="text-center py-8">
+                <EmptyState
+                  icon={Dumbbell}
+                  title="Sin equipamiento"
+                  description="Agregá el equipamiento disponible en tu gimnasio"
+                />
+                <Button
+                  onClick={handleLoadDefaults}
+                  loading={loading}
+                  className="mt-4"
+                >
+                  Cargar {DEFAULT_EQUIPMENT.length} equipos predeterminados
+                </Button>
+              </div>
+            ) : (
+              equipmentList.map(item => (
+                <div
+                  key={item.id}
+                  className="flex items-center gap-2 p-3 bg-gray-800/50 rounded-lg hover:bg-gray-800/70 transition-colors"
+                >
+                  {editingId === item.id ? (
+                    <>
+                      <Input
+                        value={editingName}
+                        onChange={e => setEditingName(e.target.value)}
+                        className="flex-1"
+                        onKeyPress={e => e.key === 'Enter' && handleUpdate(item.id)}
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => handleUpdate(item.id)}
+                        disabled={!editingName.trim()}
+                      >
+                        Guardar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={cancelEdit}
+                      >
+                        Cancelar
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <span className="flex-1 font-medium">{item.name}</span>
+                      <button
+                        onClick={() => startEdit(item)}
+                        className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+                      >
+                        <Edit size={16} className="text-gray-400" />
+                      </button>
+                      <button
+                        onClick={() => { setSelectedEquipment(item); setShowDeleteConfirm(true); }}
+                        className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
+                      >
+                        <Trash2 size={16} className="text-red-400" />
+                      </button>
+                    </>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+
+          <div className="pt-4 border-t border-gray-700">
+            <Button variant="secondary" onClick={onClose} className="w-full">
+              Cerrar
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      <ConfirmDialog
+        isOpen={showDeleteConfirm}
+        onClose={() => { setShowDeleteConfirm(false); setSelectedEquipment(null); }}
+        onConfirm={handleDelete}
+        title="Eliminar Equipamiento"
+        message={`¿Eliminar "${selectedEquipment?.name}"? Los ejercicios que lo usan mantendrán el nombre pero no podrás seleccionarlo en nuevos ejercicios.`}
+        confirmText="Eliminar"
+      />
+    </>
   );
 };
 

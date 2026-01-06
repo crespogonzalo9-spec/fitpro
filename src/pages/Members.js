@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, MoreVertical, Phone, Shield, ShieldX, ShieldCheck } from 'lucide-react';
+import { Users, MoreVertical, Phone, Shield, ShieldX, ShieldCheck, TrendingUp, Trophy, ArrowUp, ArrowDown, Calendar } from 'lucide-react';
 import { Button, Card, Modal, Select, SearchInput, EmptyState, LoadingState, Badge, Avatar, Dropdown, DropdownItem, ConfirmDialog , GymRequired } from '../components/Common';
 import { useAuth } from '../contexts/AuthContext';
 import { useGym } from '../contexts/GymContext';
@@ -12,16 +12,22 @@ const MembersContent = () => {
   const { userData, isAdmin, canAssignRole, canRemoveRole, canBlockUsers } = useAuth();
   const { currentGym } = useGym();
   const { success, error: showError } = useToast();
-  
+
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
-  
+
   const [showModal, setShowModal] = useState(false);
   const [showBlockConfirm, setShowBlockConfirm] = useState(false);
+  const [showProgress, setShowProgress] = useState(false);
   const [selected, setSelected] = useState(null);
+
+  const [prs, setPrs] = useState([]);
+  const [routineSessions, setRoutineSessions] = useState([]);
+  const [classes, setClasses] = useState([]);
+  const [wods, setWods] = useState([]);
 
   const canEdit = isAdmin();
   const canBlock = canBlockUsers();
@@ -35,7 +41,45 @@ const MembersContent = () => {
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    // Cargar todos los PRs del gimnasio
+    const prsQuery = query(collection(db, 'prs'), where('gymId', '==', currentGym.id));
+    const unsubPRs = onSnapshot(prsQuery, (snap) => {
+      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      items.sort((a, b) => {
+        const dateA = a.date?.toDate?.() || a.createdAt?.toDate?.() || new Date(0);
+        const dateB = b.date?.toDate?.() || b.createdAt?.toDate?.() || new Date(0);
+        return dateB - dateA;
+      });
+      setPrs(items);
+    });
+
+    // Cargar sesiones de rutinas
+    const sessionsQuery = query(collection(db, 'routine_sessions'), where('gymId', '==', currentGym.id));
+    const unsubSessions = onSnapshot(sessionsQuery, (snap) => {
+      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      items.sort((a, b) => {
+        const dateA = a.createdAt?.toDate?.() || new Date(0);
+        const dateB = b.createdAt?.toDate?.() || new Date(0);
+        return dateB - dateA;
+      });
+      setRoutineSessions(items);
+    });
+
+    // Cargar clases
+    const classesQuery = query(collection(db, 'classes'), where('gymId', '==', currentGym.id));
+    const unsubClasses = onSnapshot(classesQuery, (snap) => {
+      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setClasses(items);
+    });
+
+    // Cargar WODs
+    const wodsQuery = query(collection(db, 'wods'), where('gymId', '==', currentGym.id));
+    const unsubWods = onSnapshot(wodsQuery, (snap) => {
+      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setWods(items);
+    });
+
+    return () => { unsubscribe(); unsubPRs(); unsubSessions(); unsubClasses(); unsubWods(); };
   }, [currentGym]);
 
   const getFilteredMembers = () => {
@@ -208,14 +252,17 @@ const MembersContent = () => {
                 {/* Menú de acciones */}
                 {(canEdit || canBlock) && member.id !== userData.id && !member.roles?.includes('sysadmin') && (
                   <Dropdown trigger={<button className="p-2 hover:bg-gray-700 rounded-lg"><MoreVertical size={18} /></button>}>
+                    <DropdownItem icon={TrendingUp} onClick={() => { setSelected(member); setShowProgress(true); }}>
+                      Ver progreso
+                    </DropdownItem>
                     {canEdit && !member.roles?.includes('admin') && (
                       <DropdownItem icon={Shield} onClick={() => { setSelected(member); setShowModal(true); }}>
                         Gestionar roles
                       </DropdownItem>
                     )}
                     {canBlock && !member.roles?.includes('admin') && (
-                      <DropdownItem 
-                        icon={member.isBlocked ? ShieldCheck : ShieldX} 
+                      <DropdownItem
+                        icon={member.isBlocked ? ShieldCheck : ShieldX}
                         danger={!member.isBlocked}
                         onClick={() => { setSelected(member); setShowBlockConfirm(true); }}
                       >
@@ -248,17 +295,28 @@ const MembersContent = () => {
       />
 
       {/* Confirmación de bloqueo */}
-      <ConfirmDialog 
-        isOpen={showBlockConfirm} 
-        onClose={() => { setShowBlockConfirm(false); setSelected(null); }} 
-        onConfirm={handleBlockToggle} 
+      <ConfirmDialog
+        isOpen={showBlockConfirm}
+        onClose={() => { setShowBlockConfirm(false); setSelected(null); }}
+        onConfirm={handleBlockToggle}
         title={selected?.isBlocked ? 'Desbloquear Usuario' : 'Bloquear Usuario'}
-        message={selected?.isBlocked 
+        message={selected?.isBlocked
           ? `¿Desbloquear a "${selected?.name}"? Podrá volver a acceder a la app.`
           : `¿Bloquear a "${selected?.name}"? No podrá acceder a la app hasta que lo desbloquees.`
         }
         confirmText={selected?.isBlocked ? 'Desbloquear' : 'Bloquear'}
         confirmVariant={selected?.isBlocked ? 'primary' : 'danger'}
+      />
+
+      {/* Modal de progreso */}
+      <ProgressModal
+        isOpen={showProgress}
+        onClose={() => { setShowProgress(false); setSelected(null); }}
+        member={selected}
+        prs={prs}
+        routineSessions={routineSessions}
+        classes={classes}
+        wods={wods}
       />
     </div>
   );
@@ -342,6 +400,181 @@ const RolesModal = ({ isOpen, onClose, onSave, member, canAssignRole, canRemoveR
           <Button type="submit" loading={loading} className="flex-1">Guardar</Button>
         </div>
       </form>
+    </Modal>
+  );
+};
+
+const ProgressModal = ({ isOpen, onClose, member, prs, routineSessions, classes, wods }) => {
+  const [filterPRStatus, setFilterPRStatus] = useState('all');
+  const [filterClass, setFilterClass] = useState('all');
+  const [filterWod, setFilterWod] = useState('all');
+
+  if (!member) return null;
+
+  const getMemberPRs = () => {
+    let memberPRs = prs.filter(pr => pr.userId === member.id);
+
+    if (filterPRStatus !== 'all') {
+      memberPRs = memberPRs.filter(pr => pr.status === filterPRStatus);
+    }
+
+    // Filtrar por clase si hay un classId en el PR
+    if (filterClass !== 'all') {
+      memberPRs = memberPRs.filter(pr => pr.classId === filterClass);
+    }
+
+    // Filtrar por WOD si hay un wodId en el PR
+    if (filterWod !== 'all') {
+      memberPRs = memberPRs.filter(pr => pr.wodId === filterWod);
+    }
+
+    return memberPRs;
+  };
+
+  const getMemberSessions = () => {
+    return routineSessions.filter(s => s.userId === member.id);
+  };
+
+  const getMemberStats = () => {
+    const memberPRs = prs.filter(pr => pr.userId === member.id);
+    const memberSessions = routineSessions.filter(s => s.userId === member.id);
+
+    const validated = memberPRs.filter(pr => pr.status === 'validated').length;
+    const pending = memberPRs.filter(pr => pr.status === 'pending').length;
+    const improved = memberPRs.filter(pr => pr.improvement && pr.improvement > 0).length;
+
+    return {
+      totalPRs: memberPRs.length,
+      validatedPRs: validated,
+      pendingPRs: pending,
+      improvedPRs: improved,
+      totalSessions: memberSessions.length,
+      lastActivity: memberPRs.length > 0 || memberSessions.length > 0
+        ? formatDate(
+            [...memberPRs, ...memberSessions]
+              .map(item => item.date?.toDate?.() || item.createdAt?.toDate?.())
+              .sort((a, b) => b - a)[0]
+          )
+        : 'Sin actividad'
+    };
+  };
+
+  const stats = getMemberStats();
+  const memberPRs = getMemberPRs();
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} title={`Progreso de ${member.name}`}>
+      <div className="space-y-4">
+        {/* Stats */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="p-3 bg-gray-800/50 rounded-lg">
+            <div className="flex items-center gap-2 text-sm text-gray-400 mb-1">
+              <Trophy size={14} />
+              <span>PRs Totales</span>
+            </div>
+            <p className="text-2xl font-bold text-primary">{stats.totalPRs}</p>
+            <p className="text-xs text-gray-500">
+              {stats.validatedPRs} validados, {stats.pendingPRs} pendientes
+            </p>
+          </div>
+
+          <div className="p-3 bg-gray-800/50 rounded-lg">
+            <div className="flex items-center gap-2 text-sm text-gray-400 mb-1">
+              <TrendingUp size={14} />
+              <span>Mejoras</span>
+            </div>
+            <p className="text-2xl font-bold text-green-400">{stats.improvedPRs}</p>
+            <p className="text-xs text-gray-500">
+              {stats.totalSessions} sesiones completadas
+            </p>
+          </div>
+        </div>
+
+        <div className="p-3 bg-gray-800/30 rounded-lg">
+          <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center gap-2 text-gray-400">
+              <Calendar size={14} />
+              <span>Última actividad:</span>
+            </div>
+            <span className="font-medium text-gray-300">{stats.lastActivity}</span>
+          </div>
+        </div>
+
+        {/* Filtros */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <Select
+            value={filterPRStatus}
+            onChange={e => setFilterPRStatus(e.target.value)}
+            options={[
+              { value: 'all', label: 'Todos los PRs' },
+              { value: 'validated', label: 'Solo validados' },
+              { value: 'pending', label: 'Solo pendientes' },
+              { value: 'rejected', label: 'Solo rechazados' }
+            ]}
+            className="w-full"
+          />
+
+          <Select
+            value={filterClass}
+            onChange={e => setFilterClass(e.target.value)}
+            options={[
+              { value: 'all', label: 'Todas las clases' },
+              ...classes.map(c => ({ value: c.id, label: c.name || 'Sin nombre' }))
+            ]}
+            className="w-full"
+          />
+
+          <Select
+            value={filterWod}
+            onChange={e => setFilterWod(e.target.value)}
+            options={[
+              { value: 'all', label: 'Todos los WODs' },
+              ...wods.map(w => ({ value: w.id, label: w.name || 'Sin nombre' }))
+            ]}
+            className="w-full"
+          />
+        </div>
+
+        {/* Lista de PRs */}
+        <div className="space-y-2 max-h-96 overflow-y-auto">
+          {memberPRs.length === 0 ? (
+            <EmptyState icon={Trophy} title="Sin PRs" description="Este alumno no tiene PRs registrados" />
+          ) : (
+            memberPRs.map(pr => (
+              <div key={pr.id} className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg hover:bg-gray-800/50 transition-colors">
+                <div className="flex-1">
+                  <p className="font-medium">{pr.exerciseName}</p>
+                  <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                    <span>{formatDate(pr.date || pr.createdAt)}</span>
+                    <Badge className={
+                      pr.status === 'validated' ? 'bg-green-500/20 text-green-400' :
+                      pr.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
+                      'bg-red-500/20 text-red-400'
+                    }>
+                      {pr.status === 'validated' ? 'Validado' : pr.status === 'pending' ? 'Pendiente' : 'Rechazado'}
+                    </Badge>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-primary">
+                    {pr.measureType === 'time' ? (() => {
+                      const mins = Math.floor(pr.value / 60);
+                      const secs = pr.value % 60;
+                      return `${mins}:${secs.toString().padStart(2, '0')}`;
+                    })() : pr.value}
+                  </p>
+                  {pr.improvement != null && (
+                    <p className={`text-xs font-semibold ${pr.improvement > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                      {pr.improvement > 0 ? <ArrowUp size={10} className="inline" /> : <ArrowDown size={10} className="inline" />}
+                      {Math.abs(pr.improvement).toFixed(1)}%
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </Modal>
   );
 };
