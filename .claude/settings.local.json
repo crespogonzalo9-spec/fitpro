@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm audit:*)"
+      "Bash(npm audit:*)",
+      "Bash(git merge:*)"
     ]
   }
 }
