@@ -2,6 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(npm audit:*)",
+      "Bash(git pull:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(git push:*)",
       "Bash(git merge:*)"
     ]
   }

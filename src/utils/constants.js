@@ -99,7 +99,6 @@ export const NAV_ROUTES = {
     { path: '/gyms', name: 'Gimnasios', icon: 'Building2' },
     { path: '/users', name: 'Usuarios', icon: 'Users' },
     { path: '/members', name: 'Alumnos', icon: 'Users' },
-    { path: '/member-progress', name: 'Progreso Alumnos', icon: 'TrendingUp' },
     { path: '/profesores', name: 'Profesores', icon: 'UserCheck' },
     { path: '/classes', name: 'Clases', icon: 'Calendar' },
     { path: '/exercises', name: 'Ejercicios', icon: 'Dumbbell' },
@@ -117,7 +116,6 @@ export const NAV_ROUTES = {
   admin: [
     { path: '/dashboard', name: 'Dashboard', icon: 'LayoutDashboard' },
     { path: '/members', name: 'Alumnos', icon: 'Users' },
-    { path: '/member-progress', name: 'Progreso Alumnos', icon: 'TrendingUp' },
     { path: '/profesores', name: 'Profesores', icon: 'UserCheck' },
     { path: '/classes', name: 'Clases', icon: 'Calendar' },
     { path: '/exercises', name: 'Ejercicios', icon: 'Dumbbell' },
@@ -136,7 +134,6 @@ export const NAV_ROUTES = {
     { path: '/dashboard', name: 'Dashboard', icon: 'LayoutDashboard' },
     { path: '/my-classes', name: 'Mis Clases', icon: 'Calendar' },
     { path: '/members', name: 'Alumnos', icon: 'Users' },
-    { path: '/member-progress', name: 'Progreso Alumnos', icon: 'TrendingUp' },
     { path: '/exercises', name: 'Ejercicios', icon: 'Dumbbell' },
     { path: '/routines', name: 'Rutinas', icon: 'ClipboardList' },
     { path: '/wods', name: 'WODs', icon: 'Flame' },
