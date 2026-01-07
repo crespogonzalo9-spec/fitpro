@@ -30,7 +30,7 @@ service cloud.firestore {
       allow read: if isAuthenticated();
       allow create, delete: if isSysadmin();
       allow update: if isSysadmin() ||
-                      (isAuthenticated() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['updatedAt']));
+                      (isAdmin() && belongsToGym(gymId));
     }
 
     match /invites/{inviteId} {
