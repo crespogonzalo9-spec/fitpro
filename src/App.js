@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { GymProvider, useGym } from './contexts/GymContext';
 import { ToastProvider } from './contexts/ToastContext';
@@ -38,6 +38,7 @@ import GymInfo from './pages/GymInfo';
 import Profile from './pages/Profile';
 import MemberProgress from './pages/MemberProgress';
 import SelectGym from './pages/SelectGym';
+import GymLanding from './pages/GymLanding';
 
 const LoadingSpinner = () => (
   <div className="min-h-screen flex items-center justify-center bg-slate-900">
@@ -111,6 +112,22 @@ const RootRedirect = () => {
   return <Navigate to="/login" replace />;
 };
 
+// Componente para mostrar landing page o redirigir según autenticación
+const GymLandingOrRedirect = () => {
+  const { user, loading } = useAuth();
+  const { gymSlug } = useParams();
+
+  if (loading) return <LoadingSpinner />;
+
+  // Si el usuario está autenticado, redirigir al dashboard del gimnasio
+  if (user) {
+    return <Navigate to={`/${gymSlug}/dashboard`} replace />;
+  }
+
+  // Si no está autenticado, mostrar la landing page
+  return <GymLanding />;
+};
+
 const ComingSoon = ({ title }) => (
   <div className="flex flex-col items-center justify-center py-20">
     <h2 className="text-2xl font-bold mb-2">{title}</h2>
@@ -137,6 +154,9 @@ function AppRoutes() {
         <Route path="users" element={<ProtectedRoute allowedRoles={['sysadmin']}><UsersPage /></ProtectedRoute>} />
         <Route path="dashboard" element={<Dashboard />} /> {/* Vista global para sysadmin */}
       </Route>
+
+      {/* Landing page pública para gimnasios */}
+      <Route path="/:gymSlug" element={<GymLandingOrRedirect />} />
 
       {/* Rutas con gymSlug - todas las rutas específicas de gimnasio */}
       <Route path="/:gymSlug" element={<ProtectedRoute><GymRouteHandler><Layout /></GymRouteHandler></ProtectedRoute>}>
