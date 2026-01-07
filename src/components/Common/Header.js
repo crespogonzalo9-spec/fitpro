@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Menu, Bell, Info } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Avatar, ChangelogModal } from './index';
+import { Avatar, Badge } from './index';
+import ChangelogModal from './ChangelogModal';
+import { getVersionString } from '../../utils/changelog';
 
 const Header = ({ onMenuClick, title }) => {
   const { userData } = useAuth();
@@ -20,10 +22,13 @@ const Header = ({ onMenuClick, title }) => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowChangelog(true)}
-              className="relative p-2 hover:bg-gray-800 rounded-lg"
-              title="Actualizaciones"
+              className="relative p-2 hover:bg-gray-800 rounded-lg group"
+              title="Ver actualizaciones"
             >
               <Info size={20} />
+              <Badge className="absolute -top-1 -right-1 px-1 py-0 text-xs bg-primary/20 text-primary">
+                {getVersionString()}
+              </Badge>
             </button>
             <button className="relative p-2 hover:bg-gray-800 rounded-lg">
               <Bell size={20} />

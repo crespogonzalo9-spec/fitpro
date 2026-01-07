@@ -242,13 +242,6 @@ const Dashboard = () => {
             </div>
           )}
         </Card>
-
-        {/* Créditos del desarrollador */}
-        <div className="mt-8 pt-6 border-t border-gray-800">
-          <p className="text-center text-sm text-gray-500">
-            by <span className="font-medium text-gray-400">Gonzalo Crespo</span>
-          </p>
-        </div>
       </div>
     );
   }
@@ -306,13 +299,6 @@ const Dashboard = () => {
             />
           </Card>
         )}
-
-        {/* Créditos del desarrollador */}
-        <div className="mt-8 pt-6 border-t border-gray-800">
-          <p className="text-center text-sm text-gray-500">
-            by <span className="font-medium text-gray-400">Gonzalo Crespo</span>
-          </p>
-        </div>
       </div>
     );
   }
@@ -366,13 +352,6 @@ const Dashboard = () => {
             </div>
           </div>
         </Card>
-
-        {/* Créditos del desarrollador */}
-        <div className="mt-8 pt-6 border-t border-gray-800">
-          <p className="text-center text-sm text-gray-500">
-            by <span className="font-medium text-gray-400">Gonzalo Crespo</span>
-          </p>
-        </div>
       </div>
     );
   }
@@ -381,7 +360,7 @@ const Dashboard = () => {
   if (loading) return <LoadingState />;
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-8">
+    <div className="space-y-6 animate-fadeIn">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -538,10 +517,10 @@ const Dashboard = () => {
         ) : null}
       </div>
 
-      {/* Créditos del desarrollador */}
-      <div className="mt-8 pt-6 border-t border-gray-800">
-        <p className="text-center text-sm text-gray-500">
-          by <span className="font-medium text-gray-400">Gonzalo Crespo</span>
+      {/* Footer */}
+      <div className="pt-8 pb-4 text-center">
+        <p className="text-sm text-gray-500">
+          by <span className="text-gray-400 font-medium">Gonzalo Crespo</span>
         </p>
       </div>
     </div>

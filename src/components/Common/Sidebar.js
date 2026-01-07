@@ -56,45 +56,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     return currentGym?.name || 'Seleccionar gimnasio';
   };
 
-  // Generar ruta con slug del gimnasio
-  // Rutas especiales de sysadmin sin gymSlug: /gyms, /users, /dashboard (cuando viewAllGyms)
-  const getRoutePath = (routePath) => {
-    const sysadminGlobalRoutes = ['/gyms', '/users'];
-
-    // Si es sysadmin viendo todos los gimnasios, usar rutas sin slug
-    if (viewAllGyms && sysadminGlobalRoutes.includes(routePath)) {
-      return routePath;
-    }
-
-    // Si es el dashboard y está en modo "todos los gimnasios", usar /dashboard
-    if (viewAllGyms && routePath === '/dashboard') {
-      return '/dashboard';
-    }
-
-    // Para todas las demás rutas, agregar el slug del gimnasio si existe
-    if (currentGym?.slug) {
-      return `/${currentGym.slug}${routePath}`;
-    }
-
-    // Fallback a la ruta original
-    return routePath;
-  };
-
-  // Manejar cambio de gimnasio con navegación correcta
-  const handleGymChange = (gymIdOrAll) => {
-    if (gymIdOrAll === ALL_GYMS_ID) {
-      selectGym(ALL_GYMS_ID);
-      navigate('/dashboard');
-    } else {
-      const gym = availableGyms.find(g => g.id === gymIdOrAll);
-      if (gym && gym.slug) {
-        selectGym(gymIdOrAll);
-        navigate(`/${gym.slug}/dashboard`);
-      }
-    }
-    setShowGymSelector(false);
-  };
-
   return (
     <>
       {/* Overlay móvil */}
@@ -146,7 +107,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   <div className="absolute top-full left-0 right-0 mt-1 bg-gray-800 rounded-xl shadow-lg border border-gray-700 max-h-64 overflow-y-auto z-50">
                     {/* Opción "Todos los gimnasios" */}
                     <button
-                      onClick={() => handleGymChange(ALL_GYMS_ID)}
+                      onClick={() => { selectGym(ALL_GYMS_ID); setShowGymSelector(false); }}
                       className={`w-full text-left px-3 py-2 hover:bg-gray-700 text-sm flex items-center gap-2 border-b border-gray-700 ${
                         viewAllGyms ? 'text-blue-400 bg-blue-500/10' : ''
                       }`}
@@ -154,12 +115,12 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                       <Globe size={14} />
                       <span>Todos los gimnasios</span>
                     </button>
-
+                    
                     {/* Lista de gimnasios */}
                     {availableGyms.map(gym => (
                       <button
                         key={gym.id}
-                        onClick={() => handleGymChange(gym.id)}
+                        onClick={() => { selectGym(gym.id); setShowGymSelector(false); }}
                         className={`w-full text-left px-3 py-2 hover:bg-gray-700 text-sm ${
                           !viewAllGyms && currentGym?.id === gym.id ? 'text-primary bg-primary/10' : ''
                         }`}
@@ -185,16 +146,15 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           <nav className="flex-1 overflow-y-auto p-3 space-y-1">
             {routes.map(route => {
               const Icon = iconMap[route.icon] || LayoutDashboard;
-              const routePath = getRoutePath(route.path);
               return (
                 <NavLink
                   key={route.path}
-                  to={routePath}
+                  to={route.path}
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
-                      isActive
-                        ? 'nav-link-active font-medium'
+                      isActive 
+                        ? 'nav-link-active font-medium' 
                         : 'text-gray-400 hover:text-white hover:bg-gray-800'
                     }`
                   }
