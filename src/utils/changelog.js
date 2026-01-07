@@ -1,9 +1,22 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.4';
+export const CURRENT_VERSION = '1.0.5';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.5',
+    date: '2026-01-06',
+    title: 'Categorización de equipamiento y filtros',
+    changes: [
+      'Sistema de categorías para equipamiento (11 categorías con íconos)',
+      'Filtros por categoría y búsqueda en gestor de equipamiento',
+      'Filtros en la selección de equipamiento al crear ejercicios',
+      'Badges visuales con íconos para identificar categorías rápidamente',
+      'Equipamiento ordenado automáticamente por categoría y nombre',
+      'Confirmado: equipamiento específico por gimnasio (no se comparte entre gyms)'
+    ]
+  },
   {
     version: '1.0.4',
     date: '2026-01-06',

@@ -26,108 +26,122 @@ const MEASURE_TYPES = [
   { value: 'calories', label: 'Calorías', icon: '🔥', description: 'Para máquinas de cardio' },
 ];
 
+const EQUIPMENT_CATEGORIES = [
+  { value: 'barras', label: 'Barras', icon: '🏋️', color: 'bg-red-500/20 text-red-400' },
+  { value: 'discos', label: 'Discos', icon: '⚫', color: 'bg-gray-500/20 text-gray-400' },
+  { value: 'mancuernas', label: 'Mancuernas', icon: '💪', color: 'bg-orange-500/20 text-orange-400' },
+  { value: 'kettlebells', label: 'Kettlebells', icon: '🔔', color: 'bg-purple-500/20 text-purple-400' },
+  { value: 'gimnasia', label: 'Gimnasia', icon: '🤸', color: 'bg-blue-500/20 text-blue-400' },
+  { value: 'cardio', label: 'Cardio', icon: '❤️', color: 'bg-pink-500/20 text-pink-400' },
+  { value: 'pliometria', label: 'Pliometría', icon: '📦', color: 'bg-yellow-500/20 text-yellow-400' },
+  { value: 'funcional', label: 'Funcional', icon: '⚡', color: 'bg-green-500/20 text-green-400' },
+  { value: 'bandas', label: 'Bandas/Suspensión', icon: '🎯', color: 'bg-teal-500/20 text-teal-400' },
+  { value: 'accesorios', label: 'Accesorios', icon: '🔧', color: 'bg-slate-500/20 text-slate-400' },
+  { value: 'otros', label: 'Otros', icon: '📋', color: 'bg-zinc-500/20 text-zinc-400' },
+];
+
 const DEFAULT_EQUIPMENT = [
   // Barras
-  'Barra olímpica 20kg',
-  'Barra olímpica 15kg',
-  'Barra EZ',
-  'Barra hexagonal',
-  'Barra recta corta',
+  { name: 'Barra olímpica 20kg', category: 'barras' },
+  { name: 'Barra olímpica 15kg', category: 'barras' },
+  { name: 'Barra EZ', category: 'barras' },
+  { name: 'Barra hexagonal', category: 'barras' },
+  { name: 'Barra recta corta', category: 'barras' },
 
   // Discos
-  'Discos olímpicos 1.25kg',
-  'Discos olímpicos 2.5kg',
-  'Discos olímpicos 5kg',
-  'Discos olímpicos 10kg',
-  'Discos olímpicos 15kg',
-  'Discos olímpicos 20kg',
-  'Discos olímpicos 25kg',
-  'Bumper plates 10kg',
-  'Bumper plates 15kg',
-  'Bumper plates 20kg',
-  'Bumper plates 25kg',
+  { name: 'Discos olímpicos 1.25kg', category: 'discos' },
+  { name: 'Discos olímpicos 2.5kg', category: 'discos' },
+  { name: 'Discos olímpicos 5kg', category: 'discos' },
+  { name: 'Discos olímpicos 10kg', category: 'discos' },
+  { name: 'Discos olímpicos 15kg', category: 'discos' },
+  { name: 'Discos olímpicos 20kg', category: 'discos' },
+  { name: 'Discos olímpicos 25kg', category: 'discos' },
+  { name: 'Bumper plates 10kg', category: 'discos' },
+  { name: 'Bumper plates 15kg', category: 'discos' },
+  { name: 'Bumper plates 20kg', category: 'discos' },
+  { name: 'Bumper plates 25kg', category: 'discos' },
 
   // Mancuernas
-  'Mancuernas 2kg (par)',
-  'Mancuernas 4kg (par)',
-  'Mancuernas 6kg (par)',
-  'Mancuernas 8kg (par)',
-  'Mancuernas 10kg (par)',
-  'Mancuernas 12kg (par)',
-  'Mancuernas 14kg (par)',
-  'Mancuernas 16kg (par)',
-  'Mancuernas 18kg (par)',
-  'Mancuernas 20kg (par)',
-  'Mancuernas ajustables',
+  { name: 'Mancuernas 2kg (par)', category: 'mancuernas' },
+  { name: 'Mancuernas 4kg (par)', category: 'mancuernas' },
+  { name: 'Mancuernas 6kg (par)', category: 'mancuernas' },
+  { name: 'Mancuernas 8kg (par)', category: 'mancuernas' },
+  { name: 'Mancuernas 10kg (par)', category: 'mancuernas' },
+  { name: 'Mancuernas 12kg (par)', category: 'mancuernas' },
+  { name: 'Mancuernas 14kg (par)', category: 'mancuernas' },
+  { name: 'Mancuernas 16kg (par)', category: 'mancuernas' },
+  { name: 'Mancuernas 18kg (par)', category: 'mancuernas' },
+  { name: 'Mancuernas 20kg (par)', category: 'mancuernas' },
+  { name: 'Mancuernas ajustables', category: 'mancuernas' },
 
   // Kettlebells
-  'Kettlebell 4kg',
-  'Kettlebell 8kg',
-  'Kettlebell 12kg',
-  'Kettlebell 16kg',
-  'Kettlebell 20kg',
-  'Kettlebell 24kg',
-  'Kettlebell 28kg',
-  'Kettlebell 32kg',
+  { name: 'Kettlebell 4kg', category: 'kettlebells' },
+  { name: 'Kettlebell 8kg', category: 'kettlebells' },
+  { name: 'Kettlebell 12kg', category: 'kettlebells' },
+  { name: 'Kettlebell 16kg', category: 'kettlebells' },
+  { name: 'Kettlebell 20kg', category: 'kettlebells' },
+  { name: 'Kettlebell 24kg', category: 'kettlebells' },
+  { name: 'Kettlebell 28kg', category: 'kettlebells' },
+  { name: 'Kettlebell 32kg', category: 'kettlebells' },
 
   // Gimnasia
-  'Barra fija',
-  'Anillas',
-  'Paralelas',
-  'Cuerda para trepar',
-  'Pegboard',
+  { name: 'Barra fija', category: 'gimnasia' },
+  { name: 'Anillas', category: 'gimnasia' },
+  { name: 'Paralelas', category: 'gimnasia' },
+  { name: 'Cuerda para trepar', category: 'gimnasia' },
+  { name: 'Pegboard', category: 'gimnasia' },
 
   // Cardio
-  'Remo Concept2',
-  'Bike',
-  'Assault Bike',
-  'SkiErg',
-  'Cinta de correr',
-  'Elíptica',
+  { name: 'Remo Concept2', category: 'cardio' },
+  { name: 'Bike', category: 'cardio' },
+  { name: 'Assault Bike', category: 'cardio' },
+  { name: 'SkiErg', category: 'cardio' },
+  { name: 'Cinta de correr', category: 'cardio' },
+  { name: 'Elíptica', category: 'cardio' },
 
   // Pliometría
-  'Box 50cm',
-  'Box 60cm',
-  'Box 75cm',
-  'Cajón pliométrico',
-  'Wall ball 6kg',
-  'Wall ball 9kg',
-  'Balón medicinal',
-  'Slam ball 10kg',
-  'Slam ball 15kg',
+  { name: 'Box 50cm', category: 'pliometria' },
+  { name: 'Box 60cm', category: 'pliometria' },
+  { name: 'Box 75cm', category: 'pliometria' },
+  { name: 'Cajón pliométrico', category: 'pliometria' },
+  { name: 'Wall ball 6kg', category: 'pliometria' },
+  { name: 'Wall ball 9kg', category: 'pliometria' },
+  { name: 'Balón medicinal', category: 'pliometria' },
+  { name: 'Slam ball 10kg', category: 'pliometria' },
+  { name: 'Slam ball 15kg', category: 'pliometria' },
 
   // Funcional
-  'Soga de saltar',
-  'Soga de batalla',
-  'Sled',
-  'Trineo',
-  'Neumático',
-  'Sandbag',
-  'D-Ball',
+  { name: 'Soga de saltar', category: 'funcional' },
+  { name: 'Soga de batalla', category: 'funcional' },
+  { name: 'Sled', category: 'funcional' },
+  { name: 'Trineo', category: 'funcional' },
+  { name: 'Neumático', category: 'funcional' },
+  { name: 'Sandbag', category: 'funcional' },
+  { name: 'D-Ball', category: 'funcional' },
 
   // Bandas y suspensión
-  'Banda elástica ligera',
-  'Banda elástica media',
-  'Banda elástica pesada',
-  'Mini banda',
-  'TRX',
+  { name: 'Banda elástica ligera', category: 'bandas' },
+  { name: 'Banda elástica media', category: 'bandas' },
+  { name: 'Banda elástica pesada', category: 'bandas' },
+  { name: 'Mini banda', category: 'bandas' },
+  { name: 'TRX', category: 'bandas' },
 
   // Accesorios
-  'Foam roller',
-  'Pelota de lacrosse',
-  'Abmat',
-  'Colchoneta',
-  'Barra para dominadas',
-  'Dip station',
-  'GHD',
-  'Reverse hyper',
+  { name: 'Foam roller', category: 'accesorios' },
+  { name: 'Pelota de lacrosse', category: 'accesorios' },
+  { name: 'Abmat', category: 'accesorios' },
+  { name: 'Colchoneta', category: 'accesorios' },
+  { name: 'Barra para dominadas', category: 'accesorios' },
+  { name: 'Dip station', category: 'accesorios' },
+  { name: 'GHD', category: 'accesorios' },
+  { name: 'Reverse hyper', category: 'accesorios' },
 
   // Otros
-  'Peso corporal',
-  'Chaleco con peso',
-  'Cinturón de lastre',
-  'Rueda abdominal',
-  'Ninguno'
+  { name: 'Peso corporal', category: 'otros' },
+  { name: 'Chaleco con peso', category: 'otros' },
+  { name: 'Cinturón de lastre', category: 'otros' },
+  { name: 'Rueda abdominal', category: 'otros' },
+  { name: 'Ninguno', category: 'otros' }
 ];
 
 const ExercisesContent = () => {
@@ -459,6 +473,37 @@ const ExerciseModal = ({ isOpen, onClose, onSave, exercise, equipmentList }) => 
     tips: ''
   });
   const [loading, setLoading] = useState(false);
+  const [equipmentFilter, setEquipmentFilter] = useState('all');
+  const [equipmentSearch, setEquipmentSearch] = useState('');
+
+  const getCategoryInfo = (categoryValue) => {
+    return EQUIPMENT_CATEGORIES.find(c => c.value === categoryValue) || EQUIPMENT_CATEGORIES[EQUIPMENT_CATEGORIES.length - 1];
+  };
+
+  const getFilteredEquipmentList = () => {
+    let filtered = [...equipmentList];
+
+    if (equipmentFilter !== 'all') {
+      filtered = filtered.filter(item => item.category === equipmentFilter);
+    }
+
+    if (equipmentSearch) {
+      const search = equipmentSearch.toLowerCase();
+      filtered = filtered.filter(item => item.name?.toLowerCase().includes(search));
+    }
+
+    // Ordenar por categoría y luego por nombre
+    filtered.sort((a, b) => {
+      if (a.category !== b.category) {
+        const catA = getCategoryInfo(a.category);
+        const catB = getCategoryInfo(b.category);
+        return catA.label.localeCompare(catB.label);
+      }
+      return a.name.localeCompare(b.name);
+    });
+
+    return filtered;
+  };
 
   useEffect(() => {
     if (exercise) {
@@ -552,22 +597,51 @@ const ExerciseModal = ({ isOpen, onClose, onSave, exercise, equipmentList }) => 
               <p className="text-xs text-gray-500 mt-1">Usá "Gestionar Equipamiento" para cargar equipos.</p>
             </div>
           ) : (
-            <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-2 bg-gray-800/30 rounded-lg">
-              {equipmentList.map(item => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => toggleEquipment(item.name)}
-                  className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                    form.equipment.includes(item.name)
-                      ? 'bg-primary/20 border border-primary text-primary'
-                      : 'bg-gray-800 border border-gray-700 text-gray-400 hover:bg-gray-700'
-                  }`}
-                >
-                  {item.name}
-                </button>
-              ))}
-            </div>
+            <>
+              <div className="flex gap-2 mb-2">
+                <SearchInput
+                  value={equipmentSearch}
+                  onChange={setEquipmentSearch}
+                  placeholder="Buscar equipamiento..."
+                  className="flex-1"
+                />
+                <Select
+                  value={equipmentFilter}
+                  onChange={e => setEquipmentFilter(e.target.value)}
+                  options={[
+                    { value: 'all', label: 'Todas' },
+                    ...EQUIPMENT_CATEGORIES.map(c => ({ value: c.value, label: `${c.icon} ${c.label}` }))
+                  ]}
+                  className="w-48"
+                />
+              </div>
+              {getFilteredEquipmentList().length === 0 ? (
+                <div className="p-4 bg-gray-800/50 rounded-lg text-center">
+                  <p className="text-sm text-gray-400">No se encontró equipamiento</p>
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-2 bg-gray-800/30 rounded-lg">
+                  {getFilteredEquipmentList().map(item => {
+                    const category = getCategoryInfo(item.category);
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => toggleEquipment(item.name)}
+                        className={`px-3 py-1.5 rounded-lg text-sm transition-colors flex items-center gap-1 ${
+                          form.equipment.includes(item.name)
+                            ? 'bg-primary/20 border border-primary text-primary'
+                            : 'bg-gray-800 border border-gray-700 text-gray-400 hover:bg-gray-700'
+                        }`}
+                      >
+                        <span className="text-xs">{category.icon}</span>
+                        {item.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </>
           )}
         </div>
 
@@ -609,11 +683,19 @@ const EquipmentManager = ({ isOpen, onClose, equipmentList, gymId }) => {
   const { userData } = useAuth();
   const { success, error: showError } = useToast();
   const [newEquipmentName, setNewEquipmentName] = useState('');
+  const [newEquipmentCategory, setNewEquipmentCategory] = useState('otros');
   const [editingId, setEditingId] = useState(null);
   const [editingName, setEditingName] = useState('');
+  const [editingCategory, setEditingCategory] = useState('');
   const [loading, setLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [selectedEquipment, setSelectedEquipment] = useState(null);
+  const [filterCategory, setFilterCategory] = useState('all');
+  const [searchEquipment, setSearchEquipment] = useState('');
+
+  const getCategoryInfo = (categoryValue) => {
+    return EQUIPMENT_CATEGORIES.find(c => c.value === categoryValue) || EQUIPMENT_CATEGORIES[EQUIPMENT_CATEGORIES.length - 1];
+  };
 
   const handleAdd = async () => {
     if (!newEquipmentName.trim()) return;
@@ -622,12 +704,14 @@ const EquipmentManager = ({ isOpen, onClose, equipmentList, gymId }) => {
       setLoading(true);
       await addDoc(collection(db, 'equipment'), {
         name: newEquipmentName.trim(),
+        category: newEquipmentCategory,
         gymId,
         createdAt: serverTimestamp(),
         createdBy: userData.id
       });
       success('Equipamiento agregado');
       setNewEquipmentName('');
+      setNewEquipmentCategory('otros');
     } catch (err) {
       showError('Error al agregar equipamiento');
     } finally {
@@ -647,17 +731,18 @@ const EquipmentManager = ({ isOpen, onClose, equipmentList, gymId }) => {
       let errorCount = 0;
 
       // Cargar uno por uno para mejor control
-      for (const name of DEFAULT_EQUIPMENT) {
+      for (const item of DEFAULT_EQUIPMENT) {
         try {
           await addDoc(collection(db, 'equipment'), {
-            name,
+            name: item.name,
+            category: item.category,
             gymId,
             createdAt: serverTimestamp(),
             createdBy: userData.id
           });
           loadedCount++;
         } catch (err) {
-          console.error(`Error adding ${name}:`, err);
+          console.error(`Error adding ${item.name}:`, err);
           errorCount++;
         }
       }
@@ -681,12 +766,14 @@ const EquipmentManager = ({ isOpen, onClose, equipmentList, gymId }) => {
     try {
       await updateDoc(doc(db, 'equipment', id), {
         name: editingName.trim(),
+        category: editingCategory,
         updatedAt: serverTimestamp(),
         updatedBy: userData.id
       });
       success('Equipamiento actualizado');
       setEditingId(null);
       setEditingName('');
+      setEditingCategory('');
     } catch (err) {
       showError('Error al actualizar');
     }
@@ -706,34 +793,92 @@ const EquipmentManager = ({ isOpen, onClose, equipmentList, gymId }) => {
   const startEdit = (item) => {
     setEditingId(item.id);
     setEditingName(item.name);
+    setEditingCategory(item.category || 'otros');
   };
 
   const cancelEdit = () => {
     setEditingId(null);
     setEditingName('');
+    setEditingCategory('');
   };
+
+  // Filtrar equipamiento por categoría y búsqueda
+  const getFilteredEquipment = () => {
+    let filtered = [...equipmentList];
+
+    if (filterCategory !== 'all') {
+      filtered = filtered.filter(item => item.category === filterCategory);
+    }
+
+    if (searchEquipment) {
+      const search = searchEquipment.toLowerCase();
+      filtered = filtered.filter(item => item.name?.toLowerCase().includes(search));
+    }
+
+    // Ordenar por categoría y luego por nombre
+    filtered.sort((a, b) => {
+      if (a.category !== b.category) {
+        const catA = getCategoryInfo(a.category);
+        const catB = getCategoryInfo(b.category);
+        return catA.label.localeCompare(catB.label);
+      }
+      return a.name.localeCompare(b.name);
+    });
+
+    return filtered;
+  };
+
+  const filteredEquipment = getFilteredEquipment();
 
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} title="Gestionar Equipamiento" size="lg">
         <div className="space-y-4">
           {/* Agregar nuevo */}
-          <div className="flex gap-2">
-            <Input
-              value={newEquipmentName}
-              onChange={e => setNewEquipmentName(e.target.value)}
-              placeholder="Nombre del nuevo equipamiento..."
-              className="flex-1"
-              onKeyPress={e => e.key === 'Enter' && handleAdd()}
-            />
-            <Button
-              icon={Plus}
-              onClick={handleAdd}
-              disabled={!newEquipmentName.trim() || loading}
-            >
-              Agregar
-            </Button>
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <Input
+                value={newEquipmentName}
+                onChange={e => setNewEquipmentName(e.target.value)}
+                placeholder="Nombre del nuevo equipamiento..."
+                className="flex-1"
+                onKeyPress={e => e.key === 'Enter' && handleAdd()}
+              />
+              <Select
+                value={newEquipmentCategory}
+                onChange={e => setNewEquipmentCategory(e.target.value)}
+                options={EQUIPMENT_CATEGORIES.map(c => ({ value: c.value, label: `${c.icon} ${c.label}` }))}
+                className="w-48"
+              />
+              <Button
+                icon={Plus}
+                onClick={handleAdd}
+                disabled={!newEquipmentName.trim() || loading}
+              >
+                Agregar
+              </Button>
+            </div>
           </div>
+
+          {equipmentList.length > 0 && (
+            <div className="flex gap-2">
+              <SearchInput
+                value={searchEquipment}
+                onChange={setSearchEquipment}
+                placeholder="Buscar equipamiento..."
+                className="flex-1"
+              />
+              <Select
+                value={filterCategory}
+                onChange={e => setFilterCategory(e.target.value)}
+                options={[
+                  { value: 'all', label: 'Todas las categorías' },
+                  ...EQUIPMENT_CATEGORIES.map(c => ({ value: c.value, label: `${c.icon} ${c.label}` }))
+                ]}
+                className="w-56"
+              />
+            </div>
+          )}
 
           {/* Lista de equipamiento */}
           <div className="space-y-2 max-h-96 overflow-y-auto">
@@ -752,20 +897,34 @@ const EquipmentManager = ({ isOpen, onClose, equipmentList, gymId }) => {
                   Cargar {DEFAULT_EQUIPMENT.length} equipos predeterminados
                 </Button>
               </div>
+            ) : filteredEquipment.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-400">No se encontró equipamiento con ese filtro</p>
+              </div>
             ) : (
-              equipmentList.map(item => (
+              filteredEquipment.map(item => {
+                const category = getCategoryInfo(item.category);
+                return (
                 <div
                   key={item.id}
                   className="flex items-center gap-2 p-3 bg-gray-800/50 rounded-lg hover:bg-gray-800/70 transition-colors"
                 >
                   {editingId === item.id ? (
                     <>
-                      <Input
-                        value={editingName}
-                        onChange={e => setEditingName(e.target.value)}
-                        className="flex-1"
-                        onKeyPress={e => e.key === 'Enter' && handleUpdate(item.id)}
-                      />
+                      <div className="flex-1 flex gap-2">
+                        <Input
+                          value={editingName}
+                          onChange={e => setEditingName(e.target.value)}
+                          className="flex-1"
+                          onKeyPress={e => e.key === 'Enter' && handleUpdate(item.id)}
+                        />
+                        <Select
+                          value={editingCategory}
+                          onChange={e => setEditingCategory(e.target.value)}
+                          options={EQUIPMENT_CATEGORIES.map(c => ({ value: c.value, label: `${c.icon} ${c.label}` }))}
+                          className="w-48"
+                        />
+                      </div>
                       <Button
                         size="sm"
                         onClick={() => handleUpdate(item.id)}
@@ -783,7 +942,12 @@ const EquipmentManager = ({ isOpen, onClose, equipmentList, gymId }) => {
                     </>
                   ) : (
                     <>
-                      <span className="flex-1 font-medium">{item.name}</span>
+                      <div className="flex-1 flex items-center gap-2">
+                        <span className="font-medium">{item.name}</span>
+                        <Badge className={category.color}>
+                          {category.icon}
+                        </Badge>
+                      </div>
                       <button
                         onClick={() => startEdit(item)}
                         className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
@@ -799,7 +963,8 @@ const EquipmentManager = ({ isOpen, onClose, equipmentList, gymId }) => {
                     </>
                   )}
                 </div>
-              ))
+                );
+              })
             )}
           </div>
 
