@@ -27,12 +27,10 @@ service cloud.firestore {
     }
 
     match /gyms/{gymId} {
-      // Permitir lectura a usuarios no autenticados (para registro con invitación)
-      // Solo se expone información básica del gimnasio (nombre, logo)
-      allow read: if true;
+      allow read: if isAuthenticated();
       allow create, delete: if isSysadmin();
       allow update: if isSysadmin() ||
-                      (isAdmin() && belongsToGym(gymId));
+                      (isAuthenticated() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['updatedAt']));
     }
 
     match /invites/{inviteId} {
