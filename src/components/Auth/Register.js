@@ -11,8 +11,6 @@ const Register = ({ onToggle }) => {
   const [loading, setLoading] = useState(false);
   
   // Lista de gimnasios disponibles
-  const [gyms, setGyms] = useState([]);
-  const [loadingGyms, setLoadingGyms] = useState(true);
   
   // Datos de invitación
   const [inviteData, setInviteData] = useState(null);
@@ -30,25 +28,9 @@ const Register = ({ onToggle }) => {
     setCheckingInvite(false);
   }, []);
 
-  // Cargar gimnasios disponibles
-  useEffect(() => {
-    const loadGyms = async () => {
-      try {
-        const snap = await getDocs(collection(db, 'gyms'));
-        const gymList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        setGyms(gymList);
-      } catch (err) {
-        console.error('Error loading gyms');
-      }
-      setLoadingGyms(false);
-    };
-    loadGyms();
-  }, []);
-
-  // Verificar invitación cuando hay código Y cuando los gimnasios están cargados
+  // Verificar invitación cuando hay código
   useEffect(() => {
     if (!inviteCode) return;
-    if (loadingGyms) return; // Esperar a que se carguen los gimnasios
 
     const checkInvite = async () => {
       setInviteError('');
@@ -88,21 +70,18 @@ const Register = ({ onToggle }) => {
           }
         }
 
-        // BACKWARD COMPATIBILITY: Si no tiene gymName, buscarlo en la lista de gimnasios
-        let inviteWithGymName = { ...foundInvite };
-        if (!inviteWithGymName.gymName && inviteWithGymName.gymId) {
-          const gym = gyms.find(g => g.id === inviteWithGymName.gymId);
-          if (gym) {
-            inviteWithGymName.gymName = gym.name;
-          }
+        // Validar que la invitación tenga los datos necesarios
+        if (!foundInvite.gymName || !foundInvite.gymId) {
+          setInviteError('Invitación incompleta. Contactá al administrador.');
+          return;
         }
 
         // Invitación válida
-        setInviteData(inviteWithGymName);
+        setInviteData(foundInvite);
         setForm(prev => ({
           ...prev,
-          email: inviteWithGymName.email || prev.email,
-          gymId: inviteWithGymName.gymId || ''
+          email: foundInvite.email || prev.email,
+          gymId: foundInvite.gymId || ''
         }));
       } catch (err) {
         // Si el error es por falta de índice, Firebase mostrará un link en consola
@@ -112,7 +91,7 @@ const Register = ({ onToggle }) => {
     };
 
     checkInvite();
-  }, [inviteCode, loadingGyms, gyms]);
+  }, [inviteCode]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -332,27 +311,14 @@ const Register = ({ onToggle }) => {
                     🔒 {inviteData.gymName || 'Gimnasio asignado'}
                   </div>
                 ) : (
-                  <>
-                    <select
-                      value={form.gymId}
-                      onChange={(e) => setForm({ ...form, gymId: e.target.value })}
-                      className="w-full pl-10 pr-10 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-primary appearance-none cursor-pointer"
-                      disabled={loadingGyms}
-                    >
-                      <option value="">Sin gimnasio (registrarme solo)</option>
-                      {gyms.map(gym => (
-                        <option key={gym.id} value={gym.id}>{gym.name}</option>
-                      ))}
-                    </select>
-                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={20} />
-                  </>
+                  <div className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-gray-400">
+                    Sin gimnasio (registrarme solo)
+                  </div>
                 )}
               </div>
               {!inviteData && (
                 <p className="text-xs text-gray-500 mt-1">
-                  {loadingGyms ? 'Cargando gimnasios...' : 
-                   gyms.length === 0 ? 'No hay gimnasios disponibles' :
-                   `${gyms.length} gimnasio(s) disponible(s)`}
+                  Usá un código de invitación para unirte a un gimnasio
                 </p>
               )}
             </div>
