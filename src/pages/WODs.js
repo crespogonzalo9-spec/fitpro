@@ -212,9 +212,12 @@ const WODsContent = () => {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {visibleWods.map(wod => (
-            <Card key={wod.id} className="cursor-pointer hover:border-gray-600 transition-colors" onClick={() => { setSelected(wod); setShowView(true); }}>
+            <Card key={wod.id} className="hover:border-gray-600 transition-colors">
               <div className="flex justify-between items-start mb-3">
-                <div className="flex items-center gap-3">
+                <div
+                  className="flex items-center gap-3 flex-1 cursor-pointer"
+                  onClick={() => { setSelected(wod); setShowView(true); }}
+                >
                   <div className="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center">
                     <Flame className="text-orange-500" size={24} />
                   </div>
@@ -231,9 +234,9 @@ const WODsContent = () => {
                   </div>
                 </div>
                 {canEdit && (
-                  <Dropdown trigger={<button onClick={e => e.stopPropagation()} className="p-2 hover:bg-gray-700 rounded-lg"><MoreVertical size={18} /></button>}>
-                    <DropdownItem icon={Edit} onClick={(e) => { e?.stopPropagation?.(); setSelected(wod); setShowModal(true); }}>Editar</DropdownItem>
-                    <DropdownItem icon={Trash2} danger onClick={(e) => { e?.stopPropagation?.(); setSelected(wod); setShowDelete(true); }}>Eliminar</DropdownItem>
+                  <Dropdown trigger={<button className="p-2 hover:bg-gray-700 rounded-lg"><MoreVertical size={18} /></button>}>
+                    <DropdownItem icon={Edit} onClick={() => { setSelected(wod); setShowModal(true); }}>Editar</DropdownItem>
+                    <DropdownItem icon={Trash2} danger onClick={() => { setSelected(wod); setShowDelete(true); }}>Eliminar</DropdownItem>
                   </Dropdown>
                 )}
               </div>
