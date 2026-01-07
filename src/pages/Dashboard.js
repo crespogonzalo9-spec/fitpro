@@ -538,10 +538,10 @@ const Dashboard = () => {
         ) : null}
       </div>
 
-      {/* Footer */}
-      <div className="pt-8 pb-4 text-center">
-        <p className="text-sm text-gray-500">
-          by <span className="text-gray-400 font-medium">Gonzalo Crespo</span>
+      {/* Créditos del desarrollador */}
+      <div className="mt-8 pt-6 border-t border-gray-800">
+        <p className="text-center text-sm text-gray-500">
+          by <span className="font-medium text-gray-400">Gonzalo Crespo</span>
         </p>
       </div>
     </div>
