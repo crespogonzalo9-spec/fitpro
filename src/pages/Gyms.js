@@ -4,6 +4,7 @@ import { Button, Card, Modal, Input, Textarea, SearchInput, EmptyState, LoadingS
 import { useToast } from '../contexts/ToastContext';
 import { db } from '../firebase';
 import { collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, where, getDocs } from 'firebase/firestore';
+import { generateSlug, getUniqueSlug } from '../utils/slugUtils';
 
 const Gyms = () => {
   const { success, error: showError } = useToast();
@@ -40,11 +41,25 @@ const Gyms = () => {
 
   const handleSave = async (data) => {
     try {
+      // Generar slug solo si no existe o si cambió el nombre
+      let slug = selected?.slug;
+
+      if (!slug || (selected && selected.name !== data.name)) {
+        const baseSlug = generateSlug(data.name);
+        const existingSlugs = gyms
+          .filter(g => g.id !== selected?.id)
+          .map(g => g.slug)
+          .filter(Boolean);
+        slug = getUniqueSlug(baseSlug, existingSlugs);
+      }
+
+      const gymData = { ...data, slug };
+
       if (selected) {
-        await updateDoc(doc(db, 'gyms', selected.id), { ...data, updatedAt: serverTimestamp() });
+        await updateDoc(doc(db, 'gyms', selected.id), { ...gymData, updatedAt: serverTimestamp() });
         success('Gimnasio actualizado');
       } else {
-        await addDoc(collection(db, 'gyms'), { ...data, isActive: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+        await addDoc(collection(db, 'gyms'), { ...gymData, isActive: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
         success('Gimnasio creado');
       }
       setShowModal(false);
@@ -150,6 +165,7 @@ const Gyms = () => {
                 </Dropdown>
               </div>
               {gym.address && <p className="text-sm text-gray-400 flex items-center gap-1 mb-2"><MapPin size={14} />{gym.address}</p>}
+              {gym.slug && <p className="text-xs text-gray-500 mb-2 font-mono">/{gym.slug}</p>}
               <div className="flex items-center gap-2 text-sm text-gray-400">
                 <Users size={14} />
                 <span>{adminCounts[gym.id] || 0} administradores</span>
