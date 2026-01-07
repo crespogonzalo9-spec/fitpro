@@ -240,3 +240,4 @@ export const StatCard = ({ icon: Icon, label, value, color = 'emerald' }) => {
 export { default as GymRequired } from './GymRequired';
 export { default as SuspendedGymScreen } from './SuspendedGymScreen';
 export { default as ChangelogModal } from './ChangelogModal';
+export { default as GymRouteHandler } from './GymRouteHandler';
