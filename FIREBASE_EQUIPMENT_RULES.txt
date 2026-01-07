@@ -1,0 +1,23 @@
+// Agregar estas reglas en Firebase Console -> Firestore Database -> Rules
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Regla para la colección equipment
+    match /equipment/{equipmentId} {
+      // Permitir lectura a usuarios autenticados del mismo gimnasio
+      allow read: if request.auth != null;
+      
+      // Permitir escritura a usuarios autenticados
+      allow create: if request.auth != null && 
+                      request.resource.data.gymId is string &&
+                      request.resource.data.createdBy == request.auth.uid;
+      
+      allow update, delete: if request.auth != null;
+    }
+    
+    // IMPORTANTE: No borres las reglas existentes para otras colecciones
+    // Solo agrega la regla de equipment arriba
+  }
+}
