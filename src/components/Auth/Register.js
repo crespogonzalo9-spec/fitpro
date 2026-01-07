@@ -45,9 +45,10 @@ const Register = ({ onToggle }) => {
     loadGyms();
   }, []);
 
-  // Verificar invitación cuando hay código
+  // Verificar invitación cuando hay código Y cuando los gimnasios están cargados
   useEffect(() => {
     if (!inviteCode) return;
+    if (loadingGyms) return; // Esperar a que se carguen los gimnasios
 
     const checkInvite = async () => {
       setInviteError('');
@@ -111,7 +112,7 @@ const Register = ({ onToggle }) => {
     };
 
     checkInvite();
-  }, [inviteCode]);
+  }, [inviteCode, loadingGyms, gyms]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
