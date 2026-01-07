@@ -1,9 +1,22 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.5';
+export const CURRENT_VERSION = '1.0.6';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.6',
+    date: '2026-01-06',
+    title: 'Reorganización experta de equipamiento',
+    changes: [
+      'Reorganización completa del equipamiento por experto en gimnasios',
+      'Ampliado a 200+ items de equipamiento predeterminado',
+      'Nuevas categorías: Racks/Estructuras y Bancos/Plataformas',
+      'Categorías renombradas para mayor claridad profesional',
+      'Equipamiento organizado por disciplinas: Olímpico, PowerLifting, CrossFit, Calistenia',
+      'Añadido equipamiento especializado: GHD, Reverse Hyper, Atlas Stones, Yoke'
+    ]
+  },
   {
     version: '1.0.5',
     date: '2026-01-06',
