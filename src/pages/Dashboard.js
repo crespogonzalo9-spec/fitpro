@@ -516,6 +516,13 @@ const Dashboard = () => {
           </Card>
         ) : null}
       </div>
+
+      {/* Footer */}
+      <div className="pt-8 pb-4 text-center">
+        <p className="text-sm text-gray-500">
+          by <span className="text-gray-400 font-medium">Gonzalo Crespo</span>
+        </p>
+      </div>
     </div>
   );
 };
