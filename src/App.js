@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { GymProvider, useGym } from './contexts/GymContext';
 import { ToastProvider } from './contexts/ToastContext';
@@ -38,6 +38,7 @@ import GymInfo from './pages/GymInfo';
 import Profile from './pages/Profile';
 import MemberProgress from './pages/MemberProgress';
 import SelectGym from './pages/SelectGym';
+import GymLanding from './pages/GymLanding';
 
 const LoadingSpinner = () => (
   <div className="min-h-screen flex items-center justify-center bg-slate-900">
@@ -111,6 +112,22 @@ const RootRedirect = () => {
   return <Navigate to="/login" replace />;
 };
 
+// Componente para mostrar landing page o redirigir según autenticación
+const GymLandingOrRedirect = () => {
+  const { user, loading } = useAuth();
+  const { gymSlug } = useParams();
+
+  if (loading) return <LoadingSpinner />;
+
+  // Si el usuario está autenticado, redirigir al dashboard del gimnasio
+  if (user) {
+    return <Navigate to={`/${gymSlug}/dashboard`} replace />;
+  }
+
+  // Si no está autenticado, mostrar la landing page
+  return <GymLanding />;
+};
+
 const ComingSoon = ({ title }) => (
   <div className="flex flex-col items-center justify-center py-20">
     <h2 className="text-2xl font-bold mb-2">{title}</h2>
@@ -132,43 +149,47 @@ function AppRoutes() {
       <Route path="/select-gym" element={<ProtectedRoute><SelectGym /></ProtectedRoute>} />
 
       {/* Rutas especiales para Sysadmin - sin gymSlug (vista global) */}
-      <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-        <Route path="gyms" element={<ProtectedRoute allowedRoles={['sysadmin']}><Gyms /></ProtectedRoute>} />
-        <Route path="users" element={<ProtectedRoute allowedRoles={['sysadmin']}><UsersPage /></ProtectedRoute>} />
-        <Route path="dashboard" element={<Dashboard />} /> {/* Vista global para sysadmin */}
-      </Route>
+      <Route path="/gyms" element={<ProtectedRoute allowedRoles={['sysadmin']}><Layout><Gyms /></Layout></ProtectedRoute>} />
+      <Route path="/users" element={<ProtectedRoute allowedRoles={['sysadmin']}><Layout><UsersPage /></Layout></ProtectedRoute>} />
+      <Route path="/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} /> {/* Vista global para sysadmin */}
 
-      {/* Rutas con gymSlug - todas las rutas específicas de gimnasio */}
-      <Route path="/:gymSlug" element={<ProtectedRoute><GymRouteHandler><Layout /></GymRouteHandler></ProtectedRoute>}>
-        <Route path="dashboard" element={<Dashboard />} />
+      {/* Rutas con gymSlug */}
+      <Route path="/:gymSlug">
+        {/* Landing page pública (ruta index) */}
+        <Route index element={<GymLandingOrRedirect />} />
 
-        {/* Admin only */}
-        <Route path="profesores" element={<ProtectedRoute allowedRoles={['admin', 'sysadmin']}><Profesores /></ProtectedRoute>} />
-        <Route path="invites" element={<ProtectedRoute allowedRoles={['admin', 'sysadmin']}><Invites /></ProtectedRoute>} />
+        {/* Rutas específicas de gimnasio (requieren autenticación) */}
+        <Route element={<ProtectedRoute><GymRouteHandler><Layout /></GymRouteHandler></ProtectedRoute>}>
+          <Route path="dashboard" element={<Dashboard />} />
 
-        {/* Admin & Profesor */}
-        <Route path="members" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Members /></ProtectedRoute>} />
-        <Route path="classes" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Classes /></ProtectedRoute>} />
-        <Route path="exercises" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Exercises /></ProtectedRoute>} />
-        <Route path="routines" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Routines /></ProtectedRoute>} />
-        <Route path="prs" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><PRs /></ProtectedRoute>} />
-        <Route path="rankings" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Rankings /></ProtectedRoute>} />
+          {/* Admin only */}
+          <Route path="profesores" element={<ProtectedRoute allowedRoles={['admin', 'sysadmin']}><Profesores /></ProtectedRoute>} />
+          <Route path="invites" element={<ProtectedRoute allowedRoles={['admin', 'sysadmin']}><Invites /></ProtectedRoute>} />
 
-        {/* Todos los usuarios autenticados */}
-        <Route path="wods" element={<ProtectedRoute><WODs /></ProtectedRoute>} />
-        <Route path="calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
-        <Route path="news" element={<ProtectedRoute><News /></ProtectedRoute>} />
+          {/* Admin & Profesor */}
+          <Route path="members" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Members /></ProtectedRoute>} />
+          <Route path="classes" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Classes /></ProtectedRoute>} />
+          <Route path="exercises" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Exercises /></ProtectedRoute>} />
+          <Route path="routines" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Routines /></ProtectedRoute>} />
+          <Route path="prs" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><PRs /></ProtectedRoute>} />
+          <Route path="rankings" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Rankings /></ProtectedRoute>} />
 
-        {/* Alumno */}
-        <Route path="schedule" element={<Schedule />} />
-        <Route path="my-classes" element={<MyClasses />} />
-        <Route path="my-routines" element={<Routines />} />
-        <Route path="my-prs" element={<PRs />} />
+          {/* Todos los usuarios autenticados */}
+          <Route path="wods" element={<ProtectedRoute><WODs /></ProtectedRoute>} />
+          <Route path="calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
+          <Route path="news" element={<ProtectedRoute><News /></ProtectedRoute>} />
 
-        {/* Common */}
-        <Route path="profile" element={<Profile />} />
-        <Route path="gym-info" element={<GymInfo />} />
-        <Route path="settings" element={<Settings />} />
+          {/* Alumno */}
+          <Route path="schedule" element={<Schedule />} />
+          <Route path="my-classes" element={<MyClasses />} />
+          <Route path="my-routines" element={<Routines />} />
+          <Route path="my-prs" element={<PRs />} />
+
+          {/* Common */}
+          <Route path="profile" element={<Profile />} />
+          <Route path="gym-info" element={<GymInfo />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
       </Route>
 
       <Route path="*" element={<Navigate to="/select-gym" replace />} />
