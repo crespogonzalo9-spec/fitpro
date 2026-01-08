@@ -1,3 +1,27 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /api/
+
+# Sitemaps
+Sitemap: https://fitpro-drab.vercel.app/sitemap.xml
+
+# Crawl delay (opcional, en segundos)
+Crawl-delay: 1
+
+# Agentes específicos
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /icons/
+
+User-agent: Bingbot
+Allow: /
+
+# Prevenir bots excesivos
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10

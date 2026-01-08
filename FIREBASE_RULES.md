@@ -43,19 +43,27 @@ service cloud.firestore {
     
     // Función helper para verificar si es admin/sysadmin
     function isAdmin() {
-      return request.auth != null && 
+      return request.auth != null &&
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles.hasAny(['admin', 'sysadmin']);
     }
-    
+
     function isSysadmin() {
-      return request.auth != null && 
+      return request.auth != null &&
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles.hasAny(['sysadmin']);
     }
-    
-    // Gimnasios: lectura pública, escritura solo sysadmin
+
+    function isGymAdmin(gymId) {
+      let userData = get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+      return request.auth != null &&
+        userData.gymId == gymId &&
+        userData.roles.hasAny(['admin', 'sysadmin']);
+    }
+
+    // Gimnasios: lectura pública, creación/eliminación solo sysadmin, edición por admin del gimnasio o sysadmin
     match /gyms/{gymId} {
       allow read: if true;
-      allow create, update, delete: if isSysadmin();
+      allow create, delete: if isSysadmin();
+      allow update: if isGymAdmin(gymId);
     }
     
     // Invitaciones: lectura pública (para verificar código), escritura solo admin
@@ -113,6 +121,16 @@ service cloud.firestore {
     }
     
     match /schedules/{docId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    match /equipment/{docId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    match /equipment_categories/{docId} {
       allow read: if request.auth != null;
       allow write: if isAdmin();
     }

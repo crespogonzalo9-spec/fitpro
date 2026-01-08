@@ -1,9 +1,38 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.6';
+export const CURRENT_VERSION = '1.0.8';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.8',
+    date: '2026-01-07',
+    title: 'Correcciones importantes y mejoras de SEO',
+    changes: [
+      'Arreglado contador de administradores en página de gimnasios',
+      'Actualizado permisos Firebase para admins editar su gimnasio',
+      'Agregados metadatos Open Graph y Twitter Cards',
+      'Implementado Schema.org para mejor indexación en Google',
+      'Actualizado robots.txt con configuración optimizada',
+      'Creado sitemap.xml para bots de búsqueda',
+      'Mejoradas descripciones SEO para IAs y motores de búsqueda',
+      'Agregadas reglas Firebase para equipment y equipment_categories'
+    ]
+  },
+  {
+    version: '1.0.7',
+    date: '2026-01-06',
+    title: 'Sistema de categorías personalizables',
+    changes: [
+      'Nuevo gestor de categorías de equipamiento con creación personalizada',
+      'Selector de emoji personalizable para cada categoría',
+      'Selector de color con 12 opciones de paleta',
+      'Botón "Gestionar Categorías" en el gestor de equipamiento',
+      'Las categorías predeterminadas no se pueden editar ni eliminar',
+      'Las categorías personalizadas se guardan por gimnasio en Firebase',
+      'Integración completa con filtros de equipamiento en ejercicios'
+    ]
+  },
   {
     version: '1.0.6',
     date: '2026-01-06',
