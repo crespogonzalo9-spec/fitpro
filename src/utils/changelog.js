@@ -1,9 +1,20 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.12';
+export const CURRENT_VERSION = '1.0.13';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.13',
+    date: '2026-01-07',
+    title: 'Fix crítico: Orden de rutas para registro con slug',
+    changes: [
+      'Arreglado routing: /:gymSlug/register ahora funciona correctamente',
+      'Las rutas de auth con slug ahora tienen prioridad sobre rutas protegidas',
+      'Links de invitación ahora redirigen correctamente a la página de registro',
+      'Fix: React Router ya no confunde /pantera-cf/register con ruta protegida'
+    ]
+  },
   {
     version: '1.0.12',
     date: '2026-01-07',

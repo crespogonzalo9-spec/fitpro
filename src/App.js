@@ -113,11 +113,9 @@ function AppRoutes() {
       {/* Ruta raíz - detecta invitaciones */}
       <Route path="/" element={<RootRedirect />} />
 
-      {/* Auth routes - soportan slug opcional */}
+      {/* Auth routes sin slug - DEBEN IR ANTES que las rutas protegidas */}
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-      <Route path="/:gymSlug/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-      <Route path="/:gymSlug/register" element={<PublicRoute><Register /></PublicRoute>} />
 
       {/* Protected routes sin slug */}
       <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
@@ -143,6 +141,10 @@ function AppRoutes() {
         <Route path="gym-info" element={<GymInfo />} />
         <Route path="settings" element={<Settings />} />
       </Route>
+
+      {/* Auth routes CON slug - DEBEN IR ANTES que las rutas protegidas con slug */}
+      <Route path="/:gymSlug/login" element={<PublicRoute><Login /></PublicRoute>} />
+      <Route path="/:gymSlug/register" element={<PublicRoute><Register /></PublicRoute>} />
 
       {/* Protected routes CON slug opcional */}
       <Route path="/:gymSlug" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
