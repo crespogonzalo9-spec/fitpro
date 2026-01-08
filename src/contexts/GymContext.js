@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { db } from '../firebase';
-import { doc, collection, onSnapshot } from 'firebase/firestore';
+import { doc, collection, onSnapshot, updateDoc } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
 
 const GymContext = createContext();
@@ -10,6 +10,18 @@ export const useGym = () => useContext(GymContext);
 
 // Constante para "todos los gimnasios"
 export const ALL_GYMS_ID = '__ALL_GYMS__';
+
+// Helper para generar slug (mismo que en Gyms.js)
+const generateSlug = (name) => {
+  if (!name) return null;
+  return name
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special chars
+    .trim()
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-'); // Remove multiple hyphens
+};
 
 export const GymProvider = ({ children }) => {
   const { userData, isSysadmin } = useAuth();
@@ -31,8 +43,34 @@ export const GymProvider = ({ children }) => {
 
     // Sysadmin puede ver todos los gimnasios
     if (isSysadmin && isSysadmin()) {
-      const unsubscribe = onSnapshot(collection(db, 'gyms'), (snapshot) => {
+      const unsubscribe = onSnapshot(collection(db, 'gyms'), async (snapshot) => {
         const gymList = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        // MIGRACIÓN: Auto-generar slugs para gyms que no tienen
+        const migrationsNeeded = [];
+        gymList.forEach(gym => {
+          if (!gym.slug && gym.name) {
+            const slug = generateSlug(gym.name);
+            if (slug) {
+              migrationsNeeded.push({ id: gym.id, slug });
+              gym.slug = slug; // Actualizar en memoria
+            }
+          }
+        });
+
+        // Ejecutar migraciones en segundo plano
+        if (migrationsNeeded.length > 0) {
+          console.log(`[GymContext] Migrando ${migrationsNeeded.length} gimnasios sin slug`);
+          migrationsNeeded.forEach(async ({ id, slug }) => {
+            try {
+              await updateDoc(doc(db, 'gyms', id), { slug });
+              console.log(`[GymContext] Slug generado para gym ${id}: ${slug}`);
+            } catch (err) {
+              console.error(`[GymContext] Error migrando gym ${id}:`, err);
+            }
+          });
+        }
+
         gymList.sort((a, b) => a.name?.localeCompare(b.name));
         setAvailableGyms(gymList);
         
@@ -61,9 +99,24 @@ export const GymProvider = ({ children }) => {
 
     // Otros usuarios ven solo su gimnasio asignado
     if (userData.gymId) {
-      const unsubscribe = onSnapshot(doc(db, 'gyms', userData.gymId), (docSnap) => {
+      const unsubscribe = onSnapshot(doc(db, 'gyms', userData.gymId), async (docSnap) => {
         if (docSnap.exists()) {
           const gym = { id: docSnap.id, ...docSnap.data() };
+
+          // MIGRACIÓN: Auto-generar slug si no existe
+          if (!gym.slug && gym.name) {
+            const slug = generateSlug(gym.name);
+            if (slug) {
+              try {
+                await updateDoc(doc(db, 'gyms', gym.id), { slug });
+                gym.slug = slug; // Actualizar en memoria
+                console.log(`[GymContext] Slug generado para gym ${gym.id}: ${slug}`);
+              } catch (err) {
+                console.error(`[GymContext] Error generando slug:`, err);
+              }
+            }
+          }
+
           setCurrentGymState(gym);
           setAvailableGyms([gym]);
         }

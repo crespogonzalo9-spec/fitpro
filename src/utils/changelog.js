@@ -1,9 +1,21 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.10';
+export const CURRENT_VERSION = '1.0.11';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.11',
+    date: '2026-01-07',
+    title: 'Fix crítico: Migración automática de slugs',
+    changes: [
+      'Login ahora navega correctamente con slug del gimnasio (/pantera-cf/dashboard)',
+      'Migración automática: slugs se generan para gimnasios existentes sin slug',
+      'Fix: GymContext detecta y crea slugs al cargar gimnasios',
+      'Logs de consola para tracking de migración de slugs',
+      'Sistema completamente funcional para multi-tenant con slugs'
+    ]
+  },
   {
     version: '1.0.10',
     date: '2026-01-07',
