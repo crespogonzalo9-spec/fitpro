@@ -19,7 +19,7 @@ const Header = ({ onMenuClick, title }) => {
           <button className="relative p-2 hover:bg-gray-800 rounded-lg">
             <Bell size={20} />
           </button>
-          <Avatar name={userData?.name} size="sm" />
+          <Avatar name={userData?.name} src={userData?.photoURL} size="sm" />
         </div>
       </div>
     </header>

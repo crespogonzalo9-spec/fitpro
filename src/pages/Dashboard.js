@@ -338,7 +338,7 @@ const Dashboard = () => {
         <Card>
           <h3 className="font-semibold mb-4">Tu cuenta</h3>
           <div className="flex items-center gap-4">
-            <Avatar name={userData?.name} size="lg" />
+            <Avatar name={userData?.name} src={userData?.photoURL} size="lg" />
             <div>
               <p className="font-medium">{userData?.name}</p>
               <p className="text-sm text-gray-400">{userData?.email}</p>
