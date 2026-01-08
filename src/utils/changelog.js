@@ -1,9 +1,20 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.11';
+export const CURRENT_VERSION = '1.0.12';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.12',
+    date: '2026-01-07',
+    title: 'Fix: Links de invitación apuntan a URL de producción',
+    changes: [
+      'Links de invitación ahora usan REACT_APP_BASE_URL del .env',
+      'Los links siempre apuntan al dominio de producción, no al de testing',
+      'Agregada variable REACT_APP_BASE_URL a .env.example',
+      'Fallback a window.location.origin si no está configurada la variable'
+    ]
+  },
   {
     version: '1.0.11',
     date: '2026-01-07',

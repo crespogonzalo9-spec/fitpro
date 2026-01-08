@@ -167,11 +167,14 @@ const InvitesContent = () => {
   };
 
   const copyLink = (invite) => {
-    const baseUrl = window.location.origin;
+    // Usar la URL base configurada en .env, o fallback a window.location.origin
+    const baseUrl = process.env.REACT_APP_BASE_URL || window.location.origin;
+
     // Si hay slug del gimnasio, incluirlo en el link
     const link = currentGymSlug
       ? `${baseUrl}/${currentGymSlug}/register?invite=${invite.code}`
       : `${baseUrl}/register?invite=${invite.code}`;
+
     navigator.clipboard.writeText(link);
     setCopiedId(invite.id);
     success('Link copiado al portapapeles');
