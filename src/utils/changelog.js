@@ -1,9 +1,24 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.9';
+export const CURRENT_VERSION = '1.0.10';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.10',
+    date: '2026-01-07',
+    title: 'Arquitectura multi-tenant híbrida con slugs',
+    changes: [
+      'Implementado sistema de slugs para gimnasios (ej: /pantera-cf/exercises)',
+      'Soporte híbrido: URLs funcionan con y sin slug (/exercises O /gym-slug/exercises)',
+      'Auto-generación de slugs al crear o editar gimnasios',
+      'Detección automática de gimnasio por slug en la URL',
+      'Links de invitación incluyen slug del gimnasio (ej: /gym-slug/register?invite=CODE)',
+      'Navegación del sidebar mantiene el slug en todas las URLs',
+      'Selector de gimnasios para sysadmin navega con slug automáticamente',
+      'Mejora SEO: cada gimnasio tiene URLs únicas e indexables'
+    ]
+  },
   {
     version: '1.0.9',
     date: '2026-01-07',

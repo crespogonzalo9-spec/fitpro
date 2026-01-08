@@ -112,48 +112,63 @@ function AppRoutes() {
     <Routes>
       {/* Ruta raíz - detecta invitaciones */}
       <Route path="/" element={<RootRedirect />} />
-      
-      {/* Auth routes */}
+
+      {/* Auth routes - soportan slug opcional */}
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+      <Route path="/:gymSlug/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-      
-      {/* Protected routes */}
+      <Route path="/:gymSlug/register" element={<PublicRoute><Register /></PublicRoute>} />
+
+      {/* Protected routes sin slug */}
       <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
         <Route path="dashboard" element={<Dashboard />} />
-        
-        {/* Sysadmin only */}
         <Route path="gyms" element={<ProtectedRoute allowedRoles={['sysadmin']}><Gyms /></ProtectedRoute>} />
         <Route path="users" element={<ProtectedRoute allowedRoles={['sysadmin']}><UsersPage /></ProtectedRoute>} />
-        
-        {/* Admin only */}
         <Route path="profesores" element={<ProtectedRoute allowedRoles={['admin', 'sysadmin']}><Profesores /></ProtectedRoute>} />
         <Route path="invites" element={<ProtectedRoute allowedRoles={['admin', 'sysadmin']}><Invites /></ProtectedRoute>} />
-        
-        {/* Admin & Profesor */}
         <Route path="members" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Members /></ProtectedRoute>} />
         <Route path="classes" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Classes /></ProtectedRoute>} />
         <Route path="exercises" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Exercises /></ProtectedRoute>} />
         <Route path="routines" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Routines /></ProtectedRoute>} />
         <Route path="prs" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><PRs /></ProtectedRoute>} />
         <Route path="rankings" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Rankings /></ProtectedRoute>} />
-
-        {/* Todos los usuarios autenticados */}
         <Route path="wods" element={<ProtectedRoute><WODs /></ProtectedRoute>} />
         <Route path="calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
         <Route path="news" element={<ProtectedRoute><News /></ProtectedRoute>} />
-        
-        {/* Alumno */}
         <Route path="schedule" element={<Schedule />} />
         <Route path="my-classes" element={<MyClasses />} />
         <Route path="my-routines" element={<Routines />} />
         <Route path="my-prs" element={<PRs />} />
-        
-        {/* Common */}
         <Route path="profile" element={<Profile />} />
         <Route path="gym-info" element={<GymInfo />} />
         <Route path="settings" element={<Settings />} />
       </Route>
-      
+
+      {/* Protected routes CON slug opcional */}
+      <Route path="/:gymSlug" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="gyms" element={<ProtectedRoute allowedRoles={['sysadmin']}><Gyms /></ProtectedRoute>} />
+        <Route path="users" element={<ProtectedRoute allowedRoles={['sysadmin']}><UsersPage /></ProtectedRoute>} />
+        <Route path="profesores" element={<ProtectedRoute allowedRoles={['admin', 'sysadmin']}><Profesores /></ProtectedRoute>} />
+        <Route path="invites" element={<ProtectedRoute allowedRoles={['admin', 'sysadmin']}><Invites /></ProtectedRoute>} />
+        <Route path="members" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Members /></ProtectedRoute>} />
+        <Route path="classes" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Classes /></ProtectedRoute>} />
+        <Route path="exercises" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Exercises /></ProtectedRoute>} />
+        <Route path="routines" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Routines /></ProtectedRoute>} />
+        <Route path="prs" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><PRs /></ProtectedRoute>} />
+        <Route path="rankings" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Rankings /></ProtectedRoute>} />
+        <Route path="wods" element={<ProtectedRoute><WODs /></ProtectedRoute>} />
+        <Route path="calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
+        <Route path="news" element={<ProtectedRoute><News /></ProtectedRoute>} />
+        <Route path="schedule" element={<Schedule />} />
+        <Route path="my-classes" element={<MyClasses />} />
+        <Route path="my-routines" element={<Routines />} />
+        <Route path="my-prs" element={<PRs />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path="gym-info" element={<GymInfo />} />
+        <Route path="settings" element={<Settings />} />
+      </Route>
+
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );

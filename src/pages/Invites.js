@@ -10,7 +10,7 @@ import { formatDate } from '../utils/helpers';
 
 const InvitesContent = () => {
   const { userData, canManageInvites, isSysadmin } = useAuth();
-  const { currentGym } = useGym();
+  const { currentGym, currentGymSlug } = useGym();
   const { success, error: showError } = useToast();
   
   const [invites, setInvites] = useState([]);
@@ -168,7 +168,10 @@ const InvitesContent = () => {
 
   const copyLink = (invite) => {
     const baseUrl = window.location.origin;
-    const link = `${baseUrl}/register?invite=${invite.code}`;
+    // Si hay slug del gimnasio, incluirlo en el link
+    const link = currentGymSlug
+      ? `${baseUrl}/${currentGymSlug}/register?invite=${invite.code}`
+      : `${baseUrl}/register?invite=${invite.code}`;
     navigator.clipboard.writeText(link);
     setCopiedId(invite.id);
     success('Link copiado al portapapeles');

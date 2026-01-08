@@ -38,13 +38,37 @@ const Gyms = () => {
 
   const filtered = gyms.filter(g => g.name?.toLowerCase().includes(search.toLowerCase()));
 
+  // Generar slug único desde el nombre
+  const generateSlug = (name) => {
+    return name
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
+      .replace(/[^a-z0-9\s-]/g, '') // Remove special chars
+      .trim()
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-'); // Remove multiple hyphens
+  };
+
   const handleSave = async (data) => {
     try {
       if (selected) {
-        await updateDoc(doc(db, 'gyms', selected.id), { ...data, updatedAt: serverTimestamp() });
+        // Al editar, solo actualizar slug si cambió el nombre
+        const updates = { ...data, updatedAt: serverTimestamp() };
+        if (data.name !== selected.name) {
+          updates.slug = generateSlug(data.name);
+        }
+        await updateDoc(doc(db, 'gyms', selected.id), updates);
         success('Gimnasio actualizado');
       } else {
-        await addDoc(collection(db, 'gyms'), { ...data, isActive: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+        // Al crear, generar slug automáticamente
+        const slug = generateSlug(data.name);
+        await addDoc(collection(db, 'gyms'), {
+          ...data,
+          slug,
+          isActive: true,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
         success('Gimnasio creado');
       }
       setShowModal(false);

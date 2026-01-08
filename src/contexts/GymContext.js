@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, collection, onSnapshot } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
@@ -12,10 +13,13 @@ export const ALL_GYMS_ID = '__ALL_GYMS__';
 
 export const GymProvider = ({ children }) => {
   const { userData, isSysadmin } = useAuth();
+  const { gymSlug } = useParams();
+  const location = useLocation();
   const [currentGym, setCurrentGymState] = useState(null);
   const [availableGyms, setAvailableGyms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [viewAllGyms, setViewAllGyms] = useState(false);
+  const [gymFromSlug, setGymFromSlug] = useState(null);
 
   useEffect(() => {
     if (!userData) {
@@ -74,6 +78,20 @@ export const GymProvider = ({ children }) => {
     }
   }, [userData, isSysadmin]);
 
+  // Detectar gym desde slug en URL (tiene prioridad sobre localStorage)
+  useEffect(() => {
+    if (!gymSlug || availableGyms.length === 0) return;
+
+    const gymBySlug = availableGyms.find(g => g.slug === gymSlug);
+    if (gymBySlug) {
+      setGymFromSlug(gymBySlug);
+      setCurrentGymState(gymBySlug);
+      setViewAllGyms(false);
+      // Guardar en localStorage para mantener selección
+      localStorage.setItem('fitpro-selected-gym', gymBySlug.id);
+    }
+  }, [gymSlug, availableGyms]);
+
   // Función para seleccionar gimnasio (solo sysadmin)
   const selectGym = (gymId) => {
     if (gymId === ALL_GYMS_ID) {
@@ -108,7 +126,9 @@ export const GymProvider = ({ children }) => {
     // Helper para saber si debe filtrar por gym
     shouldFilterByGym: !viewAllGyms && currentGym?.id,
     // ID del gym actual o null si es "todos"
-    currentGymId: viewAllGyms ? null : currentGym?.id
+    currentGymId: viewAllGyms ? null : currentGym?.id,
+    // Slug del gym actual para construir URLs
+    currentGymSlug: currentGym?.slug || null
   };
 
   return (

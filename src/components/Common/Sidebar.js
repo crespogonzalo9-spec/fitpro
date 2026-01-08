@@ -21,7 +21,7 @@ const iconMap = {
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
   const { userData, logout, isSysadmin } = useAuth();
-  const { currentGym, availableGyms, selectGym, viewAllGyms } = useGym();
+  const { currentGym, availableGyms, selectGym, viewAllGyms, currentGymSlug } = useGym();
   const { gymLogo } = useTheme();
   const navigate = useNavigate();
   const [showGymSelector, setShowGymSelector] = useState(false);
@@ -54,6 +54,32 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const getSelectorLabel = () => {
     if (viewAllGyms) return '🌐 Todos los gimnasios';
     return currentGym?.name || 'Seleccionar gimnasio';
+  };
+
+  // Helper para construir URLs con slug si existe
+  const buildUrl = (path) => {
+    // Si hay slug y no estamos viendo todos los gimnasios, incluir slug
+    if (currentGymSlug && !viewAllGyms) {
+      return `/${currentGymSlug}${path}`;
+    }
+    return path;
+  };
+
+  // Handler para cambiar de gimnasio y navegar con slug
+  const handleGymSelect = (gymId) => {
+    selectGym(gymId);
+    setShowGymSelector(false);
+
+    // Si seleccionó un gimnasio específico, navegar con su slug
+    if (gymId !== ALL_GYMS_ID) {
+      const selectedGym = availableGyms.find(g => g.id === gymId);
+      if (selectedGym?.slug) {
+        navigate(`/${selectedGym.slug}/dashboard`);
+      }
+    } else {
+      // Si seleccionó "todos", navegar sin slug
+      navigate('/dashboard');
+    }
   };
 
   return (
@@ -107,7 +133,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   <div className="absolute top-full left-0 right-0 mt-1 bg-gray-800 rounded-xl shadow-lg border border-gray-700 max-h-64 overflow-y-auto z-50">
                     {/* Opción "Todos los gimnasios" */}
                     <button
-                      onClick={() => { selectGym(ALL_GYMS_ID); setShowGymSelector(false); }}
+                      onClick={() => handleGymSelect(ALL_GYMS_ID)}
                       className={`w-full text-left px-3 py-2 hover:bg-gray-700 text-sm flex items-center gap-2 border-b border-gray-700 ${
                         viewAllGyms ? 'text-blue-400 bg-blue-500/10' : ''
                       }`}
@@ -115,12 +141,12 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                       <Globe size={14} />
                       <span>Todos los gimnasios</span>
                     </button>
-                    
+
                     {/* Lista de gimnasios */}
                     {availableGyms.map(gym => (
                       <button
                         key={gym.id}
-                        onClick={() => { selectGym(gym.id); setShowGymSelector(false); }}
+                        onClick={() => handleGymSelect(gym.id)}
                         className={`w-full text-left px-3 py-2 hover:bg-gray-700 text-sm ${
                           !viewAllGyms && currentGym?.id === gym.id ? 'text-primary bg-primary/10' : ''
                         }`}
@@ -149,12 +175,12 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               return (
                 <NavLink
                   key={route.path}
-                  to={route.path}
+                  to={buildUrl(route.path)}
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
-                      isActive 
-                        ? 'nav-link-active font-medium' 
+                      isActive
+                        ? 'nav-link-active font-medium'
                         : 'text-gray-400 hover:text-white hover:bg-gray-800'
                     }`
                   }
