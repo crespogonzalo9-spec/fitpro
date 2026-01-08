@@ -26,7 +26,7 @@ const Gyms = () => {
       // Contar admins por gimnasio
       const counts = {};
       for (const gym of gymList) {
-        const usersQuery = query(collection(db, 'users'), where('gymId', '==', gym.id), where('role', '==', 'admin'));
+        const usersQuery = query(collection(db, 'users'), where('gymId', '==', gym.id), where('roles', 'array-contains', 'admin'));
         const usersSnap = await getDocs(usersQuery);
         counts[gym.id] = usersSnap.size;
       }
