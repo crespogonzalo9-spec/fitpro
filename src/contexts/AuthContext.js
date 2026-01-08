@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       const userDoc = await getDoc(doc(db, 'users', result.user.uid));
-      
+
       if (userDoc.exists()) {
         const data = userDoc.data();
         let roles = data.roles || [];
@@ -66,15 +66,15 @@ export const AuthProvider = ({ children }) => {
         setUserData({ id: userDoc.id, ...data, roles });
       } else {
         // Usuario en Auth pero no en Firestore - necesita re-registro
-        setUserData({ 
-          id: result.user.uid, 
+        setUserData({
+          id: result.user.uid,
           email: result.user.email,
           roles: ['alumno'],
           gymId: null,
           needsReregistration: true
         });
       }
-      return { success: true };
+      return { success: true, user: result.user };
     } catch (error) {
       let message = 'Error al iniciar sesión';
       if (error.code === 'auth/user-not-found') message = 'Usuario no encontrado';

@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Dumbbell, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
+import { db } from '../../firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,16 +18,34 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) return showError('Completá todos los campos');
-    
+
     setLoading(true);
     const result = await login(email, password);
-    setLoading(false);
 
     if (result.success) {
+      // Obtener el userData para saber el gymId
+      const userDoc = await getDoc(doc(db, 'users', result.user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+
+        // Si tiene gimnasio, obtener el slug y navegar con él
+        if (userData.gymId) {
+          const gymDoc = await getDoc(doc(db, 'gyms', userData.gymId));
+          if (gymDoc.exists() && gymDoc.data().slug) {
+            navigate(`/${gymDoc.data().slug}/dashboard`);
+            setLoading(false);
+            return;
+          }
+        }
+      }
+
+      // Fallback: navegar sin slug (para sysadmins o usuarios sin gym)
       navigate('/dashboard');
     } else {
       showError(result.error);
     }
+
+    setLoading(false);
   };
 
   return (
