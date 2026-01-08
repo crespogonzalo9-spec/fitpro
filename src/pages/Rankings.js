@@ -106,14 +106,12 @@ const RankingsContent = () => {
     }
   };
 
-  const openEdit = (e, ranking) => {
-    e.stopPropagation();
+  const openEdit = (ranking) => {
     setSelected(ranking);
     setShowModal(true);
   };
 
-  const openDelete = (e, ranking) => {
-    e.stopPropagation();
+  const openDelete = (ranking) => {
     setSelected(ranking);
     setShowDelete(true);
   };
@@ -258,20 +256,20 @@ const RankingsContent = () => {
                   </div>
                 </div>
                 {canEdit && (
-                  <Dropdown 
+                  <Dropdown
                     trigger={
-                      <button 
-                        onClick={e => e.stopPropagation()} 
+                      <button
+                        onClick={e => e.stopPropagation()}
                         className="p-2 hover:bg-gray-700 rounded-lg"
                       >
                         <MoreVertical size={18} />
                       </button>
                     }
                   >
-                    <DropdownItem icon={Edit} onClick={(e) => openEdit(e, ranking)}>
+                    <DropdownItem icon={Edit} onClick={() => openEdit(ranking)}>
                       Editar
                     </DropdownItem>
-                    <DropdownItem icon={Trash2} danger onClick={(e) => openDelete(e, ranking)}>
+                    <DropdownItem icon={Trash2} danger onClick={() => openDelete(ranking)}>
                       Eliminar
                     </DropdownItem>
                   </Dropdown>
