@@ -1,9 +1,19 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.8';
+export const CURRENT_VERSION = '1.0.9';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.9',
+    date: '2026-01-07',
+    title: 'Corrección crítica en links de invitación',
+    changes: [
+      'Arreglado link de invitación que ahora lleva a /register directamente',
+      'Los links ahora son: /register?invite=CODIGO en lugar de /?invite=CODIGO',
+      'Los usuarios son dirigidos automáticamente a la página de registro'
+    ]
+  },
   {
     version: '1.0.8',
     date: '2026-01-07',
