@@ -168,7 +168,7 @@ const InvitesContent = () => {
 
   const copyLink = (invite) => {
     const baseUrl = window.location.origin;
-    const link = `${baseUrl}?invite=${invite.code}`;
+    const link = `${baseUrl}/register?invite=${invite.code}`;
     navigator.clipboard.writeText(link);
     setCopiedId(invite.id);
     success('Link copiado al portapapeles');
