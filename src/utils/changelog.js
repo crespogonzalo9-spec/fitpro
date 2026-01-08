@@ -1,9 +1,23 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.13';
+export const CURRENT_VERSION = '1.0.14';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.14',
+    date: '2026-01-07',
+    title: 'Release final: Sistema multi-tenant con slugs completamente funcional',
+    changes: [
+      'IMPORTANTE: Configurar REACT_APP_BASE_URL en Vercel Environment Variables',
+      'IMPORTANTE: Actualizar Firebase Rules para permitir lectura pública de gyms e invites',
+      'Sistema multi-tenant híbrido: /exercises Y /gym-slug/exercises funcionan',
+      'Links de invitación generan URLs correctas con slug del gimnasio',
+      'Login navega automáticamente con slug del usuario',
+      'Migración automática de slugs para gimnasios existentes',
+      'Firebase rules actualizadas para registro sin autenticación'
+    ]
+  },
   {
     version: '1.0.13',
     date: '2026-01-07',
