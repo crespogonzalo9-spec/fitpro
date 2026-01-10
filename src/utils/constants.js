@@ -110,7 +110,6 @@ export const NAV_ROUTES = {
     { path: '/prs', name: 'Marcas Personales', icon: 'CheckCircle' },
     { path: '/invites', name: 'Invitaciones', icon: 'Link' },
     { path: '/gym-info', name: 'Info Gimnasio', icon: 'Building2' },
-    { path: '/profile', name: 'Mi Perfil', icon: 'User' },
     { path: '/settings', name: 'Configuración', icon: 'Settings' }
   ],
   admin: [
@@ -127,7 +126,6 @@ export const NAV_ROUTES = {
     { path: '/prs', name: 'Marcas Personales', icon: 'CheckCircle' },
     { path: '/invites', name: 'Invitaciones', icon: 'Link' },
     { path: '/gym-info', name: 'Info Gimnasio', icon: 'Building2' },
-    { path: '/profile', name: 'Mi Perfil', icon: 'User' },
     { path: '/settings', name: 'Configuración', icon: 'Settings' }
   ],
   profesor: [
@@ -141,8 +139,7 @@ export const NAV_ROUTES = {
     { path: '/news', name: 'Novedades', icon: 'Megaphone' },
     { path: '/prs', name: 'Validar PRs', icon: 'CheckCircle' },
     { path: '/rankings', name: 'Rankings', icon: 'Trophy' },
-    { path: '/gym-info', name: 'Info Gimnasio', icon: 'Building2' },
-    { path: '/profile', name: 'Mi Perfil', icon: 'User' }
+    { path: '/gym-info', name: 'Info Gimnasio', icon: 'Building2' }
   ],
   alumno: [
     { path: '/dashboard', name: 'Dashboard', icon: 'LayoutDashboard' },
@@ -155,8 +152,7 @@ export const NAV_ROUTES = {
     { path: '/news', name: 'Novedades', icon: 'Megaphone' },
     { path: '/my-prs', name: 'Mis PRs', icon: 'TrendingUp' },
     { path: '/rankings', name: 'Rankings', icon: 'Trophy' },
-    { path: '/gym-info', name: 'Info Gimnasio', icon: 'Building2' },
-    { path: '/profile', name: 'Mi Perfil', icon: 'User' }
+    { path: '/gym-info', name: 'Info Gimnasio', icon: 'Building2' }
   ]
 };
 

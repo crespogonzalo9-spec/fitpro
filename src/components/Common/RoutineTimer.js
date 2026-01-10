@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, SkipForward, X, Check, Timer, Coffee, Dumbbell } from 'lucide-react';
+import { Play, Pause, SkipForward, X, Check, Timer, Coffee, Dumbbell, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Button, Modal, Card } from './index';
 
 const RoutineTimer = ({ routine, exercises, onClose, onComplete }) => {
@@ -10,15 +10,35 @@ const RoutineTimer = ({ routine, exercises, onClose, onComplete }) => {
   const [restTime, setRestTime] = useState(0); // Tiempo restante de descanso
   const [exerciseTimes, setExerciseTimes] = useState([]); // Tiempos de cada ejercicio
   const [sessionStartTime, setSessionStartTime] = useState(null);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [completedSets, setCompletedSets] = useState([]); // Array de sets completados por ejercicio
+  const [isPausedSession, setIsPausedSession] = useState(false); // Nueva: sesión pausada
+  const [pausedData, setPausedData] = useState(null); // Datos de sesión pausada
 
   const timerRef = useRef(null);
   const currentExercise = routine.exercises[currentExerciseIndex];
   const exerciseData = exercises.find(e => e.id === currentExercise?.exerciseId);
 
-  // Inicializar array de tiempos
+  // Verificar si el ejercicio actual es de tiempo
+  const isTimeBasedExercise = exerciseData?.measureType === 'time';
+  const exerciseDurationInSeconds = isTimeBasedExercise ? parseInt(currentExercise.reps) * 60 : 0;
+
+  // Inicializar array de tiempos y sets completados
   useEffect(() => {
     setExerciseTimes(routine.exercises.map(() => 0));
+    setCompletedSets(routine.exercises.map((ex) => ({
+      total: parseInt(ex.sets) || 1,
+      completed: []
+    })));
     setSessionStartTime(new Date());
+
+    // Cargar sesión pausada si existe
+    const savedSession = localStorage.getItem(`paused_routine_${routine.id}`);
+    if (savedSession) {
+      const parsed = JSON.parse(savedSession);
+      setPausedData(parsed);
+      setIsPausedSession(true);
+    }
   }, [routine]);
 
   // Timer principal
@@ -39,13 +59,25 @@ const RoutineTimer = ({ routine, exercises, onClose, onComplete }) => {
           return prev - 1;
         });
       } else {
-        // Incrementar tiempo del ejercicio
-        setExerciseTime(prev => prev + 1);
+        // Para ejercicios de tiempo: cuenta regresiva
+        if (isTimeBasedExercise && exerciseDurationInSeconds > 0) {
+          setExerciseTime(prev => {
+            if (prev >= exerciseDurationInSeconds) {
+              // Tiempo cumplido, completar automáticamente
+              handleCompleteExercise();
+              return exerciseDurationInSeconds;
+            }
+            return prev + 1;
+          });
+        } else {
+          // Para ejercicios de reps: cuenta progresiva
+          setExerciseTime(prev => prev + 1);
+        }
       }
     }, 1000);
 
     return () => clearInterval(timerRef.current);
-  }, [isPaused, isResting]);
+  }, [isPaused, isResting, isTimeBasedExercise, exerciseDurationInSeconds]);
 
   const handleStart = () => {
     setIsPaused(false);
@@ -53,6 +85,21 @@ const RoutineTimer = ({ routine, exercises, onClose, onComplete }) => {
 
   const handlePause = () => {
     setIsPaused(true);
+  };
+
+  const handleToggleSet = (setNumber) => {
+    const newCompletedSets = [...completedSets];
+    const currentSets = newCompletedSets[currentExerciseIndex];
+
+    if (currentSets.completed.includes(setNumber)) {
+      // Desmarcar
+      currentSets.completed = currentSets.completed.filter(s => s !== setNumber);
+    } else {
+      // Marcar como completado
+      currentSets.completed = [...currentSets.completed, setNumber].sort();
+    }
+
+    setCompletedSets(newCompletedSets);
   };
 
   const handleCompleteExercise = () => {
@@ -71,6 +118,7 @@ const RoutineTimer = ({ routine, exercises, onClose, onComplete }) => {
     if (routine.hasRestBetweenExercises && currentExercise.restDuration > 0) {
       setIsResting(true);
       setRestTime(parseInt(currentExercise.restDuration) || 60);
+      setIsPaused(false); // Auto-iniciar descanso
     } else {
       // Si no hay descanso, pasar directamente al siguiente
       setCurrentExerciseIndex(idx => idx + 1);
@@ -83,6 +131,7 @@ const RoutineTimer = ({ routine, exercises, onClose, onComplete }) => {
     setRestTime(0);
     setExerciseTime(0);
     setCurrentExerciseIndex(idx => idx + 1);
+    setIsPaused(true); // Pausar al llegar al siguiente ejercicio
   };
 
   const handleCompleteRoutine = (times) => {
@@ -93,15 +142,71 @@ const RoutineTimer = ({ routine, exercises, onClose, onComplete }) => {
       exerciseTimes: routine.exercises.map((ex, idx) => ({
         exerciseId: ex.exerciseId,
         exerciseName: exercises.find(e => e.id === ex.exerciseId)?.name || 'Ejercicio',
-        timeInSeconds: times[idx] || 0
+        timeInSeconds: times[idx] || 0,
+        completedSets: completedSets[idx]?.completed || []
       })),
       totalTimeInSeconds: totalTime,
       completedAt: new Date(),
       sessionStartTime
     };
 
+    // Limpiar sesión pausada
+    localStorage.removeItem(`paused_routine_${routine.id}`);
+
     onComplete(sessionData);
     onClose();
+  };
+
+  const handlePauseSession = () => {
+    // Guardar estado actual en localStorage
+    const sessionData = {
+      currentExerciseIndex,
+      exerciseTime,
+      exerciseTimes,
+      completedSets,
+      sessionStartTime,
+      pausedAt: new Date().toISOString()
+    };
+
+    localStorage.setItem(`paused_routine_${routine.id}`, JSON.stringify(sessionData));
+    onClose();
+  };
+
+  const handleResumeSession = () => {
+    if (!pausedData) return;
+
+    setCurrentExerciseIndex(pausedData.currentExerciseIndex);
+    setExerciseTime(pausedData.exerciseTime);
+    setExerciseTimes(pausedData.exerciseTimes);
+    setCompletedSets(pausedData.completedSets);
+    setSessionStartTime(new Date(pausedData.sessionStartTime));
+    setIsPausedSession(false);
+    setPausedData(null);
+  };
+
+  const handleDiscardSession = () => {
+    localStorage.removeItem(`paused_routine_${routine.id}`);
+    setIsPausedSession(false);
+    setPausedData(null);
+  };
+
+  const handleExitClick = () => {
+    // Si hay progreso, mostrar confirmación
+    if (currentExerciseIndex > 0 || exerciseTime > 0) {
+      setShowExitConfirm(true);
+    } else {
+      onClose();
+    }
+  };
+
+  const handleExitConfirm = (shouldPause) => {
+    setShowExitConfirm(false);
+    if (shouldPause) {
+      handlePauseSession();
+    } else {
+      localStorage.removeItem(`paused_routine_${routine.id}`);
+      onClose();
+    }
   };
 
   const formatTime = (seconds) => {
@@ -110,10 +215,75 @@ const RoutineTimer = ({ routine, exercises, onClose, onComplete }) => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const formatTimeRemaining = (seconds) => {
+    const remaining = exerciseDurationInSeconds - seconds;
+    const mins = Math.floor(remaining / 60);
+    const secs = remaining % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
   const progress = ((currentExerciseIndex + 1) / routine.exercises.length) * 100;
 
+  // Modal de sesión pausada
+  if (isPausedSession && pausedData) {
+    return (
+      <Modal isOpen={true} onClose={() => handleDiscardSession()} title="Rutina Pausada" size="md">
+        <div className="space-y-6 text-center">
+          <div className="w-20 h-20 mx-auto bg-yellow-500/20 rounded-full flex items-center justify-center">
+            <AlertCircle className="text-yellow-400" size={40} />
+          </div>
+
+          <div>
+            <h3 className="text-xl font-bold mb-2">Continuar rutina pausada</h3>
+            <p className="text-gray-400">
+              Tenés una sesión pausada de esta rutina. ¿Querés continuar desde donde lo dejaste?
+            </p>
+          </div>
+
+          <Card className="bg-gray-800/50 text-left">
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-400">Ejercicio actual:</span>
+                <span className="font-medium">
+                  {pausedData.currentExerciseIndex + 1} de {routine.exercises.length}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Pausado el:</span>
+                <span className="font-medium">
+                  {new Date(pausedData.pausedAt).toLocaleString('es-AR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </span>
+              </div>
+            </div>
+          </Card>
+
+          <div className="flex gap-3">
+            <Button
+              variant="secondary"
+              onClick={handleDiscardSession}
+              className="flex-1"
+            >
+              Empezar de nuevo
+            </Button>
+            <Button
+              onClick={handleResumeSession}
+              className="flex-1"
+            >
+              Continuar
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+
   return (
-    <Modal isOpen={true} onClose={onClose} title={routine.name} size="lg">
+    <Modal isOpen={true} onClose={handleExitClick} title={routine.name} size="lg">
       <div className="space-y-6">
         {/* Progreso */}
         <div>
@@ -161,15 +331,24 @@ const RoutineTimer = ({ routine, exercises, onClose, onComplete }) => {
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold mb-2">{exerciseData?.name || 'Ejercicio'}</h3>
                   <div className="flex flex-wrap gap-4 text-sm">
-                    <span className="text-gray-400">
-                      <strong className="text-white">{currentExercise.sets}</strong> series
-                    </span>
-                    <span className="text-gray-400">
-                      <strong className="text-white">{currentExercise.reps}</strong> reps
-                    </span>
-                    <span className="text-gray-400">
-                      <strong className="text-white">{currentExercise.rest}s</strong> descanso entre series
-                    </span>
+                    {!isTimeBasedExercise && (
+                      <>
+                        <span className="text-gray-400">
+                          <strong className="text-white">{currentExercise.sets}</strong> series
+                        </span>
+                        <span className="text-gray-400">
+                          <strong className="text-white">{currentExercise.reps}</strong> reps
+                        </span>
+                        <span className="text-gray-400">
+                          <strong className="text-white">{currentExercise.rest}s</strong> descanso entre series
+                        </span>
+                      </>
+                    )}
+                    {isTimeBasedExercise && (
+                      <span className="text-gray-400">
+                        <strong className="text-white">{currentExercise.reps}</strong> minutos
+                      </span>
+                    )}
                   </div>
                   {currentExercise.notes && (
                     <p className="text-sm text-gray-400 mt-2 italic">{currentExercise.notes}</p>
@@ -178,14 +357,50 @@ const RoutineTimer = ({ routine, exercises, onClose, onComplete }) => {
               </div>
             </Card>
 
+            {/* Series checklist para ejercicios de reps */}
+            {!isTimeBasedExercise && parseInt(currentExercise.sets) > 1 && (
+              <Card className="mb-6 bg-gray-800/50">
+                <h4 className="text-sm font-medium text-gray-400 mb-3">Marcar series completadas</h4>
+                <div className="grid grid-cols-5 gap-2">
+                  {Array.from({ length: parseInt(currentExercise.sets) }, (_, i) => i + 1).map((setNum) => {
+                    const isCompleted = completedSets[currentExerciseIndex]?.completed.includes(setNum);
+                    return (
+                      <button
+                        key={setNum}
+                        onClick={() => handleToggleSet(setNum)}
+                        className={`p-3 rounded-lg font-medium transition-all ${
+                          isCompleted
+                            ? 'bg-green-500 text-white'
+                            : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                        }`}
+                      >
+                        {isCompleted && <CheckCircle2 size={16} className="inline mr-1" />}
+                        {setNum}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  {completedSets[currentExerciseIndex]?.completed.length || 0} de {currentExercise.sets} series completadas
+                </p>
+              </Card>
+            )}
+
             {/* Timer del ejercicio */}
             <div className="text-center py-8">
               <div className="flex items-center justify-center gap-2 text-gray-400 mb-4">
                 <Timer size={24} />
-                <span>Tiempo de ejercicio</span>
+                <span>
+                  {isTimeBasedExercise ? 'Tiempo restante' : 'Tiempo de ejercicio'}
+                </span>
               </div>
-              <div className="text-7xl font-bold text-primary mb-8">
-                {formatTime(exerciseTime)}
+              <div className={`text-7xl font-bold mb-8 ${
+                isTimeBasedExercise ? 'text-orange-400' : 'text-primary'
+              }`}>
+                {isTimeBasedExercise
+                  ? formatTimeRemaining(exerciseTime)
+                  : formatTime(exerciseTime)
+                }
               </div>
 
               <div className="flex gap-3 justify-center">
@@ -261,18 +476,60 @@ const RoutineTimer = ({ routine, exercises, onClose, onComplete }) => {
           </div>
         ) : null}
 
-        {/* Botón cerrar */}
-        <div className="pt-4 border-t border-gray-700">
-          <Button
-            variant="secondary"
-            icon={X}
-            onClick={onClose}
-            className="w-full"
-          >
-            Cancelar Rutina
-          </Button>
+        {/* Botones de control */}
+        <div className="pt-4 border-t border-gray-700 space-y-3">
+          <div className="flex gap-3">
+            <Button
+              variant="secondary"
+              icon={Pause}
+              onClick={() => setShowExitConfirm(true)}
+              className="flex-1"
+            >
+              Pausar Rutina
+            </Button>
+            <Button
+              variant="danger"
+              icon={X}
+              onClick={handleExitClick}
+              className="flex-1"
+            >
+              Salir
+            </Button>
+          </div>
         </div>
       </div>
+
+      {/* Confirmación de salida */}
+      <Modal isOpen={showExitConfirm} onClose={() => setShowExitConfirm(false)} title="¿Salir de la rutina?" size="sm">
+        <div className="space-y-4">
+          <p className="text-gray-300">
+            ¿Querés guardar tu progreso para continuar después o descartarlo?
+          </p>
+
+          <div className="flex flex-col gap-3">
+            <Button
+              onClick={() => handleExitConfirm(true)}
+              className="w-full"
+            >
+              Guardar y Pausar
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => handleExitConfirm(false)}
+              className="w-full"
+            >
+              Descartar Progreso
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => setShowExitConfirm(false)}
+              className="w-full"
+            >
+              Volver
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </Modal>
   );
 };

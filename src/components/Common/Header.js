@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Menu, Bell, Info } from 'lucide-react';
+import { Menu, Bell, Info, User, Camera } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Avatar, Badge } from './index';
+import { useNavigate } from 'react-router-dom';
+import { Avatar, Badge, Dropdown, DropdownItem } from './index';
 import ChangelogModal from './ChangelogModal';
 import { getVersionString } from '../../utils/changelog';
 
 const Header = ({ onMenuClick, title }) => {
   const { userData } = useAuth();
+  const navigate = useNavigate();
   const [showChangelog, setShowChangelog] = useState(false);
 
   return (
@@ -22,18 +24,30 @@ const Header = ({ onMenuClick, title }) => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowChangelog(true)}
-              className="relative p-2 hover:bg-gray-800 rounded-lg group"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-gray-800 rounded-lg transition-colors group"
               title="Ver actualizaciones"
             >
-              <Info size={20} />
-              <Badge className="absolute -top-1 -right-1 px-1 py-0 text-xs bg-primary/20 text-primary">
-                {getVersionString()}
-              </Badge>
+              <Info size={16} className="text-gray-400 group-hover:text-primary transition-colors" />
+              <span className="text-xs font-medium text-gray-400 group-hover:text-primary transition-colors">
+                v{getVersionString()}
+              </span>
             </button>
             <button className="relative p-2 hover:bg-gray-800 rounded-lg">
               <Bell size={20} />
             </button>
-            <Avatar name={userData?.name} size="sm" />
+
+            {/* Avatar con menú desplegable */}
+            <Dropdown
+              trigger={
+                <button className="flex items-center gap-2 hover:bg-gray-800 p-1 rounded-lg transition-colors">
+                  <Avatar name={userData?.name} src={userData?.photoURL} size="sm" />
+                </button>
+              }
+            >
+              <DropdownItem icon={User} onClick={() => navigate('/profile')}>
+                Mi Perfil
+              </DropdownItem>
+            </Dropdown>
           </div>
         </div>
       </header>

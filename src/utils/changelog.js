@@ -1,9 +1,26 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.6';
+export const CURRENT_VERSION = '1.0.7';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.7',
+    date: '2026-01-10',
+    title: 'Mejoras al Sistema de Rutinas',
+    changes: [
+      'Confirmación al salir de rutina en progreso con opciones de pausar o descartar',
+      'Sistema de pausa/reanudación de rutinas - continuá desde donde lo dejaste',
+      'Ejercicios de tiempo con cuenta regresiva (se cargan en minutos)',
+      'Botón Play manual para iniciar cuenta regresiva o progresiva',
+      'Sistema de tildar series completadas para ejercicios por series',
+      'Persistencia local de sesiones pausadas',
+      'Avatar del usuario muestra foto de perfil configurada',
+      'Click en avatar abre menú para ir al perfil',
+      'Icono de versión mejorado en el header',
+      'Corrección: error al editar/eliminar rankings'
+    ]
+  },
   {
     version: '1.0.6',
     date: '2026-01-06',
@@ -93,7 +110,7 @@ export const CHANGELOG = [
 ];
 
 // Obtener versión formateada
-export const getVersionString = () => `v${CURRENT_VERSION}`;
+export const getVersionString = () => CURRENT_VERSION;
 
 // Obtener último changelog
 export const getLatestChangelog = () => CHANGELOG[0];
