@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { 
+import {
   LayoutDashboard, Users, Calendar, Dumbbell, ClipboardList,
   Settings, LogOut, Building2, UserCheck, Flame, Trophy,
   TrendingUp, CheckCircle, CheckSquare, User, X, ChevronDown,
-  CalendarDays, Megaphone, Link, Globe
+  CalendarDays, Megaphone, Link, Globe, Palette
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGym, ALL_GYMS_ID } from '../../contexts/GymContext';
@@ -16,7 +16,7 @@ import { getRoleName } from '../../utils/helpers';
 const iconMap = {
   LayoutDashboard, Users, Calendar, Dumbbell, ClipboardList,
   Settings, Building2, UserCheck, Flame, Trophy, TrendingUp,
-  CheckCircle, CheckSquare, User, CalendarDays, Megaphone, Link
+  CheckCircle, CheckSquare, User, CalendarDays, Megaphone, Link, Palette
 };
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
@@ -64,10 +64,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed top-0 left-0 h-full w-64 bg-slate-900 border-r border-gray-800 z-50 transition-transform lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed top-0 left-0 h-full w-64 bg-sidebar border-r border-gray-800 z-50 transition-transform lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="p-4 border-b border-gray-800">
+          <div className="p-4 border-b border-gray-700/30">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 {gymLogo ? (
@@ -84,7 +84,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   <Badge className="badge-primary text-xs">{getRoleName(getHighestRole())}</Badge>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="lg:hidden p-1 hover:bg-gray-800 rounded">
+              <button onClick={() => setIsOpen(false)} className="lg:hidden p-1 hover:bg-card rounded">
                 <X size={20} />
               </button>
             </div>
@@ -95,33 +95,33 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 <button
                   onClick={() => setShowGymSelector(!showGymSelector)}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition-colors ${
-                    viewAllGyms 
-                      ? 'bg-blue-500/20 border border-blue-500/50 text-blue-400' 
-                      : 'bg-gray-800 hover:bg-gray-700'
+                    viewAllGyms
+                      ? 'bg-primary/20 border border-primary/50 text-primary'
+                      : 'bg-card hover:bg-card-hover'
                   }`}
                 >
                   <span className="text-sm truncate">{getSelectorLabel()}</span>
                   <ChevronDown size={16} className={`transition-transform ${showGymSelector ? 'rotate-180' : ''}`} />
                 </button>
                 {showGymSelector && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-gray-800 rounded-xl shadow-lg border border-gray-700 max-h-64 overflow-y-auto z-50">
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-card rounded-xl shadow-lg border border-gray-700 max-h-64 overflow-y-auto z-50">
                     {/* Opción "Todos los gimnasios" */}
                     <button
                       onClick={() => { selectGym(ALL_GYMS_ID); setShowGymSelector(false); }}
-                      className={`w-full text-left px-3 py-2 hover:bg-gray-700 text-sm flex items-center gap-2 border-b border-gray-700 ${
-                        viewAllGyms ? 'text-blue-400 bg-blue-500/10' : ''
+                      className={`w-full text-left px-3 py-2 hover:bg-card-hover text-sm flex items-center gap-2 border-b border-gray-700/30 ${
+                        viewAllGyms ? 'text-primary bg-primary/10' : ''
                       }`}
                     >
                       <Globe size={14} />
                       <span>Todos los gimnasios</span>
                     </button>
-                    
+
                     {/* Lista de gimnasios */}
                     {availableGyms.map(gym => (
                       <button
                         key={gym.id}
                         onClick={() => { selectGym(gym.id); setShowGymSelector(false); }}
-                        className={`w-full text-left px-3 py-2 hover:bg-gray-700 text-sm ${
+                        className={`w-full text-left px-3 py-2 hover:bg-card-hover text-sm ${
                           !viewAllGyms && currentGym?.id === gym.id ? 'text-primary bg-primary/10' : ''
                         }`}
                       >
@@ -135,7 +135,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
             {/* Mostrar gimnasio actual para otros roles */}
             {(!isSysadmin || !isSysadmin()) && currentGym && (
-              <div className="mt-3 px-3 py-2 bg-gray-800/50 rounded-xl">
+              <div className="mt-3 px-3 py-2 bg-card/50 rounded-xl">
                 <p className="text-xs text-gray-400">Gimnasio</p>
                 <p className="text-sm font-medium truncate">{currentGym.name}</p>
               </div>
@@ -153,9 +153,9 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
-                      isActive 
-                        ? 'nav-link-active font-medium' 
-                        : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                      isActive
+                        ? 'nav-link-active font-medium'
+                        : 'text-gray-400 hover:text-white hover:bg-card'
                     }`
                   }
                 >
@@ -167,10 +167,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           </nav>
 
           {/* Usuario y logout */}
-          <div className="p-3 border-t border-gray-800">
+          <div className="p-3 border-t border-gray-700/30">
             <NavLink
               to="/profile"
-              className="flex items-center gap-3 px-3 py-2 mb-2 hover:bg-gray-800 rounded-xl transition-colors"
+              className="flex items-center gap-3 px-3 py-2 mb-2 hover:bg-card rounded-xl transition-colors"
             >
               <Avatar name={userData?.name} src={userData?.photoURL} size="sm" />
               <div className="flex-1 min-w-0">
