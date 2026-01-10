@@ -3,6 +3,7 @@ import { Users, Calendar, Dumbbell, TrendingUp, Clock, ChevronRight, Flame, Awar
 import { Card, Badge, Avatar, EmptyState, LoadingState, Button } from '../components/Common';
 import { useAuth } from '../contexts/AuthContext';
 import { useGym } from '../contexts/GymContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { db } from '../firebase';
 import { collection, query, where, onSnapshot, getDocs } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
@@ -11,7 +12,8 @@ import { getRoleName, getRolesNames, formatRelativeDate, formatDate } from '../u
 const Dashboard = () => {
   const { userData, isSysadmin, isAdmin, isProfesor, isAlumno } = useAuth();
   const { currentGym, availableGyms, selectGym, viewAllGyms } = useGym();
-  
+  const { gymCoverImage, gymLogo, gymSlogan } = useTheme();
+
   const [stats, setStats] = useState({ members: 0, classes: 0, wods: 0, prs: 0, gyms: 0 });
   const [recentWods, setRecentWods] = useState([]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
@@ -361,24 +363,83 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">Hola, {userData?.name}</h1>
-          <p className="text-gray-400">{currentGym?.name}</p>
+      {/* Banner / Cover Image */}
+      {gymCoverImage && (
+        <>
+          {/* Banner separado con bienvenida */}
+          <div className="relative w-full h-40 md:h-48 rounded-2xl overflow-hidden -mt-6">
+            <img
+              src={gymCoverImage}
+              alt={`Banner de ${currentGym?.name}`}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+            {/* Contenido sobre el banner */}
+            <div className="absolute bottom-0 left-0 right-0 p-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3">
+                <h1 className="text-2xl md:text-3xl font-bold text-white">
+                  Hola, {userData?.name}
+                </h1>
+                <div className="flex flex-wrap items-center gap-2">
+                  {userData?.roles?.filter(r => r !== 'alumno').map(role => (
+                    <Badge key={role} className={
+                      role === 'sysadmin' ? 'bg-yellow-500/20 text-yellow-400 backdrop-blur-sm' :
+                      role === 'admin' ? 'bg-blue-500/20 text-blue-400 backdrop-blur-sm' :
+                      'bg-purple-500/20 text-purple-400 backdrop-blur-sm'
+                    }>
+                      {getRoleName(role)}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Card de información del gimnasio - separado */}
+          <Card className="mt-6 flex justify-center">
+            <div className="flex items-center gap-4">
+              {/* Logo a la izquierda */}
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-gray-800 flex items-center justify-center overflow-hidden border-2 border-gray-700 flex-shrink-0">
+                {gymLogo ? (
+                  <img src={gymLogo} alt={currentGym?.name} className="w-full h-full object-cover" />
+                ) : (
+                  <Building2 size={28} className="text-gray-500" />
+                )}
+              </div>
+
+              {/* Nombre y slogan a la derecha */}
+              <div>
+                <h2 className="text-xl md:text-2xl font-bold">{currentGym?.name}</h2>
+                {gymSlogan && (
+                  <p className="text-gray-400 text-sm md:text-base mt-1">{gymSlogan}</p>
+                )}
+              </div>
+            </div>
+          </Card>
+        </>
+      )}
+
+      {/* Header sin banner (fallback) */}
+      {!gymCoverImage && (
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-2xl font-bold">Hola, {userData?.name}</h1>
+            <p className="text-gray-400">{currentGym?.name}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            {userData?.roles?.filter(r => r !== 'alumno').map(role => (
+              <Badge key={role} className={
+                role === 'sysadmin' ? 'bg-yellow-500/20 text-yellow-400' :
+                role === 'admin' ? 'bg-blue-500/20 text-blue-400' :
+                'bg-purple-500/20 text-purple-400'
+              }>
+                {getRoleName(role)}
+              </Badge>
+            ))}
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          {userData?.roles?.filter(r => r !== 'alumno').map(role => (
-            <Badge key={role} className={
-              role === 'sysadmin' ? 'bg-yellow-500/20 text-yellow-400' :
-              role === 'admin' ? 'bg-blue-500/20 text-blue-400' :
-              'bg-purple-500/20 text-purple-400'
-            }>
-              {getRoleName(role)}
-            </Badge>
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Stats */}
       {(isAdmin() || isProfesor() || isSysadmin()) && (

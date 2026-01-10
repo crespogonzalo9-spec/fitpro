@@ -13,10 +13,10 @@ const Header = ({ onMenuClick, title }) => {
 
   return (
     <>
-      <header className="sticky top-0 z-20 bg-slate-900/80 backdrop-blur-lg border-b border-gray-800">
+      <header className="sticky top-0 z-20 bg-sidebar/80 backdrop-blur-lg border-b border-gray-700/30">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-4">
-            <button onClick={onMenuClick} className="lg:hidden p-2 hover:bg-gray-800 rounded-lg">
+            <button onClick={onMenuClick} className="lg:hidden p-2 hover:bg-card rounded-lg">
               <Menu size={24} />
             </button>
             <h2 className="text-lg font-semibold">{title}</h2>
@@ -24,7 +24,7 @@ const Header = ({ onMenuClick, title }) => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowChangelog(true)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-gray-800 rounded-lg transition-colors group"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-card rounded-lg transition-colors group"
               title="Ver actualizaciones"
             >
               <Info size={16} className="text-gray-400 group-hover:text-primary transition-colors" />
@@ -32,14 +32,14 @@ const Header = ({ onMenuClick, title }) => {
                 v{getVersionString()}
               </span>
             </button>
-            <button className="relative p-2 hover:bg-gray-800 rounded-lg">
+            <button className="relative p-2 hover:bg-card rounded-lg">
               <Bell size={20} />
             </button>
 
             {/* Avatar con menú desplegable */}
             <Dropdown
               trigger={
-                <button className="flex items-center gap-2 hover:bg-gray-800 p-1 rounded-lg transition-colors">
+                <button className="flex items-center gap-2 hover:bg-card p-1 rounded-lg transition-colors">
                   <Avatar name={userData?.name} src={userData?.photoURL} size="sm" />
                 </button>
               }

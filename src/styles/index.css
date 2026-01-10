@@ -23,10 +23,13 @@ body {
 
 /* Colores dinámicos basados en la paleta */
 .bg-primary { background-color: rgba(var(--color-primary), 1) !important; }
+.bg-primary\/10 { background-color: rgba(var(--color-primary), 0.1) !important; }
+.bg-primary\/20 { background-color: rgba(var(--color-primary), 0.2) !important; }
 .bg-primary-10 { background-color: rgba(var(--color-primary), 0.1) !important; }
 .bg-primary-20 { background-color: rgba(var(--color-primary), 0.2) !important; }
 .text-primary { color: rgba(var(--color-primary), 1) !important; }
 .border-primary { border-color: rgba(var(--color-primary), 1) !important; }
+.border-primary\/50 { border-color: rgba(var(--color-primary), 0.5) !important; }
 .border-primary-30 { border-color: rgba(var(--color-primary), 0.3) !important; }
 .ring-primary { --tw-ring-color: rgba(var(--color-primary), 1) !important; }
 .hover\:bg-primary:hover { background-color: rgba(var(--color-primary), 1) !important; }
@@ -43,36 +46,81 @@ body {
 /* ============ MODO OSCURO (default) ============ */
 .dark body,
 body.dark-mode {
-  background-color: #0F172A;
+  background-color: rgb(var(--color-bg-primary, 15, 23, 42)) !important;
   color: #F8FAFC;
 }
 
-.dark .bg-base { background-color: #0F172A; }
-.dark .bg-card { background-color: #1E293B; }
-.dark .bg-card-hover:hover { background-color: #334155; }
-.dark .bg-input { background-color: #1E293B; }
-.dark .bg-sidebar { background-color: #0F172A; }
+.dark .bg-base { background-color: rgb(var(--color-bg-primary, 15, 23, 42)) !important; }
+.dark .bg-card { background-color: rgb(var(--color-bg-800, 30, 41, 59)) !important; }
+.dark .bg-card-hover:hover { background-color: rgb(var(--color-bg-700, 51, 65, 85)) !important; }
+.dark .bg-input { background-color: rgb(var(--color-bg-800, 30, 41, 59)) !important; }
+.dark .bg-sidebar { background-color: rgb(var(--color-bg-primary, 15, 23, 42)) !important; }
 .dark .border-base { border-color: #334155; }
 .dark .text-base { color: #F8FAFC; }
 .dark .text-muted { color: #94A3B8; }
 .dark .text-subtle { color: #64748B; }
 
+/* Clases sin dark/light que funcionan por defecto en modo oscuro */
+.bg-card { background-color: rgb(var(--color-bg-800, 30, 41, 59)) !important; }
+.bg-card-hover { background-color: rgb(var(--color-bg-700, 51, 65, 85)) !important; }
+.hover\:bg-card-hover:hover { background-color: rgb(var(--color-bg-700, 51, 65, 85)) !important; }
+.bg-input { background-color: rgb(var(--color-bg-800, 30, 41, 59)) !important; }
+.bg-base { background-color: rgb(var(--color-bg-primary, 15, 23, 42)) !important; }
+.bg-sidebar { background-color: rgb(var(--color-bg-primary, 15, 23, 42)) !important; }
+
 /* ============ MODO CLARO ============ */
 .light body,
 body.light-mode {
-  background-color: #F8FAFC;
+  background-color: rgb(var(--color-bg-primary, 248, 250, 252)) !important;
   color: #1E293B;
 }
 
-.light .bg-base { background-color: #F8FAFC; }
-.light .bg-card { background-color: #FFFFFF; }
-.light .bg-card-hover:hover { background-color: #F1F5F9; }
-.light .bg-input { background-color: #FFFFFF; }
-.light .bg-sidebar { background-color: #FFFFFF; }
+.light .bg-base {
+  background-color: rgb(var(--color-bg-50, 248, 250, 252)) !important;
+  filter: saturate(1.4) brightness(0.98);
+}
+.light .bg-card {
+  background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important;
+  filter: saturate(1.4) brightness(0.96);
+}
+.light .bg-card-hover {
+  background-color: rgb(var(--color-bg-200, 226, 232, 240)) !important;
+  filter: saturate(1.4) brightness(0.94);
+}
+.light .bg-card-hover:hover {
+  background-color: rgb(var(--color-bg-200, 226, 232, 240)) !important;
+  filter: saturate(1.4) brightness(0.94);
+}
+.light .hover\:bg-card-hover:hover {
+  background-color: rgb(var(--color-bg-200, 226, 232, 240)) !important;
+  filter: saturate(1.4) brightness(0.94);
+}
+.light .bg-input {
+  background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important;
+  filter: saturate(1.3) brightness(0.97);
+}
+.light .bg-sidebar {
+  background-color: rgb(var(--color-bg-200, 226, 232, 240)) !important;
+  filter: saturate(1.5) brightness(0.92);
+}
 .light .border-base { border-color: #E2E8F0; }
 .light .text-base { color: #1E293B; }
 .light .text-muted { color: #64748B; }
 .light .text-subtle { color: #94A3B8; }
+
+/* Aumentar visibilidad del color primario en modo claro */
+.light .text-primary {
+  color: rgba(var(--color-primary), 1) !important;
+  filter: saturate(1.3) brightness(0.8);
+}
+.light .bg-primary {
+  background-color: rgba(var(--color-primary), 1) !important;
+  filter: saturate(1.2) brightness(0.95);
+}
+.light .border-primary {
+  border-color: rgba(var(--color-primary), 1) !important;
+  filter: saturate(1.3);
+}
 
 /* Override específicos para modo claro */
 .light .bg-slate-900 { background-color: #F8FAFC; }
