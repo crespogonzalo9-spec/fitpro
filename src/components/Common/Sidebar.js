@@ -168,13 +168,16 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
           {/* Usuario y logout */}
           <div className="p-3 border-t border-gray-800">
-            <div className="flex items-center gap-3 px-3 py-2 mb-2">
-              <Avatar name={userData?.name} size="sm" />
+            <NavLink
+              to="/profile"
+              className="flex items-center gap-3 px-3 py-2 mb-2 hover:bg-gray-800 rounded-xl transition-colors"
+            >
+              <Avatar name={userData?.name} src={userData?.photoURL} size="sm" />
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-sm truncate">{userData?.name}</p>
                 <p className="text-xs text-gray-400 truncate">{userData?.email}</p>
               </div>
-            </div>
+            </NavLink>
             <button
               onClick={handleLogout}
               className="flex items-center gap-3 w-full px-3 py-2.5 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors"
