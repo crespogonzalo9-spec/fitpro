@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, ClipboardList, MoreVertical, Edit, Trash2, Users, Lock, Globe, Dumbbell, Play } from 'lucide-react';
-import { Button, Card, Modal, Input, Select, Textarea, SearchInput, EmptyState, LoadingState, ConfirmDialog, Badge, Dropdown, DropdownItem, Avatar , GymRequired } from '../components/Common';
+import { Plus, ClipboardList, MoreVertical, Edit, Trash2, Users, Lock, Globe, Dumbbell, Play, Flame } from 'lucide-react';
+import { Button, Card, Modal, Input, Select, Textarea, SearchInput, EmptyState, LoadingState, ConfirmDialog, Badge, Dropdown, DropdownItem, Avatar, GymRequired, Tabs } from '../components/Common';
 import RoutineTimer from '../components/Common/RoutineTimer';
 import { useAuth } from '../contexts/AuthContext';
 import { useGym } from '../contexts/GymContext';
@@ -17,6 +17,7 @@ const RoutinesContent = () => {
   const [classes, setClasses] = useState([]);
   const [members, setMembers] = useState([]);
   const [exercises, setExercises] = useState([]);
+  const [wods, setWods] = useState([]);
   const [myEnrollments, setMyEnrollments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -36,6 +37,7 @@ const RoutinesContent = () => {
     setClasses([]);
     setMembers([]);
     setExercises([]);
+    setWods([]);
     setMyEnrollments([]);
     setLoading(true);
     setSearch('');
@@ -72,6 +74,14 @@ const RoutinesContent = () => {
       setExercises(items);
     });
 
+    // Cargar WODs
+    const wodsQuery = query(collection(db, 'wods'), where('gymId', '==', currentGym.id));
+    const unsubWods = onSnapshot(wodsQuery, (snap) => {
+      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      items.sort((a, b) => a.name?.localeCompare(b.name));
+      setWods(items);
+    });
+
     // Cargar miembros (para profesores/admin)
     if (canEdit) {
       const membersQuery = query(collection(db, 'users'), where('gymId', '==', currentGym.id));
@@ -80,7 +90,7 @@ const RoutinesContent = () => {
         // Filtrar solo alumnos
         setMembers(allMembers.filter(m => m.roles?.includes('alumno') || !m.roles || m.roles.length === 0));
       });
-      return () => { unsubRoutines(); unsubClasses(); unsubEx(); unsubMembers(); };
+      return () => { unsubRoutines(); unsubClasses(); unsubEx(); unsubWods(); unsubMembers(); };
     }
 
     // Para alumnos: cargar inscripciones
@@ -89,10 +99,10 @@ const RoutinesContent = () => {
       const unsubEnroll = onSnapshot(enrollQuery, (snap) => {
         setMyEnrollments(snap.docs.map(d => d.data().classId));
       });
-      return () => { unsubRoutines(); unsubClasses(); unsubEx(); unsubEnroll(); };
+      return () => { unsubRoutines(); unsubClasses(); unsubEx(); unsubWods(); unsubEnroll(); };
     }
 
-    return () => { unsubRoutines(); unsubClasses(); unsubEx(); };
+    return () => { unsubRoutines(); unsubClasses(); unsubEx(); unsubWods(); };
   }, [currentGym, userData, canEdit, isOnlyAlumno]);
 
   const getVisibleRoutines = () => {
@@ -307,12 +317,14 @@ const RoutinesContent = () => {
         classes={classes}
         members={members}
         exercises={exercises}
+        wods={wods}
       />
       <ViewRoutineModal
         isOpen={showView}
         onClose={() => { setShowView(false); setSelected(null); }}
         routine={selected}
         exercises={exercises}
+        wods={wods}
         getClassName={getClassName}
         getMemberNames={getMemberNames}
         members={members}
@@ -341,7 +353,7 @@ const RoutinesContent = () => {
   );
 };
 
-const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exercises }) => {
+const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exercises, wods }) => {
   const [form, setForm] = useState({
     name: '',
     description: '',
@@ -349,10 +361,12 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
     classId: '',
     memberIds: [],
     exercises: [],
+    wods: [],
     hasRestBetweenExercises: true
   });
   const [loading, setLoading] = useState(false);
   const [memberSearch, setMemberSearch] = useState('');
+  const [activeTab, setActiveTab] = useState('exercises');
 
   useEffect(() => {
     if (routine) {
@@ -363,6 +377,7 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
         classId: routine.classId || '',
         memberIds: routine.memberIds || [],
         exercises: routine.exercises || [],
+        wods: routine.wods || [],
         hasRestBetweenExercises: routine.hasRestBetweenExercises !== undefined ? routine.hasRestBetweenExercises : true
       });
     } else {
@@ -373,10 +388,12 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
         classId: '',
         memberIds: [],
         exercises: [],
+        wods: [],
         hasRestBetweenExercises: true
       });
     }
     setMemberSearch('');
+    setActiveTab('exercises');
   }, [routine, isOpen]);
 
   const handleSubmit = async (e) => {
@@ -410,9 +427,30 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
   };
 
   const removeExercise = (index) => {
-    setForm(prev => ({ 
-      ...prev, 
-      exercises: prev.exercises.filter((_, i) => i !== index) 
+    setForm(prev => ({
+      ...prev,
+      exercises: prev.exercises.filter((_, i) => i !== index)
+    }));
+  };
+
+  const addWod = () => {
+    setForm(prev => ({
+      ...prev,
+      wods: [...prev.wods, { wodId: '', notes: '' }]
+    }));
+  };
+
+  const updateWod = (index, field, value) => {
+    setForm(prev => ({
+      ...prev,
+      wods: prev.wods.map((w, i) => i === index ? { ...w, [field]: value } : w)
+    }));
+  };
+
+  const removeWod = (index) => {
+    setForm(prev => ({
+      ...prev,
+      wods: prev.wods.filter((_, i) => i !== index)
     }));
   };
 
@@ -561,26 +599,37 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
           </label>
         </div>
 
+        {/* Tabs para Ejercicios y WODs */}
+        <Tabs
+          tabs={[
+            { id: 'exercises', label: 'Ejercicios', icon: 'Dumbbell' },
+            { id: 'wods', label: 'WODs', icon: 'Flame' }
+          ]}
+          activeTab={activeTab}
+          onChange={setActiveTab}
+        />
+
         {/* Ejercicios */}
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <label className="text-sm font-medium text-gray-300">
-              Ejercicios ({form.exercises.length})
-            </label>
-            <Button type="button" variant="secondary" size="sm" icon={Plus} onClick={addExercise}>
-              Agregar
-            </Button>
-          </div>
-          
-          {exercises.length === 0 && (
-            <Card className="bg-yellow-500/10 border-yellow-500/30 mb-2">
-              <p className="text-yellow-400 text-sm">
-                No hay ejercicios cargados. Agregá ejercicios desde la sección correspondiente.
-              </p>
-            </Card>
-          )}
-          
-          <div className="space-y-2 max-h-64 overflow-y-auto">
+        {activeTab === 'exercises' && (
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <label className="text-sm font-medium text-gray-300">
+                Ejercicios ({form.exercises.length})
+              </label>
+              <Button type="button" variant="secondary" size="sm" icon={Plus} onClick={addExercise}>
+                Agregar
+              </Button>
+            </div>
+
+            {exercises.length === 0 && (
+              <Card className="bg-yellow-500/10 border-yellow-500/30 mb-2">
+                <p className="text-yellow-400 text-sm">
+                  No hay ejercicios cargados. Agregá ejercicios desde la sección correspondiente.
+                </p>
+              </Card>
+            )}
+
+            <div className="space-y-2 max-h-64 overflow-y-auto">
             {form.exercises.map((ex, idx) => (
               <div key={idx} className="p-3 bg-gray-800/50 rounded-xl space-y-2">
                 <div className="flex items-center gap-2 mb-2">
@@ -653,8 +702,64 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
                 />
               </div>
             ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* WODs */}
+        {activeTab === 'wods' && (
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <label className="text-sm font-medium text-gray-300">
+                WODs ({form.wods.length})
+              </label>
+              <Button type="button" variant="secondary" size="sm" icon={Plus} onClick={addWod}>
+                Agregar
+              </Button>
+            </div>
+
+            {wods.length === 0 && (
+              <Card className="bg-yellow-500/10 border-yellow-500/30 mb-2">
+                <p className="text-yellow-400 text-sm">
+                  No hay WODs cargados. Agregá WODs desde la sección correspondiente.
+                </p>
+              </Card>
+            )}
+
+            <div className="space-y-2 max-h-64 overflow-y-auto">
+              {form.wods.map((wod, idx) => (
+                <div key={idx} className="p-3 bg-gray-800/50 rounded-xl space-y-2">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-orange-400">
+                      {idx + 1}
+                    </div>
+                    <Select
+                      value={wod.wodId}
+                      onChange={e => updateWod(idx, 'wodId', e.target.value)}
+                      options={[
+                        { value: '', label: 'Seleccionar WOD...' },
+                        ...wods.map(w => ({ value: w.id, label: w.name }))
+                      ]}
+                      className="flex-1"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeWod(idx)}
+                      className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                  <Input
+                    value={wod.notes || ''}
+                    onChange={e => updateWod(idx, 'notes', e.target.value)}
+                    placeholder="Notas (opcional)"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="flex gap-3 pt-4">
           <Button type="button" variant="secondary" onClick={onClose} className="flex-1">Cancelar</Button>
@@ -665,10 +770,11 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
   );
 };
 
-const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, getClassName, getMemberNames, members, onStartTimer }) => {
+const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, wods, getClassName, getMemberNames, members, onStartTimer }) => {
   if (!routine) return null;
 
   const getExerciseName = (id) => exercises.find(e => e.id === id)?.name || 'Ejercicio';
+  const getWodName = (id) => wods.find(w => w.id === id)?.name || 'WOD';
   const assignedMembers = routine.memberIds?.map(id => members.find(m => m.id === id)).filter(Boolean) || [];
 
   return (
@@ -691,28 +797,54 @@ const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, getClassName, g
         )}
 
         {/* Ejercicios */}
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-300">{routine.exercises?.length || 0} ejercicios</p>
-          {routine.exercises?.map((ex, idx) => (
-            <div key={idx} className="flex items-center gap-4 p-3 bg-gray-800 rounded-xl">
-              <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-blue-400">
-                {idx + 1}
-              </div>
-              <div className="flex-1">
-                <p className="font-medium">{getExerciseName(ex.exerciseId)}</p>
-                <p className="text-sm text-gray-400">
-                  {ex.sets} series × {ex.reps} reps • {ex.rest}s descanso
-                </p>
-                {ex.notes && <p className="text-xs text-gray-500 mt-1">{ex.notes}</p>}
-                {routine.hasRestBetweenExercises && ex.restDuration && (
-                  <p className="text-xs text-yellow-400 mt-1">
-                    Descanso después: {ex.restDuration}s
+        {routine.exercises && routine.exercises.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-gray-300">
+              <Dumbbell size={16} className="inline mr-2" />
+              Ejercicios ({routine.exercises.length})
+            </p>
+            {routine.exercises.map((ex, idx) => (
+              <div key={idx} className="flex items-center gap-4 p-3 bg-gray-800 rounded-xl">
+                <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-blue-400">
+                  {idx + 1}
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium">{getExerciseName(ex.exerciseId)}</p>
+                  <p className="text-sm text-gray-400">
+                    {ex.sets} series × {ex.reps} reps • {ex.rest}s descanso
                   </p>
-                )}
+                  {ex.notes && <p className="text-xs text-gray-500 mt-1">{ex.notes}</p>}
+                  {routine.hasRestBetweenExercises && ex.restDuration && (
+                    <p className="text-xs text-yellow-400 mt-1">
+                      Descanso después: {ex.restDuration}s
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+
+        {/* WODs */}
+        {routine.wods && routine.wods.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-gray-300">
+              <Flame size={16} className="inline mr-2" />
+              WODs ({routine.wods.length})
+            </p>
+            {routine.wods.map((wod, idx) => (
+              <div key={idx} className="flex items-center gap-4 p-3 bg-gray-800 rounded-xl">
+                <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-orange-400">
+                  {idx + 1}
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium">{getWodName(wod.wodId)}</p>
+                  {wod.notes && <p className="text-xs text-gray-500 mt-1">{wod.notes}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Asignación */}
         <div className="pt-4 border-t border-gray-700">
