@@ -133,12 +133,12 @@ function AppRoutes() {
         <Route path="members" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Members /></ProtectedRoute>} />
         <Route path="classes" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Classes /></ProtectedRoute>} />
         <Route path="exercises" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Exercises /></ProtectedRoute>} />
+        <Route path="wods" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><WODs /></ProtectedRoute>} />
         <Route path="routines" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Routines /></ProtectedRoute>} />
         <Route path="prs" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><PRs /></ProtectedRoute>} />
         <Route path="rankings" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Rankings /></ProtectedRoute>} />
 
         {/* Todos los usuarios autenticados */}
-        <Route path="wods" element={<ProtectedRoute><WODs /></ProtectedRoute>} />
         <Route path="calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
         <Route path="news" element={<ProtectedRoute><News /></ProtectedRoute>} />
         
