@@ -7,28 +7,22 @@ export const CHANGELOG = [
   {
     version: '1.0.8',
     date: '2026-01-15',
-    title: 'Modo Oscuro Individual y Seguridad',
+    title: 'Personalización de Tema Individual',
     changes: [
-      'Modo oscuro individual por usuario - cada uno elige su preferencia',
-      'Switch de tema (sol/luna) en el header al lado de la versión',
-      'Tema guardado en localStorage de cada navegador',
-      'Archivo .env removido del repositorio por seguridad',
-      'Configuradas restricciones de API Key en Google Cloud',
-      'Documentación de seguridad agregada (SECURITY.md)',
-      'Correcciones de vulnerabilidades de dependencias'
+      'Cada usuario puede elegir modo oscuro o claro según su preferencia',
+      'Nuevo botón de sol/luna en el header para cambiar el tema rápidamente',
+      'Tu elección de tema se guarda automáticamente en tu dispositivo'
     ]
   },
   {
     version: '1.0.7',
     date: '2026-01-09',
-    title: 'Simulador de Roles para Sysadmin',
+    title: 'Simulador de Roles para Administradores',
     changes: [
-      'Simulador de roles para sysadmin - ver la app como admin/profesor/alumno',
-      'Banner flotante que indica el modo de simulación activo',
-      'Botón para volver a vista normal desde cualquier página',
-      'Actualización de Firebase a v12.8.0 para seguridad',
-      'Corrección de vulnerabilidades (0 encontradas)',
-      'Sistema de permisos respeta roles simulados'
+      'Los administradores del sistema pueden simular vistas de otros roles',
+      'Visualiza cómo ven la aplicación los profesores y alumnos',
+      'Banner indicador cuando estás en modo simulación',
+      'Botón para volver a tu vista normal fácilmente'
     ]
   },
   {
