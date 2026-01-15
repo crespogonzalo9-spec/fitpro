@@ -2,6 +2,18 @@
 
 Todas las notas de las versiones de FitPro se documentan en este archivo.
 
+## [1.0.9] - 2025-01-15
+
+### Modificado
+- **Uniformidad de colores en modo claro**: Removidos filtros CSS que causaban diferentes tonos de azul en las tarjetas
+- Las clases `.bg-base`, `.bg-card`, `.bg-sidebar`, `.bg-input` ahora tienen colores consistentes sin filtros de saturación/brillo
+- Experiencia visual más limpia y uniforme en modo claro, similar a modo oscuro
+
+### Técnico
+- Modificado: `src/styles/index.css` - Removidos todos los filtros de saturación y brillo de las clases de fondo en modo claro
+
+---
+
 ## [1.0.8] - 2025-01-15
 
 ### Añadido
