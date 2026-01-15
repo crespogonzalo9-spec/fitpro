@@ -8,6 +8,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 // Auth
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import ForgotPassword from './components/Auth/ForgotPassword';
 
 // Layout
 import Layout from './components/Common/Layout';
@@ -116,6 +117,7 @@ function AppRoutes() {
       {/* Auth routes */}
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+      <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
       
       {/* Protected routes */}
       <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>

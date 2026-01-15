@@ -22,7 +22,7 @@ const DAYS_OF_WEEK = [
 const GymInfoContent = () => {
   const { isAdmin, isSysadmin } = useAuth();
   const { currentGym } = useGym();
-  const { gymLogo } = useTheme();
+  const { gymLogo, gymCoverImage } = useTheme();
   const { success, error: showError } = useToast();
 
   const [showEditModal, setShowEditModal] = useState(false);
@@ -155,35 +155,81 @@ const GymInfoContent = () => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      {/* Header con logo y nombre */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-        <div className="flex items-center gap-6">
-          <div className="w-24 h-24 rounded-2xl bg-gray-800 flex items-center justify-center overflow-hidden border border-gray-700">
-            {gymLogo ? (
-              <img src={gymLogo} alt={currentGym.name} className="w-full h-full object-cover" />
-            ) : (
-              <Building2 size={40} className="text-gray-500" />
-            )}
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">{currentGym.name}</h1>
-            {currentGym.slogan && (
-              <p className="text-gray-400 mt-1 italic">"{currentGym.slogan}"</p>
-            )}
-            {currentGym.isActive !== false ? (
-              <Badge className="mt-2 bg-green-500/20 text-green-400">Activo</Badge>
-            ) : (
-              <Badge className="mt-2 bg-red-500/20 text-red-400">Inactivo</Badge>
-            )}
+      {/* Banner / Cover Image */}
+      {gymCoverImage && (
+        <div className="relative w-full h-48 md:h-64 rounded-2xl overflow-hidden border border-gray-700 -mt-6">
+          <img
+            src={gymCoverImage}
+            alt={`Banner de ${currentGym.name}`}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent flex items-end p-6">
+            <div className="flex items-center gap-4 w-full">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-gray-800 flex items-center justify-center overflow-hidden border-2 border-white shadow-lg">
+                {gymLogo ? (
+                  <img src={gymLogo} alt={currentGym.name} className="w-full h-full object-cover" />
+                ) : (
+                  <Building2 size={32} className="text-gray-500" />
+                )}
+              </div>
+              <div className="flex-1">
+                <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">{currentGym.name}</h1>
+                {currentGym.slogan && (
+                  <p className="text-gray-200 mt-1 italic drop-shadow">"{currentGym.slogan}"</p>
+                )}
+              </div>
+              {canEdit && (
+                <Button icon={Edit} onClick={() => setShowEditModal(true)}>
+                  Editar Info
+                </Button>
+              )}
+            </div>
           </div>
         </div>
+      )}
 
-        {canEdit && (
-          <Button icon={Edit} onClick={() => setShowEditModal(true)}>
-            Editar Info
-          </Button>
-        )}
-      </div>
+      {/* Header sin banner (fallback) */}
+      {!gymCoverImage && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div className="flex items-center gap-6">
+            <div className="w-24 h-24 rounded-2xl bg-gray-800 flex items-center justify-center overflow-hidden border border-gray-700">
+              {gymLogo ? (
+                <img src={gymLogo} alt={currentGym.name} className="w-full h-full object-cover" />
+              ) : (
+                <Building2 size={40} className="text-gray-500" />
+              )}
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold">{currentGym.name}</h1>
+              {currentGym.slogan && (
+                <p className="text-gray-400 mt-1 italic">"{currentGym.slogan}"</p>
+              )}
+              {currentGym.isActive !== false ? (
+                <Badge className="mt-2 bg-green-500/20 text-green-400">Activo</Badge>
+              ) : (
+                <Badge className="mt-2 bg-red-500/20 text-red-400">Inactivo</Badge>
+              )}
+            </div>
+          </div>
+
+          {canEdit && (
+            <Button icon={Edit} onClick={() => setShowEditModal(true)}>
+              Editar Info
+            </Button>
+          )}
+        </div>
+      )}
+
+      {/* Badge de estado cuando hay banner */}
+      {gymCoverImage && (
+        <div className="flex justify-start">
+          {currentGym.isActive !== false ? (
+            <Badge className="bg-green-500/20 text-green-400">Activo</Badge>
+          ) : (
+            <Badge className="bg-red-500/20 text-red-400">Inactivo</Badge>
+          )}
+        </div>
+      )}
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Información de contacto */}

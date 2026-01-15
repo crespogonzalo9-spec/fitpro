@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [simulatedRole, setSimulatedRole] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -277,21 +278,51 @@ export const AuthProvider = ({ children }) => {
   };
 
   // =============================================
-  // SISTEMA DE ROLES MÚLTIPLES
+  // SIMULACIÓN DE ROLES (solo para sysadmin)
   // =============================================
-  
-  const hasRole = (role) => {
-    if (!userData?.roles) return false;
-    return userData.roles.includes(role);
+
+  const startRoleSimulation = (role) => {
+    // Solo sysadmin puede simular roles
+    if (!userData?.roles?.includes('sysadmin')) return;
+    setSimulatedRole(role);
   };
 
-  const isSysadmin = () => hasRole('sysadmin');
+  const stopRoleSimulation = () => {
+    setSimulatedRole(null);
+  };
+
+  const isSimulating = () => simulatedRole !== null;
+
+  // Obtener el rol efectivo (simulado o real)
+  const getEffectiveRoles = () => {
+    if (simulatedRole && userData?.roles?.includes('sysadmin')) {
+      // Si está simulando, retornar solo el rol simulado
+      return [simulatedRole];
+    }
+    return userData?.roles || [];
+  };
+
+  // =============================================
+  // SISTEMA DE ROLES MÚLTIPLES
+  // =============================================
+
+  const hasRole = (role) => {
+    const effectiveRoles = getEffectiveRoles();
+    return effectiveRoles.includes(role);
+  };
+
+  const isSysadmin = () => {
+    // Si está simulando, no tiene permisos de sysadmin
+    if (isSimulating()) return false;
+    return userData?.roles?.includes('sysadmin') || false;
+  };
+
   const isAdmin = () => hasRole('sysadmin') || hasRole('admin');
   const isProfesor = () => hasRole('sysadmin') || hasRole('admin') || hasRole('profesor');
   const isAlumno = () => hasRole('alumno');
   const isOnlyAlumno = () => {
-    if (!userData?.roles) return true;
-    return userData.roles.length === 1 && userData.roles[0] === 'alumno';
+    const effectiveRoles = getEffectiveRoles();
+    return effectiveRoles.length === 1 && effectiveRoles[0] === 'alumno';
   };
 
   // Verificar si está bloqueado
@@ -368,7 +399,13 @@ export const AuthProvider = ({ children }) => {
     canValidateRankings,
     canCreateRankings,
     canManageInvites,
-    canManageGymSettings
+    canManageGymSettings,
+    // Simulación de roles
+    simulatedRole,
+    startRoleSimulation,
+    stopRoleSimulation,
+    isSimulating,
+    getEffectiveRoles
   };
 
   return (

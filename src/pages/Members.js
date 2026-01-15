@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, MoreVertical, Phone, Shield, ShieldX, ShieldCheck, TrendingUp, Trophy, ArrowUp, ArrowDown, Calendar } from 'lucide-react';
+import { Users, MoreVertical, Phone, Shield, ShieldX, ShieldCheck, TrendingUp, Trophy, ArrowUp, ArrowDown, Calendar, KeyRound } from 'lucide-react';
 import { Button, Card, Modal, Select, SearchInput, EmptyState, LoadingState, Badge, Avatar, Dropdown, DropdownItem, ConfirmDialog , GymRequired } from '../components/Common';
 import { useAuth } from '../contexts/AuthContext';
 import { useGym } from '../contexts/GymContext';
@@ -22,6 +22,7 @@ const MembersContent = () => {
   const [showModal, setShowModal] = useState(false);
   const [showBlockConfirm, setShowBlockConfirm] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
+  const [showResetPassword, setShowResetPassword] = useState(false);
   const [selected, setSelected] = useState(null);
 
   const [prs, setPrs] = useState([]);
@@ -154,6 +155,32 @@ const MembersContent = () => {
     }
   };
 
+  const handleResetPassword = async () => {
+    try {
+      // Generar contraseña temporal de 8 caracteres
+      const tempPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8).toUpperCase();
+
+      // Marcar que el usuario necesita cambiar su contraseña
+      await updateDoc(doc(db, 'users', selected.id), {
+        requiresPasswordChange: true,
+        temporaryPassword: tempPassword,
+        passwordResetBy: userData.id,
+        passwordResetAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+
+      // Mostrar la contraseña temporal al admin
+      success(`Contraseña temporal generada: ${tempPassword}`);
+      alert(`Contraseña temporal para ${selected.name}:\n\n${tempPassword}\n\nGuardá esta contraseña y enviásela al usuario de forma segura. El usuario deberá cambiarla al iniciar sesión.`);
+
+      setShowResetPassword(false);
+      setSelected(null);
+    } catch (err) {
+      console.error('Error resetting password:', err);
+      showError('Error al resetear la contraseña');
+    }
+  };
+
   const getRoleBadges = (roles) => {
     if (!roles || roles.length === 0) return <Badge className="bg-gray-500/20 text-gray-400">Alumno</Badge>;
     
@@ -260,6 +287,11 @@ const MembersContent = () => {
                         Gestionar roles
                       </DropdownItem>
                     )}
+                    {canEdit && (
+                      <DropdownItem icon={KeyRound} onClick={() => { setSelected(member); setShowResetPassword(true); }}>
+                        Resetear contraseña
+                      </DropdownItem>
+                    )}
                     {canBlock && !member.roles?.includes('admin') && (
                       <DropdownItem
                         icon={member.isBlocked ? ShieldCheck : ShieldX}
@@ -306,6 +338,17 @@ const MembersContent = () => {
         }
         confirmText={selected?.isBlocked ? 'Desbloquear' : 'Bloquear'}
         confirmVariant={selected?.isBlocked ? 'primary' : 'danger'}
+      />
+
+      {/* Confirmación de reseteo de contraseña */}
+      <ConfirmDialog
+        isOpen={showResetPassword}
+        onClose={() => { setShowResetPassword(false); setSelected(null); }}
+        onConfirm={handleResetPassword}
+        title="Resetear Contraseña"
+        message={`¿Resetear la contraseña de "${selected?.name}"? Se generará una contraseña temporal y el usuario deberá cambiarla al iniciar sesión.`}
+        confirmText="Resetear Contraseña"
+        confirmVariant="primary"
       />
 
       {/* Modal de progreso */}

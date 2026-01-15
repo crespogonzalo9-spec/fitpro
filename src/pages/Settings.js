@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Palette, Moon, Sun, Image as ImageIcon, Upload, Check, Building2, Save, User, Type, Eye, Monitor } from 'lucide-react';
-import { Button, Card, Badge, Tabs, Input } from '../components/Common';
+import { Palette, Moon, Sun, Image as ImageIcon, Upload, Check, Building2, Save, User, Type, Eye, Monitor, UserCog } from 'lucide-react';
+import { Button, Card, Badge, Tabs, Input, Select } from '../components/Common';
 import { useAuth } from '../contexts/AuthContext';
 import { useGym } from '../contexts/GymContext';
 import { useTheme, COLOR_PALETTES } from '../contexts/ThemeContext';
@@ -10,7 +10,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { compressImage } from '../utils/imageUtils';
 
 const Settings = () => {
-  const { userData, canManageGymSettings } = useAuth();
+  const { userData, canManageGymSettings, isSysadmin, simulatedRole, startRoleSimulation, stopRoleSimulation, isSimulating } = useAuth();
   const { currentGym } = useGym();
   const { isDark, paletteId, secondaryPaletteId, gymLogo, gymSlogan, gymCoverImage } = useTheme();
   const toast = useToast();
@@ -25,6 +25,7 @@ const Settings = () => {
   const [coverFile, setCoverFile] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRoleForSimulation, setSelectedRoleForSimulation] = useState('');
 
   const canEdit = canManageGymSettings();
 
@@ -190,6 +191,68 @@ const Settings = () => {
               </div>
             </div>
           </Card>
+
+          {/* Simulador de Roles (Solo para Sysadmin) */}
+          {isSysadmin() && (
+            <Card>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                  <UserCog className="text-purple-400" size={24} />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Simulador de Roles</h3>
+                  <p className="text-sm text-gray-400">Ver la aplicación desde la perspectiva de otros roles</p>
+                </div>
+              </div>
+
+              {!isSimulating() ? (
+                <div className="space-y-3">
+                  <Select
+                    value={selectedRoleForSimulation}
+                    onChange={(e) => setSelectedRoleForSimulation(e.target.value)}
+                    options={[
+                      { value: 'admin', label: 'Administrador' },
+                      { value: 'profesor', label: 'Profesor' },
+                      { value: 'alumno', label: 'Alumno' }
+                    ]}
+                    placeholder="Selecciona un rol para simular"
+                  />
+                  <Button
+                    onClick={() => {
+                      if (selectedRoleForSimulation) {
+                        startRoleSimulation(selectedRoleForSimulation);
+                        toast.success(`Simulando vista de ${selectedRoleForSimulation}`);
+                      }
+                    }}
+                    disabled={!selectedRoleForSimulation}
+                    className="w-full"
+                    variant="secondary"
+                  >
+                    Iniciar Simulación
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-3">
+                    <p className="text-sm text-purple-300">
+                      <strong>Simulando:</strong> {simulatedRole === 'admin' ? 'Administrador' : simulatedRole === 'profesor' ? 'Profesor' : 'Alumno'}
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => {
+                      stopRoleSimulation();
+                      setSelectedRoleForSimulation('');
+                      toast.success('Volviste a tu vista de Sysadmin');
+                    }}
+                    variant="danger"
+                    className="w-full"
+                  >
+                    Detener Simulación
+                  </Button>
+                </div>
+              )}
+            </Card>
+          )}
 
           {/* Botón Guardar */}
           {canEdit && selectedDarkMode !== isDark && (

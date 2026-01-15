@@ -289,7 +289,7 @@ const RoutinesContent = () => {
               </div>
 
               {/* Botón para iniciar rutina con timer */}
-              {routine.exercises && routine.exercises.length > 0 && (
+              {((routine.exercises && routine.exercises.length > 0) || (routine.wods && routine.wods.length > 0)) && (
                 <Button
                   variant="primary"
                   size="sm"
@@ -337,6 +337,7 @@ const RoutinesContent = () => {
         <RoutineTimer
           routine={selected}
           exercises={exercises}
+          wods={wods}
           onClose={() => { setShowTimer(false); setSelected(null); }}
           onComplete={handleCompleteRoutine}
         />
@@ -436,7 +437,7 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
   const addWod = () => {
     setForm(prev => ({
       ...prev,
-      wods: [...prev.wods, { wodId: '', notes: '' }]
+      wods: [...prev.wods, { wodId: '', notes: '', restDuration: 60 }]
     }));
   };
 
@@ -602,8 +603,8 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
         {/* Tabs para Ejercicios y WODs */}
         <Tabs
           tabs={[
-            { id: 'exercises', label: 'Ejercicios', icon: 'Dumbbell' },
-            { id: 'wods', label: 'WODs', icon: 'Flame' }
+            { id: 'exercises', label: 'Ejercicios', icon: Dumbbell },
+            { id: 'wods', label: 'WODs', icon: Flame }
           ]}
           activeTab={activeTab}
           onChange={setActiveTab}
@@ -750,6 +751,20 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
                       <Trash2 size={16} />
                     </button>
                   </div>
+                  {form.hasRestBetweenExercises && (
+                    <div>
+                      <label className="text-xs text-gray-400 mb-1 block">Descanso después del WOD (segundos)</label>
+                      <Input
+                        type="number"
+                        value={wod.restDuration || 60}
+                        onChange={e => updateWod(idx, 'restDuration', e.target.value)}
+                        placeholder="60"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Tiempo de descanso antes del siguiente elemento
+                      </p>
+                    </div>
+                  )}
                   <Input
                     value={wod.notes || ''}
                     onChange={e => updateWod(idx, 'notes', e.target.value)}
@@ -785,7 +800,7 @@ const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, wods, getClassN
         )}
 
         {/* Botón para iniciar con timer */}
-        {routine.exercises && routine.exercises.length > 0 && (
+        {((routine.exercises && routine.exercises.length > 0) || (routine.wods && routine.wods.length > 0)) && (
           <Button
             variant="primary"
             icon={Play}
@@ -840,6 +855,11 @@ const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, wods, getClassN
                 <div className="flex-1">
                   <p className="font-medium">{getWodName(wod.wodId)}</p>
                   {wod.notes && <p className="text-xs text-gray-500 mt-1">{wod.notes}</p>}
+                  {routine.hasRestBetweenExercises && wod.restDuration && (
+                    <p className="text-xs text-yellow-400 mt-1">
+                      Descanso después: {wod.restDuration}s
+                    </p>
+                  )}
                 </div>
               </div>
             ))}
