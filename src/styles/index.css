@@ -71,12 +71,12 @@ body.dark-mode {
 /* ============ MODO CLARO ============ */
 .light body,
 body.light-mode {
-  background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important;
+  background-color: rgb(var(--color-bg-primary, 248, 250, 252)) !important;
   color: #1E293B;
 }
 
 .light .bg-base {
-  background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important;
+  background-color: rgb(var(--color-bg-50, 248, 250, 252)) !important;
 }
 .light .bg-card {
   background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important;
