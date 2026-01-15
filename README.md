@@ -1,5 +1,7 @@
 # 🏋️ FitPro - Sistema de Gestión de Gimnasios
 
+> **⚠️ AVISO DE SEGURIDAD:** Este proyecto utiliza Firebase. Las credenciales deben configurarse mediante variables de entorno. Ver [SECURITY.md](SECURITY.md) para más información.
+
 ## 🚀 Quick Start
 
 ```bash
