@@ -2,6 +2,18 @@
 
 Todas las notas de las versiones de FitPro se documentan en este archivo.
 
+## [1.0.10] - 2025-01-15
+
+### Modificado
+- **Fondo principal en modo claro**: Cambiado color de fondo del body para usar el mismo celeste que las tarjetas
+- Clases `body` y `.bg-base` ahora usan `--color-bg-100` (241, 245, 249) en lugar de colores más claros
+- Uniformidad completa entre fondo y tarjetas en modo claro
+
+### Técnico
+- Modificado: `src/styles/index.css` - Actualizado color de fondo del body y .bg-base en modo claro
+
+---
+
 ## [1.0.9] - 2025-01-15
 
 ### Modificado
