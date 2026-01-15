@@ -1,9 +1,18 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.10';
+export const CURRENT_VERSION = '1.0.11';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.11',
+    date: '2026-01-15',
+    title: 'Corrección Final de Fondo en Modo Claro',
+    changes: [
+      'El área de contenido principal ahora tiene el mismo color celeste que las tarjetas',
+      'Uniformidad visual completa en modo claro'
+    ]
+  },
   {
     version: '1.0.10',
     date: '2026-01-15',

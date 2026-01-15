@@ -2,6 +2,19 @@
 
 Todas las notas de las versiones de FitPro se documentan en este archivo.
 
+## [1.0.11] - 2025-01-15
+
+### Modificado
+- **Fondo del área de contenido en modo claro**: Agregada clase `bg-card` al main del Layout
+- Reverted cambios incorrectos que afectaban sidebar y banner
+- El área de contenido principal ahora usa el mismo color celeste que las tarjetas individuales
+
+### Técnico
+- Modificado: `src/components/Common/Layout.js` - Agregado `bg-card` al elemento main
+- Modificado: `src/styles/index.css` - Revertidos cambios incorrectos a body y .bg-base
+
+---
+
 ## [1.0.10] - 2025-01-15
 
 ### Modificado
