@@ -79,6 +79,12 @@ const Login = () => {
               </div>
             </div>
 
+            <div className="text-right">
+              <Link to="/forgot-password" className="text-sm text-emerald-500 hover:text-emerald-400">
+                ¿Olvidaste tu contraseña?
+              </Link>
+            </div>
+
             <button
               type="submit"
               disabled={loading}

@@ -20,7 +20,7 @@ const iconMap = {
 };
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
-  const { userData, logout, isSysadmin } = useAuth();
+  const { userData, logout, isSysadmin, getEffectiveRoles } = useAuth();
   const { currentGym, availableGyms, selectGym, viewAllGyms } = useGym();
   const { gymLogo } = useTheme();
   const navigate = useNavigate();
@@ -31,23 +31,25 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     navigate('/login');
   };
 
-  // Determinar rutas basado en roles múltiples
+  // Determinar rutas basado en roles múltiples (usa roles efectivos para respetar simulación)
   const getRoutes = () => {
-    if (!userData?.roles) return NAV_ROUTES.alumno;
-    if (userData.roles.includes('sysadmin')) return NAV_ROUTES.sysadmin;
-    if (userData.roles.includes('admin')) return NAV_ROUTES.admin;
-    if (userData.roles.includes('profesor')) return NAV_ROUTES.profesor;
+    const effectiveRoles = getEffectiveRoles();
+    if (!effectiveRoles || effectiveRoles.length === 0) return NAV_ROUTES.alumno;
+    if (effectiveRoles.includes('sysadmin')) return NAV_ROUTES.sysadmin;
+    if (effectiveRoles.includes('admin')) return NAV_ROUTES.admin;
+    if (effectiveRoles.includes('profesor')) return NAV_ROUTES.profesor;
     return NAV_ROUTES.alumno;
   };
 
   const routes = getRoutes();
 
-  // Obtener el rol más alto para mostrar
+  // Obtener el rol más alto para mostrar (usa roles efectivos para respetar simulación)
   const getHighestRole = () => {
-    if (!userData?.roles) return 'alumno';
-    if (userData.roles.includes('sysadmin')) return 'sysadmin';
-    if (userData.roles.includes('admin')) return 'admin';
-    if (userData.roles.includes('profesor')) return 'profesor';
+    const effectiveRoles = getEffectiveRoles();
+    if (!effectiveRoles || effectiveRoles.length === 0) return 'alumno';
+    if (effectiveRoles.includes('sysadmin')) return 'sysadmin';
+    if (effectiveRoles.includes('admin')) return 'admin';
+    if (effectiveRoles.includes('profesor')) return 'profesor';
     return 'alumno';
   };
 

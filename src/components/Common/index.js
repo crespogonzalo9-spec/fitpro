@@ -24,7 +24,7 @@ export const Button = ({ children, variant = 'primary', size = 'md', icon: Icon,
 export const Input = ({ label, error, className = '', ...props }) => (
   <div className={className}>
     {label && <label className="block text-sm font-medium text-gray-300 mb-1">{label}</label>}
-    <input className={`w-full px-4 py-2.5 bg-gray-800 border ${error ? 'border-red-500' : 'border-gray-700'} rounded-xl text-white placeholder-gray-500 focus:outline-none transition-colors`} {...props} />
+    <input className={`w-full px-4 py-2.5 bg-input border ${error ? 'border-red-500' : 'border-gray-700'} rounded-xl text-white placeholder-gray-500 focus:outline-none transition-colors`} {...props} />
     {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
   </div>
 );
@@ -33,7 +33,7 @@ export const Input = ({ label, error, className = '', ...props }) => (
 export const Textarea = ({ label, error, className = '', ...props }) => (
   <div className={className}>
     {label && <label className="block text-sm font-medium text-gray-300 mb-1">{label}</label>}
-    <textarea className={`w-full px-4 py-2.5 bg-gray-800 border ${error ? 'border-red-500' : 'border-gray-700'} rounded-xl text-white placeholder-gray-500 focus:outline-none transition-colors resize-none`} {...props} />
+    <textarea className={`w-full px-4 py-2.5 bg-input border ${error ? 'border-red-500' : 'border-gray-700'} rounded-xl text-white placeholder-gray-500 focus:outline-none transition-colors resize-none`} {...props} />
     {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
   </div>
 );
@@ -42,7 +42,7 @@ export const Textarea = ({ label, error, className = '', ...props }) => (
 export const Select = ({ label, options = [], placeholder, error, className = '', ...props }) => (
   <div className={className}>
     {label && <label className="block text-sm font-medium text-gray-300 mb-1">{label}</label>}
-    <select className={`w-full px-4 py-2.5 bg-gray-800 border ${error ? 'border-red-500' : 'border-gray-700'} rounded-xl text-white focus:outline-none transition-colors appearance-none`} {...props}>
+    <select className={`w-full px-4 py-2.5 bg-input border ${error ? 'border-red-500' : 'border-gray-700'} rounded-xl text-white focus:outline-none transition-colors appearance-none`} {...props}>
       {placeholder && <option value="">{placeholder}</option>}
       {options.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
     </select>
@@ -52,7 +52,7 @@ export const Select = ({ label, options = [], placeholder, error, className = ''
 // Checkbox
 export const Checkbox = ({ label, className = '', ...props }) => (
   <label className={`flex items-center gap-2 cursor-pointer ${className}`}>
-    <input type="checkbox" className="w-4 h-4 rounded border-gray-600 text-primary bg-gray-800 focus:ring-primary" {...props} />
+    <input type="checkbox" className="w-4 h-4 rounded border-gray-600 text-primary bg-input focus:ring-primary" {...props} />
     {label && <span className="text-sm text-gray-300">{label}</span>}
   </label>
 );
@@ -64,7 +64,7 @@ export const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className={`relative w-full ${sizes[size]} bg-slate-800 border border-gray-700 rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto animate-fadeIn`}>
+      <div className={`relative w-full ${sizes[size]} bg-card border border-gray-700 rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto animate-fadeIn`}>
         <div className="flex items-center justify-between p-4 border-b border-gray-700">
           <h2 className="text-lg font-semibold">{title}</h2>
           <button onClick={onClose} className="p-1 hover:bg-gray-700 rounded-lg"><X size={20} /></button>
@@ -77,7 +77,7 @@ export const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
 
 // Card
 export const Card = ({ children, className = '', hover, onClick }) => (
-  <div onClick={onClick} className={`bg-slate-800/50 border border-gray-700/50 rounded-2xl p-4 ${hover ? 'hover:border-primary-30 cursor-pointer' : ''} ${className}`}>
+  <div onClick={onClick} className={`bg-card border border-gray-700/50 rounded-2xl p-4 ${hover ? 'hover:border-primary-30 cursor-pointer' : ''} ${className}`}>
     {children}
   </div>
 );
@@ -122,7 +122,7 @@ export const LoadingState = ({ message = 'Cargando...' }) => (
 // EmptyState
 export const EmptyState = ({ icon: Icon, title, description, action }) => (
   <div className="flex flex-col items-center justify-center py-12 text-center">
-    {Icon && <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mb-4"><Icon className="text-gray-500" size={32} /></div>}
+    {Icon && <div className="w-16 h-16 bg-card rounded-full flex items-center justify-center mb-4"><Icon className="text-gray-500" size={32} /></div>}
     <h3 className="text-lg font-medium text-gray-300">{title}</h3>
     {description && <p className="text-gray-500 mt-1 max-w-sm">{description}</p>}
     {action && <div className="mt-4">{action}</div>}
@@ -133,15 +133,15 @@ export const EmptyState = ({ icon: Icon, title, description, action }) => (
 export const SearchInput = ({ value, onChange, placeholder = 'Buscar...', className = '' }) => (
   <div className={`relative ${className}`}>
     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-    <input type="text" value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} className="w-full pl-10 pr-4 py-2.5 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none transition-colors" />
+    <input type="text" value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} className="w-full pl-10 pr-4 py-2.5 bg-input border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none transition-colors" />
   </div>
 );
 
 // Tabs
 export const Tabs = ({ tabs, activeTab, onChange }) => (
-  <div className="flex gap-1 p-1 bg-gray-800/50 rounded-xl">
+  <div className="flex gap-1 p-1 bg-card rounded-xl">
     {tabs.map(tab => (
-      <button key={tab.id} onClick={() => onChange(tab.id)} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === tab.id ? 'bg-primary text-white' : 'text-gray-400 hover:text-white'}`} style={activeTab === tab.id ? { backgroundColor: 'rgba(var(--color-primary), 1)' } : {}}>
+      <button type="button" key={tab.id} onClick={() => onChange(tab.id)} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === tab.id ? 'bg-primary text-white' : 'text-gray-400 hover:text-white'}`} style={activeTab === tab.id ? { backgroundColor: 'rgba(var(--color-primary), 1)' } : {}}>
         {tab.icon && <tab.icon size={16} />}{tab.label}
       </button>
     ))}
@@ -197,7 +197,7 @@ export const Dropdown = ({ trigger, children }) => {
         {trigger}
       </div>
       {isOpen && (
-        <div className="absolute right-0 mt-1 w-48 bg-gray-800 border border-gray-700 rounded-xl shadow-lg z-50 py-1 animate-fadeIn">
+        <div className="absolute right-0 mt-1 w-48 bg-card border border-gray-700 rounded-xl shadow-lg z-50 py-1 animate-fadeIn">
           {childrenWithClose}
         </div>
       )}
