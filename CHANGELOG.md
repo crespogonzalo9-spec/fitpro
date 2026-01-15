@@ -18,6 +18,14 @@ Todas las notas de las versiones de FitPro se documentan en este archivo.
 - Sidebar: Actualizado para usar roles efectivos (simulados o reales)
 - Layout: Integrado banner de simulación de roles con ajuste automático de padding
 
+### Seguridad
+- Actualizado Firebase de v10.7.0 a v12.8.0 (corrige vulnerabilidades de undici)
+- Agregados overrides de npm para forzar versiones seguras:
+  - nth-check ^2.1.1 (corrige CVE de complejidad regex)
+  - postcss ^8.4.31 (corrige error de parsing)
+  - webpack-dev-server ^5.2.1 (previene robo de código fuente en desarrollo)
+- Resultado: 0 vulnerabilidades detectadas por npm audit
+
 ### Técnico
 - Nuevo componente: `src/components/Common/RoleSimulationBanner.js`
 - Modificados: `src/contexts/AuthContext.js`, `src/pages/Settings.js`, `src/components/Common/Layout.js`, `src/components/Common/Sidebar.js`
