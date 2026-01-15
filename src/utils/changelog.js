@@ -1,24 +1,34 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.7';
+export const CURRENT_VERSION = '1.0.8';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
   {
-    version: '1.0.7',
-    date: '2026-01-10',
-    title: 'Mejoras al Sistema de Rutinas',
+    version: '1.0.8',
+    date: '2026-01-15',
+    title: 'Modo Oscuro Individual y Seguridad',
     changes: [
-      'Confirmación al salir de rutina en progreso con opciones de pausar o descartar',
-      'Sistema de pausa/reanudación de rutinas - continuá desde donde lo dejaste',
-      'Ejercicios de tiempo con cuenta regresiva (se cargan en minutos)',
-      'Botón Play manual para iniciar cuenta regresiva o progresiva',
-      'Sistema de tildar series completadas para ejercicios por series',
-      'Persistencia local de sesiones pausadas',
-      'Avatar del usuario muestra foto de perfil configurada',
-      'Click en avatar abre menú para ir al perfil',
-      'Icono de versión mejorado en el header',
-      'Corrección: error al editar/eliminar rankings'
+      'Modo oscuro individual por usuario - cada uno elige su preferencia',
+      'Switch de tema (sol/luna) en el header al lado de la versión',
+      'Tema guardado en localStorage de cada navegador',
+      'Archivo .env removido del repositorio por seguridad',
+      'Configuradas restricciones de API Key en Google Cloud',
+      'Documentación de seguridad agregada (SECURITY.md)',
+      'Correcciones de vulnerabilidades de dependencias'
+    ]
+  },
+  {
+    version: '1.0.7',
+    date: '2026-01-09',
+    title: 'Simulador de Roles para Sysadmin',
+    changes: [
+      'Simulador de roles para sysadmin - ver la app como admin/profesor/alumno',
+      'Banner flotante que indica el modo de simulación activo',
+      'Botón para volver a vista normal desde cualquier página',
+      'Actualización de Firebase a v12.8.0 para seguridad',
+      'Corrección de vulnerabilidades (0 encontradas)',
+      'Sistema de permisos respeta roles simulados'
     ]
   },
   {
