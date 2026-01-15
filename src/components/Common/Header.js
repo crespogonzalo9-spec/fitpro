@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Menu, Bell, Info, User, Camera, Moon, Sun } from 'lucide-react';
+import { Menu, Bell, Info, User, Moon, Sun } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Badge, Dropdown, DropdownItem } from './index';
+import { Avatar, Dropdown, DropdownItem } from './index';
 import ChangelogModal from './ChangelogModal';
 import { getVersionString } from '../../utils/changelog';
 
