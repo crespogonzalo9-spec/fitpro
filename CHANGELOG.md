@@ -2,7 +2,25 @@
 
 Todas las notas de las versiones de FitPro se documentan en este archivo.
 
-## [1.1.0] - 2025-01-15
+## [1.0.8] - 2025-01-15
+
+### Añadido
+- **Modo oscuro individual por usuario**: Cada usuario puede activar/desactivar el modo oscuro independientemente
+- **Switch de tema en header**: Botón de sol/luna al lado del número de versión para cambiar el tema rápidamente
+- El tema se guarda en localStorage del navegador de cada usuario
+
+### Modificado
+- ThemeContext: Modo oscuro ya no se sincroniza desde gimnasio sino desde localStorage del usuario
+- Header: Agregado switch de tema (sol/luna) al lado del número de versión
+
+### Seguridad
+- Archivo .env removido del repositorio público
+- Creada documentación de seguridad (SECURITY.md)
+- Configuradas restricciones de API Key en Google Cloud Console
+
+---
+
+## [1.0.7] - 2025-01-09
 
 ### Añadido
 - **Simulador de Roles para Sysadmin**: Nueva funcionalidad que permite a los sysadmin ver la aplicación desde la perspectiva de otros roles (Admin, Profesor, Alumno)

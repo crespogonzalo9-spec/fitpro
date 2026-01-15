@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Menu, Bell, Info, User, Camera } from 'lucide-react';
+import { Menu, Bell, Info, User, Camera, Moon, Sun } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Badge, Dropdown, DropdownItem } from './index';
 import ChangelogModal from './ChangelogModal';
@@ -8,6 +9,7 @@ import { getVersionString } from '../../utils/changelog';
 
 const Header = ({ onMenuClick, title }) => {
   const { userData } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [showChangelog, setShowChangelog] = useState(false);
 
@@ -22,16 +24,32 @@ const Header = ({ onMenuClick, title }) => {
             <h2 className="text-lg font-semibold">{title}</h2>
           </div>
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setShowChangelog(true)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-card rounded-lg transition-colors group"
-              title="Ver actualizaciones"
-            >
-              <Info size={16} className="text-gray-400 group-hover:text-primary transition-colors" />
-              <span className="text-xs font-medium text-gray-400 group-hover:text-primary transition-colors">
-                v{getVersionString()}
-              </span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowChangelog(true)}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-card rounded-lg transition-colors group"
+                title="Ver actualizaciones"
+              >
+                <Info size={16} className="text-gray-400 group-hover:text-primary transition-colors" />
+                <span className="text-xs font-medium text-gray-400 group-hover:text-primary transition-colors">
+                  v{getVersionString()}
+                </span>
+              </button>
+
+              {/* Switch de tema */}
+              <button
+                onClick={toggleTheme}
+                className="p-2 hover:bg-card rounded-lg transition-colors"
+                title={isDark ? 'Modo claro' : 'Modo oscuro'}
+              >
+                {isDark ? (
+                  <Sun size={18} className="text-yellow-400" />
+                ) : (
+                  <Moon size={18} className="text-blue-400" />
+                )}
+              </button>
+            </div>
+
             <button className="relative p-2 hover:bg-card rounded-lg">
               <Bell size={20} />
             </button>

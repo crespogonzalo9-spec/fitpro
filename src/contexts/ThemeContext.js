@@ -53,7 +53,11 @@ export const COLOR_PALETTES = [
 ];
 
 export const ThemeProvider = ({ children }) => {
-  const [isDark, setIsDark] = useState(true);
+  // Modo oscuro individual - guardar en localStorage del usuario
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('fitpro-theme-dark');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
   const [paletteId, setPaletteId] = useState('emerald');
   const [secondaryPaletteId, setSecondaryPaletteId] = useState('slate');
   const [gymLogo, setGymLogo] = useState(null);
@@ -80,10 +84,7 @@ export const ThemeProvider = ({ children }) => {
         } else if (data.colorPalette) {
           setSecondaryPaletteId(data.colorPalette);
         }
-        // Aplicar modo oscuro/claro del gimnasio
-        if (data.darkMode !== undefined) {
-          setIsDark(data.darkMode);
-        }
+        // YA NO sincronizamos darkMode desde gimnasio - es individual por usuario
         // Logo del gimnasio
         if (data.logo) {
           setGymLogo(data.logo);
@@ -103,6 +104,11 @@ export const ThemeProvider = ({ children }) => {
 
     return () => unsubscribe();
   }, [currentGymId]);
+
+  // Guardar modo oscuro en localStorage cuando cambie
+  useEffect(() => {
+    localStorage.setItem('fitpro-theme-dark', JSON.stringify(isDark));
+  }, [isDark]);
 
   // Aplicar estilos al DOM
   useEffect(() => {
