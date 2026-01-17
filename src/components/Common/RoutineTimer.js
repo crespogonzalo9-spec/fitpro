@@ -15,8 +15,22 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
 
   // Combinar todos los ejercicios y WODs de todos los bloques en un solo array
   const allElements = blocks.flatMap(block => [
-    ...(block.exercises || []).map(ex => ({ ...ex, type: 'exercise', blockName: block.name })),
-    ...(block.wods || []).map(wod => ({ ...wod, type: 'wod', blockName: block.name }))
+    ...(block.exercises || []).map(ex => ({
+      ...ex,
+      type: 'exercise',
+      blockName: block.name,
+      blockType: block.type,
+      esdInterval: block.esdInterval,
+      esdRounds: block.esdRounds
+    })),
+    ...(block.wods || []).map(wod => ({
+      ...wod,
+      type: 'wod',
+      blockName: block.name,
+      blockType: block.type,
+      esdInterval: block.esdInterval,
+      esdRounds: block.esdRounds
+    }))
   ]);
 
   const [currentElementIndex, setCurrentElementIndex] = useState(0);
@@ -33,9 +47,14 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
   const [pausedData, setPausedData] = useState(null); // Datos de sesión pausada
   const [skippedElements, setSkippedElements] = useState([]); // Array de elementos salteados
 
+  // Estados para ESD
+  const [esdCurrentRound, setEsdCurrentRound] = useState(1); // Ronda actual de ESD
+  const [esdIntervalTime, setEsdIntervalTime] = useState(0); // Tiempo dentro del intervalo actual
+
   const timerRef = useRef(null);
   const currentElement = allElements[currentElementIndex];
   const isCurrentWod = currentElement?.type === 'wod';
+  const isEsdBlock = currentElement?.blockType === 'esd';
   const exerciseData = !isCurrentWod && currentElement ? exercises.find(e => e.id === currentElement.exerciseId) : null;
   const wodData = isCurrentWod && currentElement ? wods.find(w => w.id === currentElement.wodId) : null;
 
