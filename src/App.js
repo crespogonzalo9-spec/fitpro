@@ -26,6 +26,7 @@ import Classes from './pages/Classes';
 import Exercises from './pages/Exercises';
 import Routines from './pages/Routines';
 import WODs from './pages/WODs';
+import ESDs from './pages/ESDs';
 import PRs from './pages/PRs';
 import Rankings from './pages/Rankings';
 import Schedule from './pages/Schedule';
@@ -136,6 +137,7 @@ function AppRoutes() {
         <Route path="classes" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Classes /></ProtectedRoute>} />
         <Route path="exercises" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Exercises /></ProtectedRoute>} />
         <Route path="wods" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><WODs /></ProtectedRoute>} />
+        <Route path="esds" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><ESDs /></ProtectedRoute>} />
         <Route path="routines" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Routines /></ProtectedRoute>} />
         <Route path="prs" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><PRs /></ProtectedRoute>} />
         <Route path="rankings" element={<ProtectedRoute allowedRoles={['sysadmin', 'admin', 'profesor']}><Rankings /></ProtectedRoute>} />
