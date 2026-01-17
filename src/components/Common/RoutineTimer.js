@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, SkipForward, X, Check, Timer, Coffee, Dumbbell, AlertCircle, CheckCircle2, Flame } from 'lucide-react';
+import { Play, Pause, SkipForward, X, Check, Timer, Coffee, Dumbbell, AlertCircle, CheckCircle2, Flame, StopCircle, FastForward } from 'lucide-react';
 import { Button, Modal, Card } from './index';
 
 const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
@@ -17,9 +17,11 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
   const [elementTimes, setElementTimes] = useState([]); // Tiempos de cada elemento
   const [sessionStartTime, setSessionStartTime] = useState(null);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [showFinishEarlyConfirm, setShowFinishEarlyConfirm] = useState(false);
   const [completedSets, setCompletedSets] = useState([]); // Array de sets completados por ejercicio
   const [isPausedSession, setIsPausedSession] = useState(false); // Nueva: sesión pausada
   const [pausedData, setPausedData] = useState(null); // Datos de sesión pausada
+  const [skippedElements, setSkippedElements] = useState([]); // Array de elementos salteados
 
   const timerRef = useRef(null);
   const currentElement = allElements[currentElementIndex];
@@ -39,6 +41,7 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
       completed: []
     })));
     setSessionStartTime(new Date());
+    setSkippedElements([]);
 
     // Cargar sesión pausada si existe
     const savedSession = localStorage.getItem(`paused_routine_${routine.id}`);
@@ -48,6 +51,24 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
       setIsPausedSession(true);
     }
   }, [routine]);
+
+  // Guardado automático del progreso (cada vez que cambia el estado)
+  useEffect(() => {
+    if (!isPausedSession && sessionStartTime && (currentElementIndex > 0 || elementTime > 0)) {
+      const sessionData = {
+        currentElementIndex,
+        elementTime,
+        elementTimes,
+        completedSets,
+        sessionStartTime,
+        skippedElements,
+        isResting,
+        restTime,
+        pausedAt: new Date().toISOString()
+      };
+      localStorage.setItem(`paused_routine_${routine.id}`, JSON.stringify(sessionData));
+    }
+  }, [currentElementIndex, elementTime, elementTimes, completedSets, skippedElements, isResting, restTime]);
 
   // Timer principal
   useEffect(() => {
@@ -142,32 +163,72 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
     setIsPaused(true); // Pausar al llegar al siguiente elemento
   };
 
-  const handleCompleteRoutine = (times) => {
+  const handleSkipElement = () => {
+    // Marcar elemento como salteado
+    const newSkippedElements = [...skippedElements, currentElementIndex];
+    setSkippedElements(newSkippedElements);
+
+    // Guardar tiempo 0 para el elemento actual
+    const newTimes = [...elementTimes];
+    newTimes[currentElementIndex] = 0;
+    setElementTimes(newTimes);
+
+    // Verificar si es el último elemento
+    if (currentElementIndex >= allElements.length - 1) {
+      handleCompleteRoutine(newTimes, newSkippedElements);
+      return;
+    }
+
+    // Si hay descanso configurado, iniciar descanso
+    if (routine.hasRestBetweenExercises && currentElement.restDuration > 0) {
+      setIsResting(true);
+      setRestTime(parseInt(currentElement.restDuration) || 60);
+      setIsPaused(false);
+    } else {
+      // Si no hay descanso, pasar directamente al siguiente
+      setCurrentElementIndex(idx => idx + 1);
+      setElementTime(0);
+      setIsPaused(true);
+    }
+  };
+
+  const handleFinishEarly = () => {
+    // Terminar rutina con el progreso actual
+    handleCompleteRoutine(elementTimes, skippedElements, true);
+  };
+
+  const handleCompleteRoutine = (times, skipped = skippedElements, isEarlyFinish = false) => {
     const totalTime = times.reduce((sum, t) => sum + t, 0);
     const sessionData = {
       routineId: routine.id,
       routineName: routine.name,
       elementTimes: allElements.map((el, idx) => {
+        const wasSkipped = skipped.includes(idx);
         if (el.type === 'exercise') {
           return {
             type: 'exercise',
             exerciseId: el.exerciseId,
             exerciseName: exercises.find(e => e.id === el.exerciseId)?.name || 'Ejercicio',
             timeInSeconds: times[idx] || 0,
-            completedSets: completedSets[idx]?.completed || []
+            completedSets: completedSets[idx]?.completed || [],
+            skipped: wasSkipped
           };
         } else {
           return {
             type: 'wod',
             wodId: el.wodId,
             wodName: wods.find(w => w.id === el.wodId)?.name || 'WOD',
-            timeInSeconds: times[idx] || 0
+            timeInSeconds: times[idx] || 0,
+            skipped: wasSkipped
           };
         }
       }),
       totalTimeInSeconds: totalTime,
       completedAt: new Date(),
-      sessionStartTime
+      sessionStartTime,
+      skippedCount: skipped.length,
+      completedCount: allElements.length - skipped.length,
+      isEarlyFinish
     };
 
     // Limpiar sesión pausada
@@ -185,6 +246,9 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
       elementTimes,
       completedSets,
       sessionStartTime,
+      skippedElements,
+      isResting,
+      restTime,
       pausedAt: new Date().toISOString()
     };
 
@@ -198,7 +262,10 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
     setCurrentElementIndex(pausedData.currentElementIndex || pausedData.currentExerciseIndex || 0);
     setElementTime(pausedData.elementTime || pausedData.exerciseTime || 0);
     setElementTimes(pausedData.elementTimes || pausedData.exerciseTimes || []);
-    setCompletedSets(pausedData.completedSets);
+    setCompletedSets(pausedData.completedSets || []);
+    setSkippedElements(pausedData.skippedElements || []);
+    setIsResting(pausedData.isResting || false);
+    setRestTime(pausedData.restTime || 0);
     setSessionStartTime(new Date(pausedData.sessionStartTime));
     setIsPausedSession(false);
     setPausedData(null);
@@ -435,33 +502,56 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
                 }
               </div>
 
-              <div className="flex gap-3 justify-center">
-                {isPaused ? (
+              <div className="space-y-3">
+                <div className="flex gap-3 justify-center">
+                  {isPaused ? (
+                    <Button
+                      icon={Play}
+                      onClick={handleStart}
+                      className="px-8"
+                    >
+                      {elementTime === 0 ? 'Comenzar' : 'Reanudar'}
+                    </Button>
+                  ) : (
+                    <Button
+                      icon={Pause}
+                      onClick={handlePause}
+                      variant="secondary"
+                      className="px-8"
+                    >
+                      Pausar
+                    </Button>
+                  )}
                   <Button
-                    icon={Play}
-                    onClick={handleStart}
-                    className="px-8"
+                    icon={Check}
+                    onClick={handleCompleteElement}
+                    disabled={elementTime === 0}
+                    className="px-8 bg-green-600 hover:bg-green-700"
                   >
-                    {elementTime === 0 ? 'Comenzar' : 'Reanudar'}
+                    {isCurrentWod ? 'Finalizar WOD' : 'Completar Ejercicio'}
                   </Button>
-                ) : (
+                </div>
+
+                <div className="flex gap-3 justify-center">
                   <Button
-                    icon={Pause}
-                    onClick={handlePause}
+                    icon={FastForward}
+                    onClick={handleSkipElement}
                     variant="secondary"
-                    className="px-8"
+                    className="flex-1"
+                    size="sm"
                   >
-                    Pausar
+                    Saltear {isCurrentWod ? 'WOD' : 'Ejercicio'}
                   </Button>
-                )}
-                <Button
-                  icon={Check}
-                  onClick={handleCompleteElement}
-                  disabled={elementTime === 0}
-                  className="px-8 bg-green-600 hover:bg-green-700"
-                >
-                  {isCurrentWod ? 'Finalizar WOD' : 'Completar Ejercicio'}
-                </Button>
+                  <Button
+                    icon={StopCircle}
+                    onClick={() => setShowFinishEarlyConfirm(true)}
+                    variant="secondary"
+                    className="flex-1"
+                    size="sm"
+                  >
+                    Terminar Ahora
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -557,6 +647,52 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
             <Button
               variant="secondary"
               onClick={() => setShowExitConfirm(false)}
+              className="w-full"
+            >
+              Volver
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Confirmación de terminar anticipadamente */}
+      <Modal isOpen={showFinishEarlyConfirm} onClose={() => setShowFinishEarlyConfirm(false)} title="¿Terminar rutina ahora?" size="sm">
+        <div className="space-y-4">
+          <p className="text-gray-300">
+            ¿Querés finalizar la rutina ahora con el progreso actual?
+          </p>
+
+          <Card className="bg-yellow-500/10 border-yellow-500/30">
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-400">Elementos completados:</span>
+                <span className="font-medium text-yellow-400">
+                  {currentElementIndex} de {allElements.length}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Elementos salteados:</span>
+                <span className="font-medium text-yellow-400">
+                  {skippedElements.length}
+                </span>
+              </div>
+            </div>
+          </Card>
+
+          <p className="text-sm text-gray-400">
+            Tu progreso será guardado y podrás ver las estadísticas de esta sesión.
+          </p>
+
+          <div className="flex flex-col gap-3">
+            <Button
+              onClick={handleFinishEarly}
+              className="w-full bg-yellow-600 hover:bg-yellow-700"
+            >
+              Terminar Rutina
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => setShowFinishEarlyConfirm(false)}
               className="w-full"
             >
               Volver

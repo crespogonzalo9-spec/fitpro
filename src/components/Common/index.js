@@ -239,6 +239,7 @@ export const StatCard = ({ icon: Icon, label, value, color = 'emerald' }) => {
   );
 };
 
-// Re-export GymRequired and SuspendedGymScreen
+// Re-export GymRequired, SuspendedGymScreen and ProgressChart
 export { default as GymRequired } from './GymRequired';
 export { default as SuspendedGymScreen } from './SuspendedGymScreen';
+export { default as ProgressChart } from './ProgressChart';
