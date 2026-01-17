@@ -2,6 +2,42 @@
 
 Todas las notas de las versiones de FitPro se documentan en este archivo.
 
+## [1.0.12] - 2025-01-16
+
+### Añadido
+- **Guardado automático de progreso en rutinas**: El progreso se guarda automáticamente con cada cambio de estado
+- **Botón "Terminar Rutina Ahora"**: Permite finalizar la rutina anticipadamente guardando el progreso actual
+- **Botón "Saltear Ejercicio"**: Opción para omitir ejercicios específicos durante la rutina
+- **Tracking de ejercicios salteados**: Las estadísticas muestran cuántos ejercicios fueron salteados
+- **Sistema completo de progreso del alumno**: Nueva página "Mi Progreso" con:
+  - Gráfico interactivo de progreso con 7 métricas diferentes
+  - Selector de período (última semana, 2 semanas, mes, 3 meses)
+  - Tipos de gráfico: línea y barras
+  - Estadísticas rápidas: rutinas, tiempo, ejercicios, promedio, salteados
+  - Historial reciente de sesiones completadas
+
+### Modificado
+- **ServiceWorker deshabilitado en desarrollo**: Solo se activa en producción para evitar errores en localhost
+- Restauración completa de estado al reanudar rutinas pausadas (incluye tiempo de descanso)
+- Modales de confirmación mejorados para todas las acciones de rutinas
+
+### Métricas disponibles en el gráfico
+- Rutinas completadas
+- Tiempo de entrenamiento (minutos)
+- Ejercicios realizados
+- Series completadas
+- Repeticiones totales (estimadas)
+- Peso levantado (estimado)
+- Ejercicios salteados
+
+### Técnico
+- Nuevo: `src/components/Common/ProgressChart.js` - Componente de gráfico de progreso
+- Modificado: `src/components/Common/RoutineTimer.js` - Sistema completo de guardado y control de rutinas
+- Modificado: `src/pages/MemberProgress.js` - Implementación completa de página de progreso
+- Modificado: `public/index.html` - ServiceWorker solo en producción
+
+---
+
 ## [1.0.11] - 2025-01-15
 
 ### Modificado
