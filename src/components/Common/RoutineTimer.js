@@ -116,6 +116,33 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
           }
           return prev - 1;
         });
+      } else if (isEsdBlock) {
+        // TIMER ESPECIAL PARA BLOQUES ESD
+        setEsdIntervalTime(prev => {
+          const newTime = prev + 1;
+          const interval = currentElement.esdInterval || 60;
+
+          if (newTime >= interval) {
+            // Se completó un intervalo, pasar a la siguiente ronda
+            if (esdCurrentRound >= (currentElement.esdRounds || 10)) {
+              // Todas las rondas completadas, pasar al siguiente elemento
+              handleCompleteElement();
+              setEsdCurrentRound(1);
+              setEsdIntervalTime(0);
+              return 0;
+            } else {
+              // Siguiente ronda
+              setEsdCurrentRound(r => r + 1);
+              // Reproducir sonido/notificación
+              playBeep();
+              return 0;
+            }
+          }
+          return newTime;
+        });
+
+        // También incrementar tiempo total del elemento
+        setElementTime(prev => prev + 1);
       } else {
         // Para ejercicios de tiempo: cuenta regresiva
         if (isTimeBasedExercise && exerciseDurationInSeconds > 0) {
@@ -135,7 +162,31 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
     }, 1000);
 
     return () => clearInterval(timerRef.current);
-  }, [isPaused, isResting, isTimeBasedExercise, exerciseDurationInSeconds]);
+  }, [isPaused, isResting, isTimeBasedExercise, exerciseDurationInSeconds, isEsdBlock, esdCurrentRound, currentElement]);
+
+  // Función para reproducir beep
+  const playBeep = () => {
+    try {
+      // Crear un contexto de audio y reproducir un beep
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.value = 800; // Frecuencia del beep
+      oscillator.type = 'sine';
+
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.2);
+    } catch (error) {
+      console.log('No se pudo reproducir el beep:', error);
+    }
+  };
 
   const handleStart = () => {
     setIsPaused(false);
@@ -406,7 +457,7 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
         <div>
           <div className="flex justify-between text-sm mb-2">
             <span className="text-gray-400">
-              {isCurrentWod ? 'WOD' : 'Ejercicio'} {currentElementIndex + 1} de {allElements.length}
+              {isEsdBlock ? 'Bloque ESD' : isCurrentWod ? 'WOD' : 'Ejercicio'} {currentElementIndex + 1} de {allElements.length}
             </span>
             <span className="text-primary font-medium">{Math.round(progress)}%</span>
           </div>
@@ -440,63 +491,96 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
         ) : currentElementIndex < allElements.length ? (
           /* Pantalla de Ejercicio o WOD */
           <div>
-            <Card className={`${isCurrentWod ? 'bg-orange-500/10 border-orange-500/30' : 'bg-blue-500/10 border-blue-500/30'} mb-6`}>
-              <div className="flex items-start gap-4">
-                <div className={`w-16 h-16 ${isCurrentWod ? 'bg-orange-500/20' : 'bg-blue-500/20'} rounded-xl flex items-center justify-center flex-shrink-0`}>
-                  {isCurrentWod ? (
-                    <Flame className="text-orange-400" size={32} />
-                  ) : (
-                    <Dumbbell className="text-blue-400" size={32} />
-                  )}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <h3 className="text-2xl font-bold">
-                      {isCurrentWod ? (wodData?.name || 'WOD') : (exerciseData?.name || 'Ejercicio')}
-                    </h3>
-                    {!isCurrentWod && exerciseData?.videoUrl && (
-                      <a
-                        href={exerciseData.videoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-3 py-2 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg text-sm font-medium transition-colors flex-shrink-0"
-                      >
-                        <Video size={16} />
-                        Ver Video
-                      </a>
+            {isEsdBlock ? (
+              /* Bloque ESD - UI especial */
+              <Card className="bg-purple-500/10 border-purple-500/30 mb-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-16 h-16 bg-purple-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Timer className="text-purple-400" size={32} />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-bold">
+                        ESD
+                      </span>
+                      <h3 className="text-2xl font-bold">
+                        {currentElement.blockName || 'Bloque ESD'}
+                      </h3>
+                    </div>
+                    <div className="flex flex-wrap gap-4 text-sm mb-3">
+                      <span className="text-gray-400">
+                        Intervalo: <strong className="text-white">{currentElement.esdInterval}s</strong>
+                      </span>
+                      <span className="text-gray-400">
+                        Rondas: <strong className="text-white">{currentElement.esdRounds}</strong>
+                      </span>
+                    </div>
+                    {currentElement.notes && (
+                      <p className="text-sm text-gray-400 italic">{currentElement.notes}</p>
                     )}
                   </div>
-                  {!isCurrentWod && (
-                    <div className="flex flex-wrap gap-4 text-sm">
-                      {!isTimeBasedExercise && (
-                        <>
-                          <span className="text-gray-400">
-                            <strong className="text-white">{currentElement.sets}</strong> series
-                          </span>
-                          <span className="text-gray-400">
-                            <strong className="text-white">{currentElement.reps}</strong> reps
-                          </span>
-                          <span className="text-gray-400">
-                            <strong className="text-white">{currentElement.rest}s</strong> descanso entre series
-                          </span>
-                        </>
-                      )}
-                      {isTimeBasedExercise && (
-                        <span className="text-gray-400">
-                          <strong className="text-white">{currentElement.reps}</strong> minutos
-                        </span>
+                </div>
+              </Card>
+            ) : (
+              /* Ejercicio o WOD normal */
+              <Card className={`${isCurrentWod ? 'bg-orange-500/10 border-orange-500/30' : 'bg-blue-500/10 border-blue-500/30'} mb-6`}>
+                <div className="flex items-start gap-4">
+                  <div className={`w-16 h-16 ${isCurrentWod ? 'bg-orange-500/20' : 'bg-blue-500/20'} rounded-xl flex items-center justify-center flex-shrink-0`}>
+                    {isCurrentWod ? (
+                      <Flame className="text-orange-400" size={32} />
+                    ) : (
+                      <Dumbbell className="text-blue-400" size={32} />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <h3 className="text-2xl font-bold">
+                        {isCurrentWod ? (wodData?.name || 'WOD') : (exerciseData?.name || 'Ejercicio')}
+                      </h3>
+                      {!isCurrentWod && exerciseData?.videoUrl && (
+                        <a
+                          href={exerciseData.videoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-3 py-2 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg text-sm font-medium transition-colors flex-shrink-0"
+                        >
+                          <Video size={16} />
+                          Ver Video
+                        </a>
                       )}
                     </div>
-                  )}
-                  {isCurrentWod && wodData?.description && (
-                    <p className="text-sm text-gray-400 mt-2">{wodData.description}</p>
-                  )}
-                  {currentElement.notes && (
-                    <p className="text-sm text-gray-400 mt-2 italic">{currentElement.notes}</p>
-                  )}
+                    {!isCurrentWod && (
+                      <div className="flex flex-wrap gap-4 text-sm">
+                        {!isTimeBasedExercise && (
+                          <>
+                            <span className="text-gray-400">
+                              <strong className="text-white">{currentElement.sets}</strong> series
+                            </span>
+                            <span className="text-gray-400">
+                              <strong className="text-white">{currentElement.reps}</strong> reps
+                            </span>
+                            <span className="text-gray-400">
+                              <strong className="text-white">{currentElement.rest}s</strong> descanso entre series
+                            </span>
+                          </>
+                        )}
+                        {isTimeBasedExercise && (
+                          <span className="text-gray-400">
+                            <strong className="text-white">{currentElement.reps}</strong> minutos
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    {isCurrentWod && wodData?.description && (
+                      <p className="text-sm text-gray-400 mt-2">{wodData.description}</p>
+                    )}
+                    {currentElement.notes && (
+                      <p className="text-sm text-gray-400 mt-2 italic">{currentElement.notes}</p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            )}
 
             {/* Series checklist para ejercicios de reps */}
             {!isCurrentWod && !isTimeBasedExercise && parseInt(currentElement.sets) > 1 && (
@@ -529,20 +613,55 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
 
             {/* Timer del elemento */}
             <div className="text-center py-8">
-              <div className="flex items-center justify-center gap-2 text-gray-400 mb-4">
-                <Timer size={24} />
-                <span>
-                  {isTimeBasedExercise ? 'Tiempo restante' : isCurrentWod ? 'Tiempo del WOD' : 'Tiempo de ejercicio'}
-                </span>
-              </div>
-              <div className={`text-7xl font-bold mb-8 ${
-                isCurrentWod ? 'text-orange-400' : isTimeBasedExercise ? 'text-orange-400' : 'text-primary'
-              }`}>
-                {isTimeBasedExercise
-                  ? formatTimeRemaining(elementTime)
-                  : formatTime(elementTime)
-                }
-              </div>
+              {isEsdBlock ? (
+                /* Timer especial para ESD */
+                <>
+                  <div className="mb-6">
+                    <div className="text-sm text-gray-400 mb-2">Ronda Actual</div>
+                    <div className="text-5xl font-bold text-purple-400 mb-4">
+                      {esdCurrentRound} <span className="text-3xl text-gray-500">de</span> {currentElement.esdRounds || 10}
+                    </div>
+                    {/* Barra de progreso de rondas */}
+                    <div className="max-w-md mx-auto">
+                      <div className="h-3 bg-gray-800 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-purple-600 to-purple-400 transition-all duration-500"
+                          style={{ width: `${(esdCurrentRound / (currentElement.esdRounds || 10)) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-2 text-gray-400 mb-4">
+                    <Timer size={24} />
+                    <span>Tiempo del intervalo</span>
+                  </div>
+                  <div className="text-7xl font-bold mb-2 text-purple-400">
+                    {formatTime(esdIntervalTime)}
+                  </div>
+                  <div className="text-sm text-gray-500 mb-8">
+                    / {formatTime(currentElement.esdInterval || 60)}
+                  </div>
+                </>
+              ) : (
+                /* Timer normal para ejercicios y WODs */
+                <>
+                  <div className="flex items-center justify-center gap-2 text-gray-400 mb-4">
+                    <Timer size={24} />
+                    <span>
+                      {isTimeBasedExercise ? 'Tiempo restante' : isCurrentWod ? 'Tiempo del WOD' : 'Tiempo de ejercicio'}
+                    </span>
+                  </div>
+                  <div className={`text-7xl font-bold mb-8 ${
+                    isCurrentWod ? 'text-orange-400' : isTimeBasedExercise ? 'text-orange-400' : 'text-primary'
+                  }`}>
+                    {isTimeBasedExercise
+                      ? formatTimeRemaining(elementTime)
+                      : formatTime(elementTime)
+                    }
+                  </div>
+                </>
+              )}
 
               <div className="space-y-3">
                 <div className="flex gap-3 justify-center">
@@ -570,7 +689,7 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
                     disabled={elementTime === 0}
                     className="px-8 bg-green-600 hover:bg-green-700"
                   >
-                    {isCurrentWod ? 'Finalizar WOD' : 'Completar Ejercicio'}
+                    {isEsdBlock ? 'Finalizar Bloque ESD' : isCurrentWod ? 'Finalizar WOD' : 'Completar Ejercicio'}
                   </Button>
                 </div>
 
@@ -582,7 +701,7 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
                     className="flex-1"
                     size="sm"
                   >
-                    Saltear {isCurrentWod ? 'WOD' : 'Ejercicio'}
+                    Saltear {isEsdBlock ? 'Bloque ESD' : isCurrentWod ? 'WOD' : 'Ejercicio'}
                   </Button>
                   <Button
                     icon={StopCircle}
