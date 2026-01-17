@@ -7,7 +7,19 @@
       "Bash(git commit:*)",
       "Bash(git checkout:*)",
       "Bash(git push:*)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Bash(code .)",
+      "Bash(npm start)",
+      "Bash(npm install)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(git stash:*)",
+      "Bash(git fetch:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(npm run build:*)",
+      "Bash(set CI=false)",
+      "Bash(npx react-scripts build:*)",
+      "Bash(curl:*)"
     ]
   }
 }
