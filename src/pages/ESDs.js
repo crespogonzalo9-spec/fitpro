@@ -276,12 +276,15 @@ const ESDsContent = () => {
                 <div className="mb-3">
                   <p className="text-xs font-medium text-gray-400 mb-1">Ejercicios:</p>
                   <div className="text-sm text-gray-300">
-                    {esd.exercises.slice(0, 3).map((ex, idx) => (
-                      <div key={idx} className="flex gap-2">
-                        <span className="text-blue-400">{idx + 1}.</span>
-                        <span>{ex.name} {ex.reps && `- ${ex.reps} reps`}</span>
-                      </div>
-                    ))}
+                    {esd.exercises.slice(0, 3).map((ex, idx) => {
+                      const exercise = exercises.find(e => e.id === ex.exerciseId);
+                      return (
+                        <div key={idx} className="flex gap-2">
+                          <span className="text-blue-400">{idx + 1}.</span>
+                          <span>{exercise?.name || 'Ejercicio'} {ex.reps && `- ${ex.reps} reps`}</span>
+                        </div>
+                      );
+                    })}
                     {esd.exercises.length > 3 && (
                       <span className="text-xs text-gray-500">+ {esd.exercises.length - 3} más</span>
                     )}
@@ -417,7 +420,7 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
   const addExercise = () => {
     setForm(prev => ({
       ...prev,
-      exercises: [...prev.exercises, { name: '', reps: '', weight: '', notes: '' }]
+      exercises: [...prev.exercises, { exerciseId: '', reps: '', weight: '', notes: '' }]
     }));
   };
 
@@ -487,10 +490,25 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
               <Dumbbell size={16} />
               Ejercicios ({form.exercises.length})
             </label>
-            <Button type="button" size="sm" variant="secondary" icon={Plus} onClick={addExercise}>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              icon={Plus}
+              onClick={addExercise}
+              disabled={exercises.length === 0}
+            >
               Agregar Ejercicio
             </Button>
           </div>
+
+          {exercises.length === 0 && (
+            <Card className="bg-yellow-500/10 border-yellow-500/30 mb-3">
+              <p className="text-sm text-yellow-400">
+                No hay ejercicios en el gimnasio. Creá ejercicios primero desde la sección "Ejercicios".
+              </p>
+            </Card>
+          )}
 
           {form.exercises.length === 0 ? (
             <Card className="bg-gray-800/50 border-gray-700">
@@ -507,15 +525,16 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
                       {idx + 1}
                     </div>
                     <div className="flex-1 space-y-3">
-                      <div className="grid grid-cols-1 gap-3">
-                        <Input
-                          label="Ejercicio *"
-                          value={ex.name}
-                          onChange={e => updateExercise(idx, 'name', e.target.value)}
-                          placeholder="Ej: Pull-ups, Push-ups, Air Squats"
-                          required
-                        />
-                      </div>
+                      <Select
+                        label="Ejercicio *"
+                        value={ex.exerciseId}
+                        onChange={e => updateExercise(idx, 'exerciseId', e.target.value)}
+                        options={[
+                          { value: '', label: 'Seleccionar ejercicio...' },
+                          ...exercises.map(e => ({ value: e.id, label: e.name }))
+                        ]}
+                        required
+                      />
                       <div className="grid grid-cols-3 gap-3">
                         <Input
                           label="Reps"
@@ -630,8 +649,13 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
   );
 };
 
-const ViewESDModal = ({ isOpen, onClose, esd, getClassName, getMemberNames, members, formatInterval }) => {
+const ViewESDModal = ({ isOpen, onClose, esd, getClassName, getMemberNames, members, exercises, formatInterval }) => {
   if (!esd) return null;
+
+  const getExerciseName = (exerciseId) => {
+    const exercise = exercises.find(e => e.id === exerciseId);
+    return exercise?.name || 'Ejercicio';
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={esd.name} size="md">
@@ -668,7 +692,7 @@ const ViewESDModal = ({ isOpen, onClose, esd, getClassName, getMemberNames, memb
                       {idx + 1}
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium">{ex.name}</p>
+                      <p className="font-medium">{getExerciseName(ex.exerciseId)}</p>
                       <div className="flex gap-3 mt-1 text-sm text-gray-400">
                         {ex.reps && <span>{ex.reps} reps</span>}
                         {ex.weight && <span>@ {ex.weight}</span>}
