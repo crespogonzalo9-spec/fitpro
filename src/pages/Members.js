@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, MoreVertical, Phone, Shield, ShieldX, ShieldCheck, TrendingUp, Trophy, ArrowUp, ArrowDown, Calendar, KeyRound } from 'lucide-react';
+import { Users, MoreVertical, Phone, Shield, ShieldX, ShieldCheck, TrendingUp, Trophy, ArrowUp, ArrowDown, Calendar, KeyRound, AlertCircle } from 'lucide-react';
 import { Button, Card, Modal, Select, SearchInput, EmptyState, LoadingState, Badge, Avatar, Dropdown, DropdownItem, ConfirmDialog , GymRequired } from '../components/Common';
 import { useAuth } from '../contexts/AuthContext';
 import { useGym } from '../contexts/GymContext';
@@ -542,6 +542,34 @@ const ProgressModal = ({ isOpen, onClose, member, prs, routineSessions, classes,
             <span className="font-medium text-gray-300">{stats.lastActivity}</span>
           </div>
         </div>
+
+        {/* Contacto de emergencia */}
+        {(member.emergencyContact || member.emergencyPhone) && (
+          <Card className="bg-red-500/10 border-red-500/30">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <AlertCircle className="text-red-400" size={20} />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-sm font-medium text-red-400 mb-2">Contacto de Emergencia</h4>
+                {member.emergencyContact && (
+                  <div className="flex items-center gap-2 text-sm mb-1">
+                    <Users size={14} className="text-gray-400" />
+                    <span className="text-gray-300">{member.emergencyContact}</span>
+                  </div>
+                )}
+                {member.emergencyPhone && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Phone size={14} className="text-gray-400" />
+                    <a href={`tel:${member.emergencyPhone}`} className="text-primary hover:underline">
+                      {member.emergencyPhone}
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Card>
+        )}
 
         {/* Filtros */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

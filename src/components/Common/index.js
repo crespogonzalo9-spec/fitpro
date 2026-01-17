@@ -137,6 +137,116 @@ export const SearchInput = ({ value, onChange, placeholder = 'Buscar...', classN
   </div>
 );
 
+// Autocomplete
+export const Autocomplete = ({ value, onChange, options = [], placeholder = 'Buscar...', className = '', displayField = 'label', valueField = 'value', error }) => {
+  const [inputValue, setInputValue] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setIsOpen(false);
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  useEffect(() => {
+    // Sincronizar el input con el valor seleccionado
+    const selected = options.find(opt => opt[valueField] === value);
+    if (selected) {
+      setInputValue(selected[displayField]);
+    } else if (!value) {
+      setInputValue('');
+    }
+  }, [value, options, valueField, displayField]);
+
+  const filteredOptions = inputValue
+    ? options.filter(opt => opt[displayField].toLowerCase().includes(inputValue.toLowerCase()))
+    : options;
+
+  const handleInputChange = (e) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    setIsOpen(true);
+    setSelectedIndex(-1);
+    if (!newValue) {
+      onChange('');
+    }
+  };
+
+  const handleSelect = (option) => {
+    setInputValue(option[displayField]);
+    onChange(option[valueField]);
+    setIsOpen(false);
+    setSelectedIndex(-1);
+  };
+
+  const handleKeyDown = (e) => {
+    if (!isOpen) {
+      if (e.key === 'ArrowDown' || e.key === 'Enter') {
+        setIsOpen(true);
+      }
+      return;
+    }
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedIndex(prev => (prev < filteredOptions.length - 1 ? prev + 1 : prev));
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedIndex(prev => (prev > 0 ? prev - 1 : -1));
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (selectedIndex >= 0 && filteredOptions[selectedIndex]) {
+          handleSelect(filteredOptions[selectedIndex]);
+        }
+        break;
+      case 'Escape':
+        setIsOpen(false);
+        setSelectedIndex(-1);
+        break;
+      default:
+        break;
+    }
+  };
+
+  return (
+    <div ref={ref} className={`relative ${className}`}>
+      <input
+        type="text"
+        value={inputValue}
+        onChange={handleInputChange}
+        onFocus={() => setIsOpen(true)}
+        onKeyDown={handleKeyDown}
+        placeholder={placeholder}
+        className={`w-full px-4 py-2.5 bg-input border ${error ? 'border-red-500' : 'border-gray-700'} rounded-xl text-white placeholder-gray-500 focus:outline-none transition-colors`}
+      />
+      {isOpen && filteredOptions.length > 0 && (
+        <div className="absolute z-50 w-full mt-1 bg-card border border-gray-700 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+          {filteredOptions.map((option, idx) => (
+            <button
+              key={option[valueField]}
+              type="button"
+              onClick={() => handleSelect(option)}
+              className={`w-full text-left px-4 py-2.5 hover:bg-gray-700 transition-colors ${
+                idx === selectedIndex ? 'bg-gray-700' : ''
+              } ${idx === 0 ? 'rounded-t-xl' : ''} ${idx === filteredOptions.length - 1 ? 'rounded-b-xl' : ''}`}
+            >
+              {option[displayField]}
+            </button>
+          ))}
+        </div>
+      )}
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+    </div>
+  );
+};
+
 // Tabs
 export const Tabs = ({ tabs, activeTab, onChange }) => (
   <div className="flex gap-1 p-1 bg-card rounded-xl">

@@ -47,9 +47,23 @@ export const WOD_TYPES = [
   { id: 'for_time', name: 'For Time', description: 'Completar lo más rápido posible' },
   { id: 'amrap', name: 'AMRAP', description: 'Máximas rondas en tiempo' },
   { id: 'emom', name: 'EMOM', description: 'Every Minute On the Minute' },
+  { id: 'esd', name: 'ESD', description: 'Every X Seconds/Minutes/Hours Day' },
   { id: 'tabata', name: 'Tabata', description: '20s trabajo / 10s descanso' },
   { id: 'chipper', name: 'Chipper', description: 'Lista secuencial de ejercicios' },
   { id: 'ladder', name: 'Ladder', description: 'Incremento/decremento progresivo' }
+];
+
+// Intervalos de tiempo para ESD
+export const ESD_INTERVALS = [
+  { value: 30, label: '30 segundos', unit: 'seconds' },
+  { value: 45, label: '45 segundos', unit: 'seconds' },
+  { value: 60, label: '1 minuto', unit: 'seconds' },
+  { value: 90, label: '90 segundos', unit: 'seconds' },
+  { value: 120, label: '2 minutos', unit: 'seconds' },
+  { value: 150, label: '2:30 minutos', unit: 'seconds' },
+  { value: 180, label: '3 minutos', unit: 'seconds' },
+  { value: 240, label: '4 minutos', unit: 'seconds' },
+  { value: 300, label: '5 minutos', unit: 'seconds' }
 ];
 
 // Tipos de ranking
