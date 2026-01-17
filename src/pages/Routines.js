@@ -762,76 +762,72 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
                     </div>
 
                     {/* Tipo de Bloque */}
-                    <div className="grid grid-cols-2 gap-4">
-                      <Select
-                        label="Tipo de Bloque"
-                        value={block.type || 'regular'}
-                        onChange={e => {
-                          const newBlocks = [...form.blocks];
-                          newBlocks[idx].type = e.target.value;
-                          // Inicializar campos ESD si se selecciona
-                          if (e.target.value === 'esd') {
-                            newBlocks[idx].esdInterval = newBlocks[idx].esdInterval || 60;
-                            newBlocks[idx].esdRounds = newBlocks[idx].esdRounds || 10;
-                          }
-                          setForm({ ...form, blocks: newBlocks });
-                        }}
-                        options={[
-                          { value: 'regular', label: 'Regular' },
-                          { value: 'esd', label: 'ESD (Every X Seconds/Minutes)' }
-                        ]}
-                      />
+                    <Select
+                      label="Tipo de Bloque"
+                      value={block.type || 'regular'}
+                      onChange={e => {
+                        const newBlocks = [...form.blocks];
+                        newBlocks[idx].type = e.target.value;
+                        // Inicializar campos ESD si se selecciona
+                        if (e.target.value === 'esd') {
+                          newBlocks[idx].esdInterval = newBlocks[idx].esdInterval || 60;
+                          newBlocks[idx].esdRounds = newBlocks[idx].esdRounds || 10;
+                        }
+                        setForm({ ...form, blocks: newBlocks });
+                      }}
+                      options={[
+                        { value: 'regular', label: 'Regular' },
+                        { value: 'esd', label: 'ESD (Every X Seconds/Minutes)' }
+                      ]}
+                    />
 
-                      {/* Configuración ESD */}
-                      {block.type === 'esd' && (
-                        <>
-                          <Select
-                            label="Intervalo"
-                            value={block.esdInterval || 60}
-                            onChange={e => {
-                              const newBlocks = [...form.blocks];
-                              newBlocks[idx].esdInterval = parseInt(e.target.value);
-                              setForm({ ...form, blocks: newBlocks });
-                            }}
-                            options={[
-                              { value: 30, label: '30 segundos' },
-                              { value: 45, label: '45 segundos' },
-                              { value: 60, label: '1 minuto' },
-                              { value: 90, label: '90 segundos' },
-                              { value: 120, label: '2 minutos' },
-                              { value: 150, label: '2:30 minutos' },
-                              { value: 180, label: '3 minutos' },
-                              { value: 240, label: '4 minutos' },
-                              { value: 300, label: '5 minutos' }
-                            ]}
-                          />
-                        </>
-                      )}
-                    </div>
+                    {/* Configuración ESD */}
+                    {block.type === 'esd' && (
+                      <div className="grid grid-cols-2 gap-4">
+                        <Select
+                          label="Intervalo"
+                          value={block.esdInterval || 60}
+                          onChange={e => {
+                            const newBlocks = [...form.blocks];
+                            newBlocks[idx].esdInterval = parseInt(e.target.value);
+                            setForm({ ...form, blocks: newBlocks });
+                          }}
+                          options={[
+                            { value: 30, label: '30 segundos' },
+                            { value: 45, label: '45 segundos' },
+                            { value: 60, label: '1 minuto' },
+                            { value: 90, label: '90 segundos' },
+                            { value: 120, label: '2 minutos' },
+                            { value: 150, label: '2:30 minutos' },
+                            { value: 180, label: '3 minutos' },
+                            { value: 240, label: '4 minutos' },
+                            { value: 300, label: '5 minutos' }
+                          ]}
+                        />
+                        <Input
+                          label="Número de Rondas"
+                          type="number"
+                          min="1"
+                          max="60"
+                          value={block.esdRounds || 10}
+                          onChange={e => {
+                            const newBlocks = [...form.blocks];
+                            newBlocks[idx].esdRounds = parseInt(e.target.value) || 1;
+                            setForm({ ...form, blocks: newBlocks });
+                          }}
+                          placeholder="10"
+                        />
+                      </div>
+                    )}
 
                     {block.type === 'esd' && (
                       <Card className="bg-blue-500/10 border-blue-500/30">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
                           <Clock size={16} className="text-blue-400" />
-                          <div className="flex-1">
-                            <Input
-                              label="Número de Rondas"
-                              type="number"
-                              min="1"
-                              max="60"
-                              value={block.esdRounds || 10}
-                              onChange={e => {
-                                const newBlocks = [...form.blocks];
-                                newBlocks[idx].esdRounds = parseInt(e.target.value) || 1;
-                                setForm({ ...form, blocks: newBlocks });
-                              }}
-                              placeholder="10"
-                            />
-                          </div>
+                          <p className="text-xs text-blue-400">
+                            Los ejercicios de este bloque se realizarán cada {block.esdInterval === 60 ? '1 minuto' : `${block.esdInterval} segundos`} durante {block.esdRounds || 10} rondas
+                          </p>
                         </div>
-                        <p className="text-xs text-blue-400 mt-2">
-                          Los ejercicios de este bloque se realizarán cada {block.esdInterval === 60 ? '1 minuto' : `${block.esdInterval} segundos`} durante {block.esdRounds || 10} rondas
-                        </p>
                       </Card>
                     )}
                   </div>
