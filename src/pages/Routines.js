@@ -361,13 +361,30 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
     assignmentType: 'general',
     classId: '',
     memberIds: [],
-    exercises: [],
-    wods: [],
+    blocks: [],
     hasRestBetweenExercises: true
   });
   const [loading, setLoading] = useState(false);
   const [memberSearch, setMemberSearch] = useState('');
+  const [currentBlockIndex, setCurrentBlockIndex] = useState(0);
   const [activeTab, setActiveTab] = useState('exercises');
+
+  // Migrar rutinas antiguas al formato de bloques
+  const migrateToBlocks = (oldRoutine) => {
+    if (oldRoutine.blocks && Array.isArray(oldRoutine.blocks)) {
+      return oldRoutine.blocks;
+    }
+
+    // Si tiene formato antiguo (exercises/wods), crear un bloque por defecto
+    const defaultBlock = {
+      name: 'Bloque 1',
+      type: 'regular',
+      exercises: oldRoutine.exercises || [],
+      wods: oldRoutine.wods || []
+    };
+
+    return [defaultBlock];
+  };
 
   useEffect(() => {
     if (routine) {
@@ -377,10 +394,10 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
         assignmentType: routine.assignmentType || 'general',
         classId: routine.classId || '',
         memberIds: routine.memberIds || [],
-        exercises: routine.exercises || [],
-        wods: routine.wods || [],
+        blocks: migrateToBlocks(routine),
         hasRestBetweenExercises: routine.hasRestBetweenExercises !== undefined ? routine.hasRestBetweenExercises : true
       });
+      setCurrentBlockIndex(0);
     } else {
       setForm({
         name: '',
@@ -388,10 +405,10 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
         assignmentType: 'general',
         classId: '',
         memberIds: [],
-        exercises: [],
-        wods: [],
+        blocks: [{ name: 'Bloque 1', type: 'regular', exercises: [], wods: [] }],
         hasRestBetweenExercises: true
       });
+      setCurrentBlockIndex(0);
     }
     setMemberSearch('');
     setActiveTab('exercises');
@@ -413,45 +430,107 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
     setLoading(false);
   };
 
+  // Funciones para manejar bloques
+  const addBlock = () => {
+    setForm(prev => ({
+      ...prev,
+      blocks: [...prev.blocks, {
+        name: `Bloque ${prev.blocks.length + 1}`,
+        type: 'regular',
+        exercises: [],
+        wods: []
+      }]
+    }));
+    setCurrentBlockIndex(form.blocks.length);
+  };
+
+  const updateBlock = (field, value) => {
+    setForm(prev => ({
+      ...prev,
+      blocks: prev.blocks.map((block, i) =>
+        i === currentBlockIndex ? { ...block, [field]: value } : block
+      )
+    }));
+  };
+
+  const removeBlock = (index) => {
+    setForm(prev => ({
+      ...prev,
+      blocks: prev.blocks.filter((_, i) => i !== index)
+    }));
+    if (currentBlockIndex >= index && currentBlockIndex > 0) {
+      setCurrentBlockIndex(currentBlockIndex - 1);
+    }
+  };
+
+  // Obtener bloque actual
+  const currentBlock = form.blocks[currentBlockIndex];
+
+  // Funciones para manejar ejercicios dentro del bloque actual
   const addExercise = () => {
     setForm(prev => ({
       ...prev,
-      exercises: [...prev.exercises, { exerciseId: '', sets: 3, reps: '10', rest: '60', restDuration: 60, notes: '' }]
+      blocks: prev.blocks.map((block, i) =>
+        i === currentBlockIndex
+          ? { ...block, exercises: [...block.exercises, { exerciseId: '', sets: 3, reps: '10', rest: '60', restDuration: 60, notes: '', intensity: 100 }] }
+          : block
+      )
     }));
   };
 
   const updateExercise = (index, field, value) => {
-    setForm(prev => ({ 
-      ...prev, 
-      exercises: prev.exercises.map((ex, i) => i === index ? { ...ex, [field]: value } : ex) 
+    setForm(prev => ({
+      ...prev,
+      blocks: prev.blocks.map((block, i) =>
+        i === currentBlockIndex
+          ? { ...block, exercises: block.exercises.map((ex, j) => j === index ? { ...ex, [field]: value } : ex) }
+          : block
+      )
     }));
   };
 
   const removeExercise = (index) => {
     setForm(prev => ({
       ...prev,
-      exercises: prev.exercises.filter((_, i) => i !== index)
+      blocks: prev.blocks.map((block, i) =>
+        i === currentBlockIndex
+          ? { ...block, exercises: block.exercises.filter((_, j) => j !== index) }
+          : block
+      )
     }));
   };
 
+  // Funciones para manejar WODs dentro del bloque actual
   const addWod = () => {
     setForm(prev => ({
       ...prev,
-      wods: [...prev.wods, { wodId: '', notes: '', restDuration: 60 }]
+      blocks: prev.blocks.map((block, i) =>
+        i === currentBlockIndex
+          ? { ...block, wods: [...block.wods, { wodId: '', notes: '', restDuration: 60 }] }
+          : block
+      )
     }));
   };
 
   const updateWod = (index, field, value) => {
     setForm(prev => ({
       ...prev,
-      wods: prev.wods.map((w, i) => i === index ? { ...w, [field]: value } : w)
+      blocks: prev.blocks.map((block, i) =>
+        i === currentBlockIndex
+          ? { ...block, wods: block.wods.map((w, j) => j === index ? { ...w, [field]: value } : w) }
+          : block
+      )
     }));
   };
 
   const removeWod = (index) => {
     setForm(prev => ({
       ...prev,
-      wods: prev.wods.filter((_, i) => i !== index)
+      blocks: prev.blocks.map((block, i) =>
+        i === currentBlockIndex
+          ? { ...block, wods: block.wods.filter((_, j) => j !== index) }
+          : block
+      )
     }));
   };
 
@@ -600,6 +679,59 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
           </label>
         </div>
 
+        {/* Selector de Bloques */}
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <label className="text-sm font-medium text-gray-300">
+              Bloques ({form.blocks.length})
+            </label>
+            <Button type="button" variant="secondary" size="sm" icon={Plus} onClick={addBlock}>
+              Agregar Bloque
+            </Button>
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            {form.blocks.map((block, idx) => (
+              <div key={idx} className="relative">
+                <button
+                  type="button"
+                  onClick={() => setCurrentBlockIndex(idx)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all min-w-[120px] ${
+                    currentBlockIndex === idx
+                      ? 'bg-primary text-white'
+                      : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                  }`}
+                >
+                  {block.name}
+                  <span className="ml-2 text-xs opacity-70">
+                    ({block.exercises?.length || 0}E + {block.wods?.length || 0}W)
+                  </span>
+                </button>
+                {form.blocks.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeBlock(idx)}
+                    className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs hover:bg-red-600"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {currentBlock && (
+            <div className="p-3 bg-gray-800/30 rounded-xl space-y-2">
+              <Input
+                label="Nombre del bloque"
+                value={currentBlock.name}
+                onChange={e => updateBlock('name', e.target.value)}
+                placeholder="Ej: Entrada en calor, Principal, Finisher..."
+              />
+            </div>
+          )}
+        </div>
+
         {/* Tabs para Ejercicios y WODs */}
         <Tabs
           tabs={[
@@ -611,11 +743,11 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
         />
 
         {/* Ejercicios */}
-        {activeTab === 'exercises' && (
+        {activeTab === 'exercises' && currentBlock && (
           <div>
             <div className="flex justify-between items-center mb-2">
               <label className="text-sm font-medium text-gray-300">
-                Ejercicios ({form.exercises.length})
+                Ejercicios ({currentBlock.exercises.length})
               </label>
               <Button type="button" variant="secondary" size="sm" icon={Plus} onClick={addExercise}>
                 Agregar
@@ -631,7 +763,7 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
             )}
 
             <div className="space-y-2 max-h-64 overflow-y-auto">
-            {form.exercises.map((ex, idx) => (
+            {currentBlock.exercises.map((ex, idx) => (
               <div key={idx} className="p-3 bg-gray-800/50 rounded-xl space-y-2">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-blue-400">
@@ -654,7 +786,7 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
                     <Trash2 size={16} />
                   </button>
                 </div>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-4 gap-2">
                   <div>
                     <label className="text-xs text-gray-400 mb-1 block">Series</label>
                     <Input
@@ -673,12 +805,23 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-gray-400 mb-1 block">Desc entre series (s)</label>
+                    <label className="text-xs text-gray-400 mb-1 block">Desc series (s)</label>
                     <Input
                       type="number"
                       value={ex.rest}
                       onChange={e => updateExercise(idx, 'rest', e.target.value)}
                       placeholder="60"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-400 mb-1 block">Intensidad %</label>
+                    <Input
+                      type="number"
+                      value={ex.intensity || 100}
+                      onChange={e => updateExercise(idx, 'intensity', e.target.value)}
+                      placeholder="100"
+                      min="1"
+                      max="100"
                     />
                   </div>
                 </div>
@@ -708,11 +851,11 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
         )}
 
         {/* WODs */}
-        {activeTab === 'wods' && (
+        {activeTab === 'wods' && currentBlock && (
           <div>
             <div className="flex justify-between items-center mb-2">
               <label className="text-sm font-medium text-gray-300">
-                WODs ({form.wods.length})
+                WODs ({currentBlock.wods.length})
               </label>
               <Button type="button" variant="secondary" size="sm" icon={Plus} onClick={addWod}>
                 Agregar
@@ -728,7 +871,7 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
             )}
 
             <div className="space-y-2 max-h-64 overflow-y-auto">
-              {form.wods.map((wod, idx) => (
+              {currentBlock.wods.map((wod, idx) => (
                 <div key={idx} className="p-3 bg-gray-800/50 rounded-xl space-y-2">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-orange-400">
@@ -792,6 +935,18 @@ const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, wods, getClassN
   const getWodName = (id) => wods.find(w => w.id === id)?.name || 'WOD';
   const assignedMembers = routine.memberIds?.map(id => members.find(m => m.id === id)).filter(Boolean) || [];
 
+  // Soportar tanto formato antiguo como nuevo con bloques
+  const blocks = routine.blocks || [
+    {
+      name: 'Rutina',
+      type: 'regular',
+      exercises: routine.exercises || [],
+      wods: routine.wods || []
+    }
+  ];
+
+  const hasContent = blocks.some(b => (b.exercises?.length > 0 || b.wods?.length > 0));
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={routine.name} size="lg">
       <div className="space-y-4">
@@ -800,7 +955,7 @@ const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, wods, getClassN
         )}
 
         {/* Botón para iniciar con timer */}
-        {((routine.exercises && routine.exercises.length > 0) || (routine.wods && routine.wods.length > 0)) && (
+        {hasContent && (
           <Button
             variant="primary"
             icon={Play}
@@ -811,60 +966,78 @@ const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, wods, getClassN
           </Button>
         )}
 
-        {/* Ejercicios */}
-        {routine.exercises && routine.exercises.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-300">
-              <Dumbbell size={16} className="inline mr-2" />
-              Ejercicios ({routine.exercises.length})
-            </p>
-            {routine.exercises.map((ex, idx) => (
-              <div key={idx} className="flex items-center gap-4 p-3 bg-gray-800 rounded-xl">
-                <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-blue-400">
-                  {idx + 1}
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium">{getExerciseName(ex.exerciseId)}</p>
-                  <p className="text-sm text-gray-400">
-                    {ex.sets} series × {ex.reps} reps • {ex.rest}s descanso
-                  </p>
-                  {ex.notes && <p className="text-xs text-gray-500 mt-1">{ex.notes}</p>}
-                  {routine.hasRestBetweenExercises && ex.restDuration && (
-                    <p className="text-xs text-yellow-400 mt-1">
-                      Descanso después: {ex.restDuration}s
-                    </p>
-                  )}
+        {/* Bloques */}
+        {blocks.map((block, blockIdx) => (
+          <div key={blockIdx} className="space-y-3">
+            {blocks.length > 1 && (
+              <div className="flex items-center gap-2 pb-2 border-b border-gray-700">
+                <div className="px-3 py-1 bg-primary/20 rounded-lg">
+                  <p className="text-sm font-bold text-primary">{block.name}</p>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+            )}
 
-        {/* WODs */}
-        {routine.wods && routine.wods.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-300">
-              <Flame size={16} className="inline mr-2" />
-              WODs ({routine.wods.length})
-            </p>
-            {routine.wods.map((wod, idx) => (
-              <div key={idx} className="flex items-center gap-4 p-3 bg-gray-800 rounded-xl">
-                <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-orange-400">
-                  {idx + 1}
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium">{getWodName(wod.wodId)}</p>
-                  {wod.notes && <p className="text-xs text-gray-500 mt-1">{wod.notes}</p>}
-                  {routine.hasRestBetweenExercises && wod.restDuration && (
-                    <p className="text-xs text-yellow-400 mt-1">
-                      Descanso después: {wod.restDuration}s
-                    </p>
-                  )}
-                </div>
+            {/* Ejercicios del bloque */}
+            {block.exercises && block.exercises.length > 0 && (
+              <div className="space-y-2">
+                {blocks.length === 1 && (
+                  <p className="text-sm font-medium text-gray-300">
+                    <Dumbbell size={16} className="inline mr-2" />
+                    Ejercicios ({block.exercises.length})
+                  </p>
+                )}
+                {block.exercises.map((ex, idx) => (
+                  <div key={idx} className="flex items-center gap-4 p-3 bg-gray-800 rounded-xl">
+                    <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-blue-400">
+                      {idx + 1}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium">{getExerciseName(ex.exerciseId)}</p>
+                      <p className="text-sm text-gray-400">
+                        {ex.sets} series × {ex.reps} reps • {ex.rest}s descanso
+                        {ex.intensity && ex.intensity !== 100 && <span className="text-yellow-400"> • {ex.intensity}% intensidad</span>}
+                      </p>
+                      {ex.notes && <p className="text-xs text-gray-500 mt-1">{ex.notes}</p>}
+                      {routine.hasRestBetweenExercises && ex.restDuration && (
+                        <p className="text-xs text-yellow-400 mt-1">
+                          Descanso después: {ex.restDuration}s
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
+
+            {/* WODs del bloque */}
+            {block.wods && block.wods.length > 0 && (
+              <div className="space-y-2">
+                {blocks.length === 1 && (
+                  <p className="text-sm font-medium text-gray-300">
+                    <Flame size={16} className="inline mr-2" />
+                    WODs ({block.wods.length})
+                  </p>
+                )}
+                {block.wods.map((wod, idx) => (
+                  <div key={idx} className="flex items-center gap-4 p-3 bg-gray-800 rounded-xl">
+                    <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-orange-400">
+                      {idx + 1}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium">{getWodName(wod.wodId)}</p>
+                      {wod.notes && <p className="text-xs text-gray-500 mt-1">{wod.notes}</p>}
+                      {routine.hasRestBetweenExercises && wod.restDuration && (
+                        <p className="text-xs text-yellow-400 mt-1">
+                          Descanso después: {wod.restDuration}s
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        ))}
 
         {/* Asignación */}
         <div className="pt-4 border-t border-gray-700">
