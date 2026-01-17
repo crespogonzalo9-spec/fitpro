@@ -235,37 +235,25 @@ const ESDsContent = () => {
           action={canEdit && <Button icon={Plus} onClick={() => setShowModal(true)}>Crear ESD</Button>}
         />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {visibleEsds.map(esd => (
-            <Card key={esd.id} className="hover:border-gray-600 transition-colors">
+            <Card
+              key={esd.id}
+              className="hover:border-gray-700 transition-colors cursor-pointer"
+              onClick={() => { setSelected(esd); setShowView(true); }}
+            >
               <div className="flex justify-between items-start mb-3">
-                <div
-                  className="flex items-center gap-3 flex-1 cursor-pointer"
-                  onClick={() => { setSelected(esd); setShowView(true); }}
-                >
-                  <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
-                    <Clock className="text-purple-500" size={24} />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">{esd.name}</h3>
-                    <div className="flex gap-2 mt-1 flex-wrap">
-                      <Badge className="bg-purple-500/20 text-purple-400">
-                        {formatInterval(esd.esdInterval || 60)}
-                      </Badge>
-                      <Badge className="bg-gray-500/20 text-gray-400">
-                        {esd.esdRounds || 10} rondas
-                      </Badge>
-                      {esd.exercises && esd.exercises.length > 0 && (
-                        <Badge className="bg-blue-500/20 text-blue-400">
-                          <Dumbbell size={10} className="mr-1" />
-                          {esd.exercises.length} ej
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
+                <div className="flex-1">
+                  <h3 className="font-medium text-base mb-1">{esd.name}</h3>
+                  <p className="text-sm text-gray-400">
+                    {formatInterval(esd.esdInterval || 60)} × {esd.esdRounds || 10}
+                    {esd.exercises && esd.exercises.length > 0 && (
+                      <span className="ml-2">• {esd.exercises.length} ejercicios</span>
+                    )}
+                  </p>
                 </div>
                 {canEdit && (
-                  <Dropdown trigger={<button className="p-2 hover:bg-gray-700 rounded-lg"><MoreVertical size={18} /></button>}>
+                  <Dropdown trigger={<button className="p-1.5 hover:bg-gray-700 rounded" onClick={e => e.stopPropagation()}><MoreVertical size={16} /></button>}>
                     <DropdownItem icon={Edit} onClick={() => { setSelected(esd); setShowModal(true); }}>Editar</DropdownItem>
                     <DropdownItem icon={Trash2} danger onClick={() => { setSelected(esd); setShowDelete(true); }}>Eliminar</DropdownItem>
                   </Dropdown>
@@ -273,49 +261,20 @@ const ESDsContent = () => {
               </div>
 
               {esd.exercises && esd.exercises.length > 0 && (
-                <div className="mb-3">
-                  <p className="text-xs font-medium text-gray-400 mb-1">Ejercicios:</p>
-                  <div className="text-sm text-gray-300">
-                    {esd.exercises.slice(0, 3).map((ex, idx) => {
-                      const exercise = exercises.find(e => e.id === ex.exerciseId);
-                      return (
-                        <div key={idx} className="flex gap-2">
-                          <span className="text-blue-400">{idx + 1}.</span>
-                          <span>{exercise?.name || 'Ejercicio'} {ex.reps && `- ${ex.reps} reps`}</span>
-                        </div>
-                      );
-                    })}
-                    {esd.exercises.length > 3 && (
-                      <span className="text-xs text-gray-500">+ {esd.exercises.length - 3} más</span>
-                    )}
-                  </div>
+                <div className="space-y-1 text-sm text-gray-300 mb-3">
+                  {esd.exercises.slice(0, 3).map((ex, idx) => {
+                    const exercise = exercises.find(e => e.id === ex.exerciseId);
+                    return (
+                      <div key={idx}>
+                        {exercise?.name || 'Ejercicio'} {ex.reps && `× ${ex.reps}`}
+                      </div>
+                    );
+                  })}
+                  {esd.exercises.length > 3 && (
+                    <span className="text-xs text-gray-500">+{esd.exercises.length - 3} más</span>
+                  )}
                 </div>
               )}
-
-              {esd.description && (
-                <p className="text-sm text-gray-400 mb-3 line-clamp-2 whitespace-pre-wrap">{esd.description}</p>
-              )}
-
-              <div className="text-xs text-gray-500 flex items-center gap-1">
-                {esd.assignmentType === 'individual' && (
-                  <>
-                    <Lock size={12} />
-                    <span>{getMemberNames(esd.memberIds) || 'Sin asignar'}</span>
-                  </>
-                )}
-                {esd.assignmentType === 'class' && (
-                  <>
-                    <Users size={12} />
-                    <span>{getClassName(esd.classId)}</span>
-                  </>
-                )}
-                {(!esd.assignmentType || esd.assignmentType === 'general') && (
-                  <>
-                    <Globe size={12} />
-                    <span>General</span>
-                  </>
-                )}
-              </div>
             </Card>
           ))}
         </div>
@@ -456,40 +415,28 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
           required
         />
 
-        <Card className="bg-purple-500/10 border-purple-500/30">
-          <h4 className="text-sm font-medium text-purple-400 mb-3 flex items-center gap-2">
-            <Clock size={16} />
-            Configuración ESD
-          </h4>
-          <div className="grid grid-cols-2 gap-4">
-            <Select
-              label="Intervalo"
-              value={form.esdInterval}
-              onChange={e => setForm({ ...form, esdInterval: parseInt(e.target.value) })}
-              options={ESD_INTERVALS.map(i => ({ value: i.value, label: i.label }))}
-            />
-            <Input
-              label="Rondas"
-              type="number"
-              min="1"
-              max="60"
-              value={form.esdRounds}
-              onChange={e => setForm({ ...form, esdRounds: parseInt(e.target.value) || 1 })}
-              placeholder="10"
-            />
-          </div>
-          <p className="text-xs text-gray-400 mt-2">
-            Ejemplo: Intervalo de 1 minuto con 10 rondas = E1MOM 10
-          </p>
-        </Card>
+        <div className="grid grid-cols-2 gap-4">
+          <Select
+            label="Intervalo"
+            value={form.esdInterval}
+            onChange={e => setForm({ ...form, esdInterval: parseInt(e.target.value) })}
+            options={ESD_INTERVALS.map(i => ({ value: i.value, label: i.label }))}
+          />
+          <Input
+            label="Rondas"
+            type="number"
+            min="1"
+            max="60"
+            value={form.esdRounds}
+            onChange={e => setForm({ ...form, esdRounds: parseInt(e.target.value) || 1 })}
+            placeholder="10"
+          />
+        </div>
 
-        {/* Sección de Ejercicios */}
+        {/* Ejercicios */}
         <div>
-          <div className="flex items-center justify-between mb-3">
-            <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-              <Dumbbell size={16} />
-              Ejercicios ({form.exercises.length})
-            </label>
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-sm font-medium">Ejercicios ({form.exercises.length})</label>
             <Button
               type="button"
               size="sm"
@@ -498,76 +445,58 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
               onClick={addExercise}
               disabled={exercises.length === 0}
             >
-              Agregar Ejercicio
+              Agregar
             </Button>
           </div>
 
           {exercises.length === 0 && (
-            <Card className="bg-yellow-500/10 border-yellow-500/30 mb-3">
-              <p className="text-sm text-yellow-400">
-                No hay ejercicios en el gimnasio. Creá ejercicios primero desde la sección "Ejercicios".
-              </p>
-            </Card>
+            <p className="text-sm text-yellow-500 mb-2">
+              No hay ejercicios. Creá ejercicios primero.
+            </p>
           )}
 
-          {form.exercises.length === 0 ? (
-            <Card className="bg-gray-800/50 border-gray-700">
-              <p className="text-sm text-gray-400 text-center py-4">
-                No hay ejercicios agregados. Hacé click en "Agregar Ejercicio" para comenzar.
-              </p>
-            </Card>
-          ) : (
-            <div className="space-y-3">
-              {form.exercises.map((ex, idx) => (
-                <Card key={idx} className="bg-gray-800/50 border-gray-700">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-blue-400 flex-shrink-0 mt-6">
-                      {idx + 1}
-                    </div>
-                    <div className="flex-1 space-y-3">
-                      <Select
-                        label="Ejercicio *"
-                        value={ex.exerciseId}
-                        onChange={e => updateExercise(idx, 'exerciseId', e.target.value)}
-                        options={[
-                          { value: '', label: 'Seleccionar ejercicio...' },
-                          ...exercises.map(e => ({ value: e.id, label: e.name }))
-                        ]}
-                        required
-                      />
-                      <div className="grid grid-cols-3 gap-3">
-                        <Input
-                          label="Reps"
-                          value={ex.reps}
-                          onChange={e => updateExercise(idx, 'reps', e.target.value)}
-                          placeholder="5, 10, 15..."
-                        />
-                        <Input
-                          label="Peso"
-                          value={ex.weight}
-                          onChange={e => updateExercise(idx, 'weight', e.target.value)}
-                          placeholder="43kg, RX, etc"
-                        />
-                        <Input
-                          label="Notas"
-                          value={ex.notes}
-                          onChange={e => updateExercise(idx, 'notes', e.target.value)}
-                          placeholder="Escalas, etc"
-                        />
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => removeExercise(idx)}
-                      className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg flex-shrink-0 mt-6"
-                    >
-                      <X size={18} />
-                    </button>
+          <div className="space-y-2">
+            {form.exercises.map((ex, idx) => (
+              <div key={idx} className="flex gap-2 items-start p-3 bg-gray-800/30 rounded-lg border border-gray-700">
+                <span className="text-gray-500 text-sm mt-2">{idx + 1}.</span>
+                <div className="flex-1 space-y-2">
+                  <Select
+                    value={ex.exerciseId}
+                    onChange={e => updateExercise(idx, 'exerciseId', e.target.value)}
+                    options={[
+                      { value: '', label: 'Seleccionar ejercicio...' },
+                      ...exercises.map(e => ({ value: e.id, label: e.name }))
+                    ]}
+                    required
+                  />
+                  <div className="grid grid-cols-3 gap-2">
+                    <Input
+                      value={ex.reps}
+                      onChange={e => updateExercise(idx, 'reps', e.target.value)}
+                      placeholder="Reps"
+                    />
+                    <Input
+                      value={ex.weight}
+                      onChange={e => updateExercise(idx, 'weight', e.target.value)}
+                      placeholder="Peso"
+                    />
+                    <Input
+                      value={ex.notes}
+                      onChange={e => updateExercise(idx, 'notes', e.target.value)}
+                      placeholder="Notas"
+                    />
                   </div>
-                </Card>
-              ))}
-            </div>
-          )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeExercise(idx)}
+                  className="p-1.5 text-gray-500 hover:text-red-400 rounded mt-2"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
         <Textarea
@@ -660,47 +589,25 @@ const ViewESDModal = ({ isOpen, onClose, esd, getClassName, getMemberNames, memb
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={esd.name} size="md">
       <div className="space-y-4">
-        <Card className="bg-purple-500/10 border-purple-500/30">
-          <div className="flex items-center gap-3 mb-3">
-            <Clock className="text-purple-400" size={20} />
-            <h4 className="font-medium text-purple-400">Configuración ESD</h4>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-xs text-gray-500 mb-1">Intervalo</p>
-              <p className="text-sm font-medium">{formatInterval(esd.esdInterval || 60)}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 mb-1">Rondas</p>
-              <p className="text-sm font-medium">{esd.esdRounds || 10} rondas</p>
-            </div>
-          </div>
-        </Card>
+        <div className="text-sm text-gray-400">
+          {formatInterval(esd.esdInterval || 60)} × {esd.esdRounds || 10} rondas
+        </div>
 
         {/* Ejercicios */}
         {esd.exercises && esd.exercises.length > 0 && (
           <div>
-            <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
-              <Dumbbell size={16} />
-              Ejercicios ({esd.exercises.length})
-            </h4>
-            <div className="space-y-2">
+            <h4 className="text-sm font-medium mb-2">Ejercicios</h4>
+            <div className="space-y-1.5">
               {esd.exercises.map((ex, idx) => (
-                <Card key={idx} className="bg-gray-800/50 border-gray-700">
-                  <div className="flex gap-3">
-                    <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-blue-400 flex-shrink-0">
-                      {idx + 1}
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium">{getExerciseName(ex.exerciseId)}</p>
-                      <div className="flex gap-3 mt-1 text-sm text-gray-400">
-                        {ex.reps && <span>{ex.reps} reps</span>}
-                        {ex.weight && <span>@ {ex.weight}</span>}
-                        {ex.notes && <span className="text-xs">({ex.notes})</span>}
-                      </div>
-                    </div>
+                <div key={idx} className="flex gap-2 text-sm">
+                  <span className="text-gray-500">{idx + 1}.</span>
+                  <div>
+                    <span>{getExerciseName(ex.exerciseId)}</span>
+                    {ex.reps && <span className="text-gray-400"> × {ex.reps}</span>}
+                    {ex.weight && <span className="text-gray-400"> @ {ex.weight}</span>}
+                    {ex.notes && <span className="text-gray-500 text-xs"> ({ex.notes})</span>}
                   </div>
-                </Card>
+                </div>
               ))}
             </div>
           </div>
@@ -708,8 +615,8 @@ const ViewESDModal = ({ isOpen, onClose, esd, getClassName, getMemberNames, memb
 
         {esd.description && (
           <div>
-            <h4 className="text-sm font-medium text-gray-400 mb-2">Descripción / Notas</h4>
-            <p className="text-sm whitespace-pre-wrap">{esd.description}</p>
+            <h4 className="text-sm font-medium mb-2">Notas</h4>
+            <p className="text-sm text-gray-400">{esd.description}</p>
           </div>
         )}
 
