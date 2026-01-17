@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, ClipboardList, MoreVertical, Edit, Trash2, Users, Lock, Globe, Dumbbell, Play, Flame, Copy } from 'lucide-react';
+import { Plus, ClipboardList, MoreVertical, Edit, Trash2, Users, Lock, Globe, Dumbbell, Play, Flame, Copy, Clock } from 'lucide-react';
 import { Button, Card, Modal, Input, Select, Textarea, SearchInput, EmptyState, LoadingState, ConfirmDialog, Badge, Dropdown, DropdownItem, Avatar, GymRequired, Tabs, Autocomplete } from '../components/Common';
 import RoutineTimer from '../components/Common/RoutineTimer';
 import { useAuth } from '../contexts/AuthContext';
