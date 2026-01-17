@@ -6,7 +6,7 @@ import { useGym } from '../contexts/GymContext';
 import { useToast } from '../contexts/ToastContext';
 import { db } from '../firebase';
 import { collection, query, where, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
-import { WOD_TYPES, BENCHMARK_WODS } from '../utils/constants';
+import { WOD_TYPES, BENCHMARK_WODS, ESD_INTERVALS } from '../utils/constants';
 
 const WODsContent = () => {
   const { userData, canCreateRoutines, isOnlyAlumno } = useAuth();
@@ -300,14 +300,23 @@ const WODsContent = () => {
 };
 
 const WODModal = ({ isOpen, onClose, onSave, wod, classes, members }) => {
-  const [form, setForm] = useState({ 
-    name: '', 
-    type: 'for_time', 
-    description: '', 
-    timeLimit: '', 
-    assignmentType: 'general', 
-    classId: '', 
-    memberIds: [] 
+  const [form, setForm] = useState({
+    name: '',
+    type: 'for_time',
+    description: '',
+    timeLimit: '',
+    assignmentType: 'general',
+    classId: '',
+    memberIds: [],
+    // Campos específicos para ESD
+    esdInterval: 60,
+    esdRounds: 10,
+    // Campos específicos para AMRAP
+    amrapTime: 20,
+    // Campos específicos para For Time
+    forTimeRounds: 1,
+    // Campos específicos para Tabata
+    tabataRounds: 8
   });
   const [loading, setLoading] = useState(false);
   const [showBenchmarks, setShowBenchmarks] = useState(false);
@@ -315,24 +324,34 @@ const WODModal = ({ isOpen, onClose, onSave, wod, classes, members }) => {
 
   useEffect(() => {
     if (wod) {
-      setForm({ 
-        name: wod.name || '', 
-        type: wod.type || 'for_time', 
-        description: wod.description || '', 
-        timeLimit: wod.timeLimit || '', 
-        assignmentType: wod.assignmentType || 'general', 
-        classId: wod.classId || '', 
-        memberIds: wod.memberIds || [] 
+      setForm({
+        name: wod.name || '',
+        type: wod.type || 'for_time',
+        description: wod.description || '',
+        timeLimit: wod.timeLimit || '',
+        assignmentType: wod.assignmentType || 'general',
+        classId: wod.classId || '',
+        memberIds: wod.memberIds || [],
+        esdInterval: wod.esdInterval || 60,
+        esdRounds: wod.esdRounds || 10,
+        amrapTime: wod.amrapTime || 20,
+        forTimeRounds: wod.forTimeRounds || 1,
+        tabataRounds: wod.tabataRounds || 8
       });
     } else {
-      setForm({ 
-        name: '', 
-        type: 'for_time', 
-        description: '', 
-        timeLimit: '', 
-        assignmentType: 'general', 
-        classId: '', 
-        memberIds: [] 
+      setForm({
+        name: '',
+        type: 'for_time',
+        description: '',
+        timeLimit: '',
+        assignmentType: 'general',
+        classId: '',
+        memberIds: [],
+        esdInterval: 60,
+        esdRounds: 10,
+        amrapTime: 20,
+        forTimeRounds: 1,
+        tabataRounds: 8
       });
     }
     setMemberSearch('');
@@ -416,28 +435,130 @@ const WODModal = ({ isOpen, onClose, onSave, wod, classes, members }) => {
         )}
 
         <div className="grid grid-cols-2 gap-4">
-          <Select 
-            label="Tipo" 
-            value={form.type} 
-            onChange={e => setForm({ ...form, type: e.target.value })} 
-            options={WOD_TYPES.map(t => ({ value: t.id, label: t.name }))} 
+          <Select
+            label="Tipo"
+            value={form.type}
+            onChange={e => setForm({ ...form, type: e.target.value })}
+            options={WOD_TYPES.map(t => ({ value: t.id, label: t.name }))}
           />
-          <Input 
-            label="Time Cap (min)" 
-            type="number" 
-            value={form.timeLimit} 
-            onChange={e => setForm({ ...form, timeLimit: e.target.value })} 
-            placeholder="20" 
+          <Input
+            label="Time Cap (min)"
+            type="number"
+            value={form.timeLimit}
+            onChange={e => setForm({ ...form, timeLimit: e.target.value })}
+            placeholder="20"
           />
         </div>
 
-        <Textarea 
-          label="Descripción / Movimientos *" 
-          value={form.description} 
-          onChange={e => setForm({ ...form, description: e.target.value })} 
-          rows={5} 
-          placeholder="21-15-9&#10;Thrusters (43/30 kg)&#10;Pull-ups" 
-          required 
+        {/* Campos específicos para ESD */}
+        {form.type === 'esd' && (
+          <Card className="bg-blue-500/10 border-blue-500/30">
+            <h4 className="text-sm font-medium text-blue-400 mb-3 flex items-center gap-2">
+              <Clock size={16} />
+              Configuración ESD
+            </h4>
+            <div className="grid grid-cols-2 gap-4">
+              <Select
+                label="Intervalo"
+                value={form.esdInterval}
+                onChange={e => setForm({ ...form, esdInterval: parseInt(e.target.value) })}
+                options={ESD_INTERVALS.map(i => ({ value: i.value, label: i.label }))}
+              />
+              <Input
+                label="Rondas"
+                type="number"
+                min="1"
+                max="60"
+                value={form.esdRounds}
+                onChange={e => setForm({ ...form, esdRounds: parseInt(e.target.value) || 1 })}
+                placeholder="10"
+              />
+            </div>
+            <p className="text-xs text-gray-400 mt-2">
+              Ejemplo: Intervalo de 1 minuto con 10 rondas = E1MOM 10
+            </p>
+          </Card>
+        )}
+
+        {/* Campos específicos para AMRAP */}
+        {form.type === 'amrap' && (
+          <Card className="bg-green-500/10 border-green-500/30">
+            <h4 className="text-sm font-medium text-green-400 mb-3 flex items-center gap-2">
+              <Clock size={16} />
+              Configuración AMRAP
+            </h4>
+            <Input
+              label="Tiempo (minutos)"
+              type="number"
+              min="1"
+              max="60"
+              value={form.amrapTime}
+              onChange={e => setForm({ ...form, amrapTime: parseInt(e.target.value) || 1 })}
+              placeholder="20"
+            />
+            <p className="text-xs text-gray-400 mt-2">
+              As Many Rounds As Possible - Máximas rondas en el tiempo indicado
+            </p>
+          </Card>
+        )}
+
+        {/* Campos específicos para For Time */}
+        {form.type === 'for_time' && (
+          <Card className="bg-purple-500/10 border-purple-500/30">
+            <h4 className="text-sm font-medium text-purple-400 mb-3 flex items-center gap-2">
+              <Clock size={16} />
+              Configuración For Time
+            </h4>
+            <Input
+              label="Rondas"
+              type="number"
+              min="1"
+              max="10"
+              value={form.forTimeRounds}
+              onChange={e => setForm({ ...form, forTimeRounds: parseInt(e.target.value) || 1 })}
+              placeholder="3"
+            />
+            <p className="text-xs text-gray-400 mt-2">
+              Completar todas las rondas lo más rápido posible
+            </p>
+          </Card>
+        )}
+
+        {/* Campos específicos para Tabata */}
+        {form.type === 'tabata' && (
+          <Card className="bg-red-500/10 border-red-500/30">
+            <h4 className="text-sm font-medium text-red-400 mb-3 flex items-center gap-2">
+              <Clock size={16} />
+              Configuración Tabata
+            </h4>
+            <Input
+              label="Rondas"
+              type="number"
+              min="4"
+              max="12"
+              value={form.tabataRounds}
+              onChange={e => setForm({ ...form, tabataRounds: parseInt(e.target.value) || 8 })}
+              placeholder="8"
+            />
+            <p className="text-xs text-gray-400 mt-2">
+              Protocolo Tabata: 20 segundos trabajo / 10 segundos descanso
+            </p>
+          </Card>
+        )}
+
+        <Textarea
+          label="Descripción / Movimientos *"
+          value={form.description}
+          onChange={e => setForm({ ...form, description: e.target.value })}
+          rows={5}
+          placeholder={
+            form.type === 'esd' ? 'Ejemplo:\n5 Thrusters (43/30 kg)\n10 Pull-ups\n15 Air Squats' :
+            form.type === 'amrap' ? 'Ejemplo:\n5 Pull-ups\n10 Push-ups\n15 Air Squats' :
+            form.type === 'for_time' ? 'Ejemplo:\n21-15-9\nThrusters (43/30 kg)\nPull-ups' :
+            form.type === 'tabata' ? 'Ejemplo:\nBurpees' :
+            '21-15-9\nThrusters (43/30 kg)\nPull-ups'
+          }
+          required
         />
 
         <Select 
@@ -538,17 +659,48 @@ const WODModal = ({ isOpen, onClose, onSave, wod, classes, members }) => {
 
 const ViewWODModal = ({ isOpen, onClose, wod, getTypeName, getClassName, getMemberNames, members }) => {
   if (!wod) return null;
-  
+
   const assignedMembers = wod.memberIds?.map(id => members.find(m => m.id === id)).filter(Boolean) || [];
-  
+
+  // Formatear el intervalo ESD
+  const formatEsdInterval = (seconds) => {
+    if (seconds < 60) return `${seconds} segundos`;
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    if (secs === 0) return `${minutes} minuto${minutes > 1 ? 's' : ''}`;
+    return `${minutes}:${secs.toString().padStart(2, '0')} minutos`;
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={wod.name} size="lg">
       <div className="space-y-4">
         <div className="flex items-center gap-2 flex-wrap">
           <Badge className="bg-orange-500/20 text-orange-400">{getTypeName(wod.type)}</Badge>
           {wod.timeLimit && <Badge className="bg-gray-500/20 text-gray-400">{wod.timeLimit} min</Badge>}
+          {wod.type === 'esd' && wod.esdInterval && wod.esdRounds && (
+            <Badge className="bg-blue-500/20 text-blue-400">
+              <Clock size={12} className="mr-1" />
+              {formatEsdInterval(wod.esdInterval)} × {wod.esdRounds} rondas
+            </Badge>
+          )}
+          {wod.type === 'amrap' && wod.amrapTime && (
+            <Badge className="bg-green-500/20 text-green-400">
+              <Clock size={12} className="mr-1" />
+              {wod.amrapTime} min
+            </Badge>
+          )}
+          {wod.type === 'for_time' && wod.forTimeRounds && wod.forTimeRounds > 1 && (
+            <Badge className="bg-purple-500/20 text-purple-400">
+              {wod.forTimeRounds} rondas
+            </Badge>
+          )}
+          {wod.type === 'tabata' && wod.tabataRounds && (
+            <Badge className="bg-red-500/20 text-red-400">
+              {wod.tabataRounds} rondas × 20s/10s
+            </Badge>
+          )}
         </div>
-        
+
         <div className="bg-gray-800 rounded-xl p-4 whitespace-pre-wrap font-mono text-sm">
           {wod.description}
         </div>

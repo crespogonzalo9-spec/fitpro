@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, SkipForward, X, Check, Timer, Coffee, Dumbbell, AlertCircle, CheckCircle2, Flame, StopCircle, FastForward } from 'lucide-react';
+import { Play, Pause, SkipForward, X, Check, Timer, Coffee, Dumbbell, AlertCircle, CheckCircle2, Flame, StopCircle, FastForward, Video } from 'lucide-react';
 import { Button, Modal, Card } from './index';
 
 const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
@@ -431,9 +431,22 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
                   )}
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold mb-2">
-                    {isCurrentWod ? (wodData?.name || 'WOD') : (exerciseData?.name || 'Ejercicio')}
-                  </h3>
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <h3 className="text-2xl font-bold">
+                      {isCurrentWod ? (wodData?.name || 'WOD') : (exerciseData?.name || 'Ejercicio')}
+                    </h3>
+                    {!isCurrentWod && exerciseData?.videoUrl && (
+                      <a
+                        href={exerciseData.videoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-3 py-2 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg text-sm font-medium transition-colors flex-shrink-0"
+                      >
+                        <Video size={16} />
+                        Ver Video
+                      </a>
+                    )}
+                  </div>
                   {!isCurrentWod && (
                     <div className="flex flex-wrap gap-4 text-sm">
                       {!isTimeBasedExercise && (

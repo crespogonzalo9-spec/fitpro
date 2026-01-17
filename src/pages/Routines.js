@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, ClipboardList, MoreVertical, Edit, Trash2, Users, Lock, Globe, Dumbbell, Play, Flame } from 'lucide-react';
-import { Button, Card, Modal, Input, Select, Textarea, SearchInput, EmptyState, LoadingState, ConfirmDialog, Badge, Dropdown, DropdownItem, Avatar, GymRequired, Tabs } from '../components/Common';
+import { Plus, ClipboardList, MoreVertical, Edit, Trash2, Users, Lock, Globe, Dumbbell, Play, Flame, Copy } from 'lucide-react';
+import { Button, Card, Modal, Input, Select, Textarea, SearchInput, EmptyState, LoadingState, ConfirmDialog, Badge, Dropdown, DropdownItem, Avatar, GymRequired, Tabs, Autocomplete } from '../components/Common';
 import RoutineTimer from '../components/Common/RoutineTimer';
 import { useAuth } from '../contexts/AuthContext';
 import { useGym } from '../contexts/GymContext';
@@ -154,6 +154,38 @@ const RoutinesContent = () => {
     }
   };
 
+  const handleCopy = async (routine) => {
+    try {
+      // Crear copia de la rutina sin el ID y sin las fechas
+      const { id, createdAt, updatedAt, createdBy, createdByName, ...routineCopy } = routine;
+
+      // Agregar "(Copia)" al nombre si no lo tiene
+      const newName = routineCopy.name.includes('(Copia)')
+        ? routineCopy.name
+        : `${routineCopy.name} (Copia)`;
+
+      // Cambiar asignación a general para evitar conflictos
+      const newRoutineData = {
+        ...routineCopy,
+        name: newName,
+        assignmentType: 'general',
+        classId: '',
+        memberIds: [],
+        gymId: currentGym.id,
+        createdBy: userData.id,
+        createdByName: userData.name,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      };
+
+      await addDoc(collection(db, 'routines'), newRoutineData);
+      success('Rutina copiada exitosamente');
+    } catch (err) {
+      console.error('Error copying routine:', err);
+      showError('Error al copiar la rutina');
+    }
+  };
+
   const handleDelete = async () => {
     try {
       await deleteDoc(doc(db, 'routines', selected.id));
@@ -258,6 +290,7 @@ const RoutinesContent = () => {
                 {canEdit && (
                   <Dropdown trigger={<button className="p-2 hover:bg-gray-700 rounded-lg"><MoreVertical size={18} /></button>}>
                     <DropdownItem icon={Edit} onClick={() => { setSelected(routine); setShowModal(true); }}>Editar</DropdownItem>
+                    <DropdownItem icon={Copy} onClick={() => handleCopy(routine)}>Copiar</DropdownItem>
                     <DropdownItem icon={Trash2} danger onClick={() => { setSelected(routine); setShowDelete(true); }}>Eliminar</DropdownItem>
                   </Dropdown>
                 )}
@@ -769,13 +802,13 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
                   <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-blue-400">
                     {idx + 1}
                   </div>
-                  <Select
+                  <Autocomplete
                     value={ex.exerciseId}
-                    onChange={e => updateExercise(idx, 'exerciseId', e.target.value)}
-                    options={[
-                      { value: '', label: 'Seleccionar ejercicio...' },
-                      ...exercises.map(e => ({ value: e.id, label: e.name }))
-                    ]}
+                    onChange={value => updateExercise(idx, 'exerciseId', value)}
+                    options={exercises.map(e => ({ value: e.id, label: e.name }))}
+                    placeholder="Buscar ejercicio..."
+                    displayField="label"
+                    valueField="value"
                     className="flex-1"
                   />
                   <button
