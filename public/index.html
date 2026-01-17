@@ -155,21 +155,21 @@
       }, 10000);
     })();
     
-    // Registrar Service Worker
-    if ('serviceWorker' in navigator) {
+    // Registrar Service Worker (solo en producción)
+    if ('serviceWorker' in navigator && window.location.hostname !== 'localhost') {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('/service-worker.js')
           .then(function(registration) {
             console.log('[SW] Registered:', registration.scope);
-            
+
             // Verificar actualizaciones cada vez que se carga
             registration.update();
-            
+
             // Escuchar actualizaciones
             registration.addEventListener('updatefound', function() {
               var newWorker = registration.installing;
               console.log('[SW] Update found, installing...');
-              
+
               newWorker.addEventListener('statechange', function() {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                   // Hay una nueva versión disponible
@@ -181,8 +181,9 @@
           })
           .catch(function(error) {
             console.log('[SW] Registration failed:', error);
+            // No hacer nada en caso de error - la app funciona sin SW
           });
-        
+
         // Escuchar mensajes del Service Worker
         navigator.serviceWorker.addEventListener('message', function(event) {
           if (event.data && event.data.type === 'SW_UPDATED') {
@@ -193,6 +194,19 @@
           }
         });
       });
+    } else if (window.location.hostname === 'localhost') {
+      console.log('[SW] ServiceWorker disabled in development mode');
+
+      // Desregistrar cualquier SW existente en desarrollo
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for (var registration of registrations) {
+            registration.unregister().then(function() {
+              console.log('[SW] Unregistered development ServiceWorker');
+            });
+          }
+        });
+      }
     }
     
     function showUpdateNotification() {
