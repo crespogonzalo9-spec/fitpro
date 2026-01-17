@@ -712,245 +712,248 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
           </label>
         </div>
 
-        {/* Selector de Bloques */}
-        <div className="space-y-2">
+        {/* Gestión de Bloques */}
+        <div className="space-y-4">
           <div className="flex justify-between items-center">
             <label className="text-sm font-medium text-gray-300">
-              Bloques ({form.blocks.length})
+              Bloques de la Rutina ({form.blocks.length})
             </label>
             <Button type="button" variant="secondary" size="sm" icon={Plus} onClick={addBlock}>
               Agregar Bloque
             </Button>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto pb-2">
+          {/* Lista de bloques como cuadros */}
+          <div className="space-y-4">
             {form.blocks.map((block, idx) => (
-              <div key={idx} className="relative">
-                <button
-                  type="button"
-                  onClick={() => setCurrentBlockIndex(idx)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all min-w-[120px] ${
-                    currentBlockIndex === idx
-                      ? 'bg-primary text-white'
-                      : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-                  }`}
-                >
-                  {block.name}
-                  <span className="ml-2 text-xs opacity-70">
-                    ({block.exercises?.length || 0}E + {block.wods?.length || 0}W)
-                  </span>
-                </button>
-                {form.blocks.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeBlock(idx)}
-                    className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs hover:bg-red-600"
-                  >
-                    ×
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {currentBlock && (
-            <div className="p-3 bg-gray-800/30 rounded-xl space-y-2">
-              <Input
-                label="Nombre del bloque"
-                value={currentBlock.name}
-                onChange={e => updateBlock('name', e.target.value)}
-                placeholder="Ej: Entrada en calor, Principal, Finisher..."
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Tabs para Ejercicios y WODs */}
-        <Tabs
-          tabs={[
-            { id: 'exercises', label: 'Ejercicios', icon: Dumbbell },
-            { id: 'wods', label: 'WODs', icon: Flame }
-          ]}
-          activeTab={activeTab}
-          onChange={setActiveTab}
-        />
-
-        {/* Ejercicios */}
-        {activeTab === 'exercises' && currentBlock && (
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <label className="text-sm font-medium text-gray-300">
-                Ejercicios ({currentBlock.exercises.length})
-              </label>
-              <Button type="button" variant="secondary" size="sm" icon={Plus} onClick={addExercise}>
-                Agregar
-              </Button>
-            </div>
-
-            {exercises.length === 0 && (
-              <Card className="bg-yellow-500/10 border-yellow-500/30 mb-2">
-                <p className="text-yellow-400 text-sm">
-                  No hay ejercicios cargados. Agregá ejercicios desde la sección correspondiente.
-                </p>
-              </Card>
-            )}
-
-            <div className="space-y-2 max-h-64 overflow-y-auto">
-            {currentBlock.exercises.map((ex, idx) => (
-              <div key={idx} className="p-3 bg-gray-800/50 rounded-xl space-y-2">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-blue-400">
-                    {idx + 1}
-                  </div>
-                  <Autocomplete
-                    value={ex.exerciseId}
-                    onChange={value => updateExercise(idx, 'exerciseId', value)}
-                    options={exercises.map(e => ({ value: e.id, label: e.name }))}
-                    placeholder="Buscar ejercicio..."
-                    displayField="label"
-                    valueField="value"
-                    className="flex-1"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeExercise(idx)}
-                    className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-                <div className="grid grid-cols-4 gap-2">
-                  <div>
-                    <label className="text-xs text-gray-400 mb-1 block">Series</label>
-                    <Input
-                      type="number"
-                      value={ex.sets}
-                      onChange={e => updateExercise(idx, 'sets', e.target.value)}
-                      placeholder="3"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs text-gray-400 mb-1 block">Reps</label>
-                    <Input
-                      value={ex.reps}
-                      onChange={e => updateExercise(idx, 'reps', e.target.value)}
-                      placeholder="10"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs text-gray-400 mb-1 block">Desc series (s)</label>
-                    <Input
-                      type="number"
-                      value={ex.rest}
-                      onChange={e => updateExercise(idx, 'rest', e.target.value)}
-                      placeholder="60"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs text-gray-400 mb-1 block">Intensidad %</label>
-                    <Input
-                      type="number"
-                      value={ex.intensity || 100}
-                      onChange={e => updateExercise(idx, 'intensity', e.target.value)}
-                      placeholder="100"
-                      min="1"
-                      max="100"
-                    />
-                  </div>
-                </div>
-                {form.hasRestBetweenExercises && (
-                  <div>
-                    <label className="text-xs text-gray-400 mb-1 block">Descanso después del ejercicio (segundos)</label>
-                    <Input
-                      type="number"
-                      value={ex.restDuration || 60}
-                      onChange={e => updateExercise(idx, 'restDuration', e.target.value)}
-                      placeholder="60"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Tiempo de descanso antes del siguiente ejercicio
-                    </p>
-                  </div>
-                )}
-                <Input
-                  value={ex.notes || ''}
-                  onChange={e => updateExercise(idx, 'notes', e.target.value)}
-                  placeholder="Notas (opcional)"
-                />
-              </div>
-            ))}
-            </div>
-          </div>
-        )}
-
-        {/* WODs */}
-        {activeTab === 'wods' && currentBlock && (
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <label className="text-sm font-medium text-gray-300">
-                WODs ({currentBlock.wods.length})
-              </label>
-              <Button type="button" variant="secondary" size="sm" icon={Plus} onClick={addWod}>
-                Agregar
-              </Button>
-            </div>
-
-            {wods.length === 0 && (
-              <Card className="bg-yellow-500/10 border-yellow-500/30 mb-2">
-                <p className="text-yellow-400 text-sm">
-                  No hay WODs cargados. Agregá WODs desde la sección correspondiente.
-                </p>
-              </Card>
-            )}
-
-            <div className="space-y-2 max-h-64 overflow-y-auto">
-              {currentBlock.wods.map((wod, idx) => (
-                <div key={idx} className="p-3 bg-gray-800/50 rounded-xl space-y-2">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-orange-400">
-                      {idx + 1}
+              <Card key={idx} className="bg-gray-800/50 border-2 border-gray-700 hover:border-primary/50 transition-colors">
+                <div className="space-y-4">
+                  {/* Header del bloque */}
+                  <div className="flex items-center justify-between pb-3 border-b border-gray-700">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+                        <span className="text-lg font-bold text-primary">{idx + 1}</span>
+                      </div>
+                      <div className="flex-1">
+                        <Input
+                          value={block.name}
+                          onChange={e => {
+                            const newBlocks = [...form.blocks];
+                            newBlocks[idx].name = e.target.value;
+                            setForm({ ...form, blocks: newBlocks });
+                          }}
+                          placeholder="Nombre del bloque (ej: Entrada en calor, Principal...)"
+                          className="font-semibold"
+                        />
+                      </div>
                     </div>
-                    <Select
-                      value={wod.wodId}
-                      onChange={e => updateWod(idx, 'wodId', e.target.value)}
-                      options={[
-                        { value: '', label: 'Seleccionar WOD...' },
-                        ...wods.map(w => ({ value: w.id, label: w.name }))
-                      ]}
-                      className="flex-1"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeWod(idx)}
-                      className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg"
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                    {form.blocks.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        icon={Trash2}
+                        onClick={() => removeBlock(idx)}
+                      >
+                        Eliminar
+                      </Button>
+                    )}
                   </div>
-                  {form.hasRestBetweenExercises && (
+
+                  {/* Tabs para Ejercicios y WODs dentro del bloque */}
+                  <Tabs
+                    tabs={[
+                      { id: 'exercises', label: 'Ejercicios', icon: Dumbbell },
+                      { id: 'wods', label: 'WODs', icon: Flame }
+                    ]}
+                    activeTab={currentBlockIndex === idx ? activeTab : 'exercises'}
+                    onChange={(tab) => {
+                      setCurrentBlockIndex(idx);
+                      setActiveTab(tab);
+                    }}
+                  />
+
+                  {/* Ejercicios */}
+                  {currentBlockIndex === idx && activeTab === 'exercises' && (
                     <div>
-                      <label className="text-xs text-gray-400 mb-1 block">Descanso después del WOD (segundos)</label>
-                      <Input
-                        type="number"
-                        value={wod.restDuration || 60}
-                        onChange={e => updateWod(idx, 'restDuration', e.target.value)}
-                        placeholder="60"
-                      />
-                      <p className="text-xs text-gray-500 mt-1">
-                        Tiempo de descanso antes del siguiente elemento
-                      </p>
+                      <div className="flex justify-between items-center mb-2">
+                        <label className="text-sm font-medium text-gray-300">
+                          Ejercicios ({block.exercises.length})
+                        </label>
+                        <Button type="button" variant="secondary" size="sm" icon={Plus} onClick={addExercise}>
+                          Agregar
+                        </Button>
+                      </div>
+
+                      {exercises.length === 0 && (
+                        <Card className="bg-yellow-500/10 border-yellow-500/30 mb-2">
+                          <p className="text-yellow-400 text-sm">
+                            No hay ejercicios cargados. Agregá ejercicios desde la sección correspondiente.
+                          </p>
+                        </Card>
+                      )}
+
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {block.exercises.map((ex, exIdx) => (
+                          <div key={exIdx} className="p-3 bg-gray-700/50 rounded-xl space-y-2">
+                            <div className="flex items-center gap-2 mb-2">
+                              <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-blue-400">
+                                {exIdx + 1}
+                              </div>
+                              <Autocomplete
+                                value={ex.exerciseId}
+                                onChange={value => updateExercise(exIdx, 'exerciseId', value)}
+                                options={exercises.map(e => ({ value: e.id, label: e.name }))}
+                                placeholder="Buscar ejercicio..."
+                                displayField="label"
+                                valueField="value"
+                                className="flex-1"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeExercise(exIdx)}
+                                className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                            <div className="grid grid-cols-4 gap-2">
+                              <div>
+                                <label className="text-xs text-gray-400 mb-1 block">Series</label>
+                                <Input
+                                  type="number"
+                                  value={ex.sets}
+                                  onChange={e => updateExercise(exIdx, 'sets', e.target.value)}
+                                  placeholder="3"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-xs text-gray-400 mb-1 block">Reps</label>
+                                <Input
+                                  value={ex.reps}
+                                  onChange={e => updateExercise(exIdx, 'reps', e.target.value)}
+                                  placeholder="10"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-xs text-gray-400 mb-1 block">Desc series (s)</label>
+                                <Input
+                                  type="number"
+                                  value={ex.rest}
+                                  onChange={e => updateExercise(exIdx, 'rest', e.target.value)}
+                                  placeholder="60"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-xs text-gray-400 mb-1 block">Intensidad %</label>
+                                <Input
+                                  type="number"
+                                  value={ex.intensity || 100}
+                                  onChange={e => updateExercise(exIdx, 'intensity', e.target.value)}
+                                  placeholder="100"
+                                  min="1"
+                                  max="100"
+                                />
+                              </div>
+                            </div>
+                            {form.hasRestBetweenExercises && (
+                              <div>
+                                <label className="text-xs text-gray-400 mb-1 block">Descanso después del ejercicio (segundos)</label>
+                                <Input
+                                  type="number"
+                                  value={ex.restDuration || 60}
+                                  onChange={e => updateExercise(exIdx, 'restDuration', e.target.value)}
+                                  placeholder="60"
+                                />
+                                <p className="text-xs text-gray-500 mt-1">
+                                  Tiempo de descanso antes del siguiente ejercicio
+                                </p>
+                              </div>
+                            )}
+                            <Input
+                              value={ex.notes || ''}
+                              onChange={e => updateExercise(exIdx, 'notes', e.target.value)}
+                              placeholder="Notas (opcional)"
+                            />
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
-                  <Input
-                    value={wod.notes || ''}
-                    onChange={e => updateWod(idx, 'notes', e.target.value)}
-                    placeholder="Notas (opcional)"
-                  />
+
+                  {/* WODs */}
+                  {currentBlockIndex === idx && activeTab === 'wods' && (
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <label className="text-sm font-medium text-gray-300">
+                          WODs ({block.wods.length})
+                        </label>
+                        <Button type="button" variant="secondary" size="sm" icon={Plus} onClick={addWod}>
+                          Agregar
+                        </Button>
+                      </div>
+
+                      {wods.length === 0 && (
+                        <Card className="bg-yellow-500/10 border-yellow-500/30 mb-2">
+                          <p className="text-yellow-400 text-sm">
+                            No hay WODs cargados. Agregá WODs desde la sección correspondiente.
+                          </p>
+                        </Card>
+                      )}
+
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {block.wods.map((wod, wodIdx) => (
+                          <div key={wodIdx} className="p-3 bg-gray-700/50 rounded-xl space-y-2">
+                            <div className="flex items-center gap-2 mb-2">
+                              <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-orange-400">
+                                {wodIdx + 1}
+                              </div>
+                              <Select
+                                value={wod.wodId}
+                                onChange={e => updateWod(wodIdx, 'wodId', e.target.value)}
+                                options={[
+                                  { value: '', label: 'Seleccionar WOD...' },
+                                  ...wods.map(w => ({ value: w.id, label: w.name }))
+                                ]}
+                                className="flex-1"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeWod(wodIdx)}
+                                className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                            {form.hasRestBetweenExercises && (
+                              <div>
+                                <label className="text-xs text-gray-400 mb-1 block">Descanso después del WOD (segundos)</label>
+                                <Input
+                                  type="number"
+                                  value={wod.restDuration || 60}
+                                  onChange={e => updateWod(wodIdx, 'restDuration', e.target.value)}
+                                  placeholder="60"
+                                />
+                                <p className="text-xs text-gray-500 mt-1">
+                                  Tiempo de descanso antes del siguiente elemento
+                                </p>
+                              </div>
+                            )}
+                            <Input
+                              value={wod.notes || ''}
+                              onChange={e => updateWod(wodIdx, 'notes', e.target.value)}
+                              placeholder="Notas (opcional)"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
+              </Card>
+            ))}
           </div>
-        )}
+        </div>
 
         <div className="flex gap-3 pt-4">
           <Button type="button" variant="secondary" onClick={onClose} className="flex-1">Cancelar</Button>
