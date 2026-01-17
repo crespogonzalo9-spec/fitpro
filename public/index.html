@@ -197,14 +197,23 @@
     } else if (window.location.hostname === 'localhost') {
       console.log('[SW] ServiceWorker disabled in development mode');
 
-      // Desregistrar cualquier SW existente en desarrollo
+      // Desregistrar cualquier SW existente en desarrollo INMEDIATAMENTE
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for (var registration of registrations) {
-            registration.unregister().then(function() {
-              console.log('[SW] Unregistered development ServiceWorker');
+          if (registrations.length > 0) {
+            console.log('[SW] Found ' + registrations.length + ' service workers, unregistering...');
+            registrations.forEach(function(registration) {
+              registration.unregister().then(function(success) {
+                if (success) {
+                  console.log('[SW] Successfully unregistered service worker');
+                }
+              });
             });
+          } else {
+            console.log('[SW] No service workers found');
           }
+        }).catch(function(error) {
+          console.log('[SW] Error checking service workers:', error);
         });
       }
     }
