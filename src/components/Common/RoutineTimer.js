@@ -3,11 +3,21 @@ import { Play, Pause, SkipForward, X, Check, Timer, Coffee, Dumbbell, AlertCircl
 import { Button, Modal, Card } from './index';
 
 const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
-  // Combinar ejercicios y WODs en un solo array de elementos
-  const allElements = [
-    ...(routine.exercises || []).map(ex => ({ ...ex, type: 'exercise' })),
-    ...(routine.wods || []).map(wod => ({ ...wod, type: 'wod' }))
+  // Soportar tanto formato antiguo (exercises/wods directos) como nuevo (bloques)
+  const blocks = routine.blocks || [
+    {
+      name: 'Rutina',
+      type: 'regular',
+      exercises: routine.exercises || [],
+      wods: routine.wods || []
+    }
   ];
+
+  // Combinar todos los ejercicios y WODs de todos los bloques en un solo array
+  const allElements = blocks.flatMap(block => [
+    ...(block.exercises || []).map(ex => ({ ...ex, type: 'exercise', blockName: block.name })),
+    ...(block.wods || []).map(wod => ({ ...wod, type: 'wod', blockName: block.name }))
+  ]);
 
   const [currentElementIndex, setCurrentElementIndex] = useState(0);
   const [isResting, setIsResting] = useState(false);
