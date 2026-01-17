@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Users, Calendar, Dumbbell, ClipboardList,
   Settings, LogOut, Building2, UserCheck, Flame, Trophy,
   TrendingUp, CheckCircle, CheckSquare, User, X, ChevronDown,
-  CalendarDays, Megaphone, Link, Globe, Palette
+  CalendarDays, Megaphone, Link, Globe, Palette, Clock
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGym, ALL_GYMS_ID } from '../../contexts/GymContext';
@@ -16,7 +16,7 @@ import { getRoleName } from '../../utils/helpers';
 const iconMap = {
   LayoutDashboard, Users, Calendar, Dumbbell, ClipboardList,
   Settings, Building2, UserCheck, Flame, Trophy, TrendingUp,
-  CheckCircle, CheckSquare, User, CalendarDays, Megaphone, Link, Palette
+  CheckCircle, CheckSquare, User, CalendarDays, Megaphone, Link, Palette, Clock
 };
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
