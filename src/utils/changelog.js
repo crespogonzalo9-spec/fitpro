@@ -1,18 +1,31 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.17';
+export const CURRENT_VERSION = '1.0.18';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
   {
+    version: '1.0.18',
+    date: '2025-01-18',
+    title: 'Efectos neon más finos + Alumno→Miembro',
+    changes: [
+      'Reducción de blur en efectos neon de 15-35px a 8-18px para mejor definición',
+      'Efectos neon más finos que no se mezclan entre elementos',
+      'Intensidad del brillo mantenida para máxima visibilidad',
+      'Arreglado click en tarjetas de miembros para ver perfil',
+      'Cambio de terminología: "Alumno" reemplazado por "Miembro" en toda la app',
+      'Terminología más apropiada para contexto de gimnasio (13 archivos actualizados)'
+    ]
+  },
+  {
     version: '1.0.17',
     date: '2025-01-18',
-    title: 'Mejoras estéticas en panel de Alumnos',
+    title: 'Mejoras estéticas en panel de Miembros',
     changes: [
       'Email movido a la parte inferior de las tarjetas de miembros',
       'Email con fuente más pequeña y truncado automáticamente si es muy largo',
       'Tooltip con email completo al hacer hover sobre el email',
-      'Tarjetas clickeables para ver perfil del alumno (solo profes, admins y sysadmin)',
+      'Tarjetas clickeables para ver perfil del miembro (solo profes, admins y sysadmin)',
       'Efecto hover mejorado en tarjetas con borde primary',
       'Mejorada la estructura visual y alineación de las tarjetas'
     ]
@@ -52,7 +65,7 @@ export const CHANGELOG = [
       'Items no seleccionados: text-shadow 8-10px con opacidad 0.3-0.4',
       'Items con hover: text-shadow 12-14px con opacidad 0.5-0.6',
       'Items activos: text-shadow 10-12px con opacidad 0.5-0.6',
-      'Efecto visible en Dashboard, Gimnasios, Usuarios, Alumnos, Profesores, Clases, Ejercicios'
+      'Efecto visible en Dashboard, Gimnasios, Usuarios, Miembros, Profesores, Clases, Ejercicios'
     ]
   },
   {

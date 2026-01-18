@@ -15,8 +15,8 @@ const RoleSimulationBanner = () => {
         return 'Administrador';
       case 'profesor':
         return 'Profesor';
-      case 'alumno':
-        return 'Alumno';
+      case 'miembro':
+        return 'Miembro';
       default:
         return simulatedRole;
     }

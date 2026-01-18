@@ -2,6 +2,34 @@
 
 Todas las notas de las versiones de FitPro se documentan en este archivo.
 
+## [1.0.18] - 2025-01-18
+
+### Modificado
+- **Reducción de blur en efectos neon para mayor definición**:
+  - Blur reducido de 15-35px a 8-18px para evitar mezcla entre elementos
+  - Intensidad del brillo mantenida (mismo nivel de opacidad)
+  - Efectos neon ahora más finos y definidos
+  - Mejor legibilidad sin sacrificar el efecto visual
+  - Modo claro: 8px-16px con opacidad 0.7-0.4
+  - Modo oscuro: 10px-18px con opacidad 0.8-0.5
+
+- **Corrección de tarjetas clickeables en panel de Miembros**:
+  - Arreglado el onClick de las tarjetas para que funcione correctamente
+  - Profes, admins y sysadmins pueden hacer click para ver perfil del miembro
+  - Efecto hover visible con cursor pointer
+
+- **Cambio de terminología: Alumno → Miembro**:
+  - Reemplazado "Alumno" por "Miembro" en toda la aplicación (13 archivos)
+  - Actualizado en: roles, badges, filtros, mensajes, formularios
+  - Terminología más apropiada para contexto de gimnasio
+  - Incluye: Members.js, constants.js, helpers.js, AuthContext.js, Sidebar.js, etc.
+
+### Técnico
+- Modificado: src/styles/index.css - Blur reducido en text-shadow global (líneas 254-260)
+- Modificado: src/pages/Members.js - onClick corregido para tarjetas (líneas 259-264)
+- Modificado: 13 archivos - Reemplazo alumno→miembro en toda la app
+- Modificado: package.json - Versión actualizada a 1.0.18
+
 ## [1.0.17] - 2025-01-18
 
 ### Modificado

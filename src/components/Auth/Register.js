@@ -161,7 +161,7 @@ const Register = ({ onToggle }) => {
         form.name,
         form.phone,
         inviteData.gymId,
-        inviteData.roles || ['alumno']
+        inviteData.roles || ['miembro']
       );
 
       if (result.success) {
@@ -241,7 +241,7 @@ const Register = ({ onToggle }) => {
                   <p className="text-sm text-gray-300 mt-1">
                     Te unirás a <strong>{inviteData.gymName || 'el gimnasio'}</strong>
                   </p>
-                  {inviteData.roles && inviteData.roles.filter(r => r !== 'alumno').length > 0 && (
+                  {inviteData.roles && inviteData.roles.filter(r => r !== 'miembro').length > 0 && (
                     <p className="text-xs text-gray-400 mt-1">
                       Roles: {inviteData.roles.join(', ')}
                     </p>

@@ -3,7 +3,7 @@ export const ROLES = [
   { id: 'sysadmin', name: 'Sysadmin', level: 4 },
   { id: 'admin', name: 'Administrador', level: 3 },
   { id: 'profesor', name: 'Profesor', level: 2 },
-  { id: 'alumno', name: 'Alumno', level: 1 }
+  { id: 'miembro', name: 'Miembro', level: 1 }
 ];
 
 // Tipos de ejercicios
@@ -112,7 +112,7 @@ export const NAV_ROUTES = {
     { path: '/dashboard', name: 'Dashboard', icon: 'LayoutDashboard' },
     { path: '/gyms', name: 'Gimnasios', icon: 'Building2' },
     { path: '/users', name: 'Usuarios', icon: 'Users' },
-    { path: '/members', name: 'Alumnos', icon: 'Users' },
+    { path: '/members', name: 'Miembros', icon: 'Users' },
     { path: '/profesores', name: 'Profesores', icon: 'UserCheck' },
     { path: '/classes', name: 'Clases', icon: 'Calendar' },
     { path: '/exercises', name: 'Ejercicios', icon: 'Dumbbell' },
@@ -129,7 +129,7 @@ export const NAV_ROUTES = {
   ],
   admin: [
     { path: '/dashboard', name: 'Dashboard', icon: 'LayoutDashboard' },
-    { path: '/members', name: 'Alumnos', icon: 'Users' },
+    { path: '/members', name: 'Miembros', icon: 'Users' },
     { path: '/profesores', name: 'Profesores', icon: 'UserCheck' },
     { path: '/classes', name: 'Clases', icon: 'Calendar' },
     { path: '/exercises', name: 'Ejercicios', icon: 'Dumbbell' },
@@ -147,7 +147,7 @@ export const NAV_ROUTES = {
   profesor: [
     { path: '/dashboard', name: 'Dashboard', icon: 'LayoutDashboard' },
     { path: '/my-classes', name: 'Mis Clases', icon: 'Calendar' },
-    { path: '/members', name: 'Alumnos', icon: 'Users' },
+    { path: '/members', name: 'Miembros', icon: 'Users' },
     { path: '/exercises', name: 'Ejercicios', icon: 'Dumbbell' },
     { path: '/routines', name: 'Rutinas', icon: 'ClipboardList' },
     { path: '/wods', name: 'WODs', icon: 'Flame' },
@@ -158,7 +158,7 @@ export const NAV_ROUTES = {
     { path: '/rankings', name: 'Rankings', icon: 'Trophy' },
     { path: '/gym-info', name: 'Info Gimnasio', icon: 'Building2' }
   ],
-  alumno: [
+  miembro: [
     { path: '/dashboard', name: 'Dashboard', icon: 'LayoutDashboard' },
     { path: '/schedule', name: 'Horarios', icon: 'Calendar' },
     { path: '/my-classes', name: 'Mis Clases', icon: 'CheckSquare' },

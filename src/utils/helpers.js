@@ -28,14 +28,14 @@ export const getRoleName = (role) => {
     sysadmin: 'Sysadmin',
     admin: 'Admin',
     profesor: 'Profesor',
-    alumno: 'Alumno'
+    miembro: 'Miembro'
   };
   return roles[role] || role;
 };
 
 // Obtener nombres de roles múltiples
 export const getRolesNames = (roles) => {
-  if (!roles || roles.length === 0) return 'Alumno';
+  if (!roles || roles.length === 0) return 'Miembro';
   return roles.map(r => getRoleName(r)).join(', ');
 };
 

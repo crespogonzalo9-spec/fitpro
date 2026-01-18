@@ -34,11 +34,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   // Determinar rutas basado en roles múltiples (usa roles efectivos para respetar simulación)
   const getRoutes = () => {
     const effectiveRoles = getEffectiveRoles();
-    if (!effectiveRoles || effectiveRoles.length === 0) return NAV_ROUTES.alumno;
+    if (!effectiveRoles || effectiveRoles.length === 0) return NAV_ROUTES.miembro;
     if (effectiveRoles.includes('sysadmin')) return NAV_ROUTES.sysadmin;
     if (effectiveRoles.includes('admin')) return NAV_ROUTES.admin;
     if (effectiveRoles.includes('profesor')) return NAV_ROUTES.profesor;
-    return NAV_ROUTES.alumno;
+    return NAV_ROUTES.miembro;
   };
 
   const routes = getRoutes();
@@ -46,11 +46,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   // Obtener el rol más alto para mostrar (usa roles efectivos para respetar simulación)
   const getHighestRole = () => {
     const effectiveRoles = getEffectiveRoles();
-    if (!effectiveRoles || effectiveRoles.length === 0) return 'alumno';
+    if (!effectiveRoles || effectiveRoles.length === 0) return 'miembro';
     if (effectiveRoles.includes('sysadmin')) return 'sysadmin';
     if (effectiveRoles.includes('admin')) return 'admin';
     if (effectiveRoles.includes('profesor')) return 'profesor';
-    return 'alumno';
+    return 'miembro';
   };
 
   const getSelectorLabel = () => {

@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
           if (data.role && !roles.includes(data.role)) {
             roles = [data.role, ...roles];
           }
-          if (roles.length === 0) roles = ['alumno'];
+          if (roles.length === 0) roles = ['miembro'];
           setUserData({ id: userDoc.id, ...data, roles });
         } else {
           // Usuario existe en Auth pero no en Firestore (fue eliminado)
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
             id: firebaseUser.uid, 
             email: firebaseUser.email,
             name: firebaseUser.displayName || 'Usuario',
-            roles: ['alumno'],
+            roles: ['miembro'],
             gymId: null,
             needsReregistration: true // Marcar que necesita completar datos
           });
@@ -63,14 +63,14 @@ export const AuthProvider = ({ children }) => {
         const data = userDoc.data();
         let roles = data.roles || [];
         if (data.role && !roles.includes(data.role)) roles = [data.role, ...roles];
-        if (roles.length === 0) roles = ['alumno'];
+        if (roles.length === 0) roles = ['miembro'];
         setUserData({ id: userDoc.id, ...data, roles });
       } else {
         // Usuario en Auth pero no en Firestore - necesita re-registro
         setUserData({ 
           id: result.user.uid, 
           email: result.user.email,
-          roles: ['alumno'],
+          roles: ['miembro'],
           gymId: null,
           needsReregistration: true
         });
@@ -115,9 +115,9 @@ export const AuthProvider = ({ children }) => {
         }
       }
       
-      // Los roles se asignan por defecto como alumno
+      // Los roles se asignan por defecto como miembro
       // NOTA: Para crear un sysadmin, usar la consola de Firebase directamente
-      const roles = ['alumno'];
+      const roles = ['miembro'];
 
       const newUserData = {
         email: email.toLowerCase(),
@@ -152,7 +152,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Registro con invitación (asigna gimnasio y roles automáticamente)
-  const registerWithInvite = async (email, password, name, phone, gymId, inviteRoles = ['alumno']) => {
+  const registerWithInvite = async (email, password, name, phone, gymId, inviteRoles = ['miembro']) => {
     try {
       let userId;
 
@@ -172,8 +172,8 @@ export const AuthProvider = ({ children }) => {
         }
       }
 
-      // Asegurar que siempre tenga alumno
-      const roles = inviteRoles.includes('alumno') ? inviteRoles : [...inviteRoles, 'alumno'];
+      // Asegurar que siempre tenga miembro
+      const roles = inviteRoles.includes('miembro') ? inviteRoles : [...inviteRoles, 'miembro'];
 
       const newUserData = {
         email: email.toLowerCase(),
@@ -216,7 +216,7 @@ export const AuthProvider = ({ children }) => {
         email: user.email.toLowerCase(),
         name,
         phone,
-        roles: ['alumno'],
+        roles: ['miembro'],
         gymId: gymId || null,
         isActive: true,
         isBlocked: false,
@@ -272,7 +272,7 @@ export const AuthProvider = ({ children }) => {
     if (userDoc.exists()) {
       const data = userDoc.data();
       let roles = data.roles || [];
-      if (roles.length === 0) roles = ['alumno'];
+      if (roles.length === 0) roles = ['miembro'];
       setUserData({ id: userDoc.id, ...data, roles });
     }
   };
@@ -319,10 +319,10 @@ export const AuthProvider = ({ children }) => {
 
   const isAdmin = () => hasRole('sysadmin') || hasRole('admin');
   const isProfesor = () => hasRole('sysadmin') || hasRole('admin') || hasRole('profesor');
-  const isAlumno = () => hasRole('alumno');
-  const isOnlyAlumno = () => {
+  const isMiembro = () => hasRole('miembro');
+  const isOnlyMiembro = () => {
     const effectiveRoles = getEffectiveRoles();
-    return effectiveRoles.length === 1 && effectiveRoles[0] === 'alumno';
+    return effectiveRoles.length === 1 && effectiveRoles[0] === 'miembro';
   };
 
   // Verificar si está bloqueado
@@ -334,7 +334,7 @@ export const AuthProvider = ({ children }) => {
   
   const canAssignRole = (targetRole) => {
     if (isSysadmin()) return true;
-    if (isAdmin()) return ['admin', 'profesor', 'alumno'].includes(targetRole);
+    if (isAdmin()) return ['admin', 'profesor', 'miembro'].includes(targetRole);
     return false;
   };
 
@@ -356,7 +356,7 @@ export const AuthProvider = ({ children }) => {
   const canManageClasses = () => isAdmin();
   const canManageExercises = () => isAdmin();
   const canManageProfesores = () => isAdmin();
-  const canManageAlumnos = () => isProfesor();
+  const canManageMiembros = () => isProfesor();
   const canCreateRoutines = () => isProfesor();
   const canManageCalendar = () => isAdmin();
   const canManageNews = () => isAdmin();
@@ -381,8 +381,8 @@ export const AuthProvider = ({ children }) => {
     isSysadmin,
     isAdmin,
     isProfesor,
-    isAlumno,
-    isOnlyAlumno,
+    isMiembro,
+    isOnlyMiembro,
     isBlocked,
     canAssignRole,
     canRemoveRole,
@@ -392,7 +392,7 @@ export const AuthProvider = ({ children }) => {
     canManageClasses,
     canManageExercises,
     canManageProfesores,
-    canManageAlumnos,
+    canManageMiembros,
     canCreateRoutines,
     canManageCalendar,
     canManageNews,

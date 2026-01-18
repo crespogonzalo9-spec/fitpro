@@ -107,14 +107,14 @@ const MembersContent = () => {
     }
     
     // Ordenar: bloqueados al final, luego por roles
-    const roleOrder = { sysadmin: 0, admin: 1, profesor: 2, alumno: 3 };
+    const roleOrder = { sysadmin: 0, admin: 1, profesor: 2, miembro: 3 };
     filtered.sort((a, b) => {
       // Bloqueados al final
       if (a.isBlocked && !b.isBlocked) return 1;
       if (!a.isBlocked && b.isBlocked) return -1;
-      
-      const aTop = Math.min(...(a.roles || ['alumno']).map(r => roleOrder[r] ?? 4));
-      const bTop = Math.min(...(b.roles || ['alumno']).map(r => roleOrder[r] ?? 4));
+
+      const aTop = Math.min(...(a.roles || ['miembro']).map(r => roleOrder[r] ?? 4));
+      const bTop = Math.min(...(b.roles || ['miembro']).map(r => roleOrder[r] ?? 4));
       return aTop - bTop;
     });
     
@@ -124,8 +124,8 @@ const MembersContent = () => {
   const handleSaveRoles = async (data) => {
     try {
       let roles = data.roles;
-      if (!roles.includes('alumno')) roles.push('alumno');
-      
+      if (!roles.includes('miembro')) roles.push('miembro');
+
       await updateDoc(doc(db, 'users', selected.id), {
         roles,
         updatedAt: serverTimestamp()
@@ -182,13 +182,13 @@ const MembersContent = () => {
   };
 
   const getRoleBadges = (roles) => {
-    if (!roles || roles.length === 0) return <Badge className="bg-gray-500/20 text-gray-400">Alumno</Badge>;
-    
+    if (!roles || roles.length === 0) return <Badge className="bg-gray-500/20 text-gray-400">Miembro</Badge>;
+
     const roleConfig = {
       sysadmin: { color: 'bg-yellow-500/20 text-yellow-400', icon: '👑' },
       admin: { color: 'bg-blue-500/20 text-blue-400', icon: '🔧' },
       profesor: { color: 'bg-purple-500/20 text-purple-400', icon: '👨‍🏫' },
-      alumno: { color: 'bg-gray-500/20 text-gray-400', icon: '👤' }
+      miembro: { color: 'bg-gray-500/20 text-gray-400', icon: '👤' }
     };
 
     return (
@@ -229,7 +229,7 @@ const MembersContent = () => {
             { value: 'all', label: 'Todos los roles' },
             { value: 'admin', label: '🔧 Admins' },
             { value: 'profesor', label: '👨‍🏫 Profesores' },
-            { value: 'alumno', label: '👤 Alumnos' }
+            { value: 'miembro', label: '👤 Miembros' }
           ]}
           className="w-full sm:w-40"
         />
@@ -256,7 +256,12 @@ const MembersContent = () => {
               <Card
                 key={member.id}
                 className={`${member.isBlocked ? 'border-red-500/30 bg-red-500/5' : ''} ${canViewProfile ? 'cursor-pointer hover:border-primary/50 transition-all' : ''}`}
-                onClick={() => canViewProfile && setSelected(member) && setShowProgress(true)}
+                onClick={() => {
+                  if (canViewProfile) {
+                    setSelected(member);
+                    setShowProgress(true);
+                  }
+                }}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -385,12 +390,12 @@ const MembersContent = () => {
 };
 
 const RolesModal = ({ isOpen, onClose, onSave, member, canAssignRole, canRemoveRole }) => {
-  const [roles, setRoles] = useState(['alumno']);
+  const [roles, setRoles] = useState(['miembro']);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (member) {
-      setRoles(member.roles || ['alumno']);
+      setRoles(member.roles || ['miembro']);
     }
   }, [member, isOpen]);
 
@@ -403,10 +408,10 @@ const RolesModal = ({ isOpen, onClose, onSave, member, canAssignRole, canRemoveR
 
   const toggleRole = (role) => {
     const hasRole = roles.includes(role);
-    
+
     if (hasRole) {
       if (!canRemoveRole(role)) return;
-      if (role === 'alumno') return;
+      if (role === 'miembro') return;
       setRoles(prev => prev.filter(r => r !== role));
     } else {
       if (!canAssignRole(role)) return;
@@ -454,7 +459,7 @@ const RolesModal = ({ isOpen, onClose, onSave, member, canAssignRole, canRemoveR
         </div>
 
         <p className="text-xs text-gray-500">
-          El rol de Alumno siempre está incluido.
+          El rol de Miembro siempre está incluido.
         </p>
 
         <div className="flex gap-3 pt-4">
@@ -628,7 +633,7 @@ const ProgressModal = ({ isOpen, onClose, member, prs, routineSessions, classes,
         {/* Lista de PRs */}
         <div className="space-y-2 max-h-96 overflow-y-auto">
           {memberPRs.length === 0 ? (
-            <EmptyState icon={Trophy} title="Sin PRs" description="Este alumno no tiene PRs registrados" />
+            <EmptyState icon={Trophy} title="Sin PRs" description="Este miembro no tiene PRs registrados" />
           ) : (
             memberPRs.map(pr => (
               <div key={pr.id} className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg hover:bg-gray-800/50 transition-colors">

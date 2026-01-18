@@ -228,8 +228,8 @@ const RankingsContent = () => {
       {filteredRankings.length === 0 ? (
         <EmptyState 
           icon={Trophy} 
-          title="No hay rankings" 
-          description="Creá rankings para ver las mejores marcas de tus alumnos" 
+          title="No hay rankings"
+          description="Creá rankings para ver las mejores marcas de tus miembros" 
           action={canEdit && <Button icon={Plus} onClick={() => setShowModal(true)}>Crear Ranking</Button>} 
         />
       ) : (
