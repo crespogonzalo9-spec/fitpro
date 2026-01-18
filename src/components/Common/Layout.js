@@ -64,7 +64,7 @@ const Layout = () => {
           onMenuClick={() => setSidebarOpen(true)}
         />
 
-        <main className="p-4 lg:p-6 bg-card">
+        <main className="p-4 lg:p-6 bg-base">
           <Outlet />
         </main>
       </div>
