@@ -2,6 +2,21 @@
 
 Todas las notas de las versiones de FitPro se documentan en este archivo.
 
+## [1.0.14] - 2025-01-18
+
+### Modificado
+- **Efectos de text-shadow neon en navegación del sidebar**:
+  - Aplicado text-shadow a TODOS los enlaces y botones dentro del elemento aside (sidebar)
+  - Items no seleccionados: text-shadow 8-10px con opacidad 0.3-0.4
+  - Items con hover: text-shadow 12-14px con opacidad 0.5-0.6
+  - Items activos: text-shadow 10-12px con opacidad 0.5-0.6
+  - Selectores específicos: `aside nav a`, `aside nav button`, `aside a span`, `aside button span`
+  - Efecto visible en Dashboard, Gimnasios, Usuarios, Alumnos, Profesores, Clases, Ejercicios, etc.
+
+### Técnico
+- Modificado: src/styles/index.css - Selectores más específicos para sidebar (líneas 517-547)
+- Modificado: package.json - Versión actualizada a 1.0.14
+
 ## [1.0.13] - 2025-01-18
 
 ### Añadido
