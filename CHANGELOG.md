@@ -26,13 +26,15 @@ Todas las notas de las versiones de FitPro se documentan en este archivo.
     - Auto-avance a la siguiente ronda al completar intervalo
     - UI distintiva con tema púrpura/morado
     - Integración completa con sistema de pausar/reanudar rutina
-- **Efectos visuales de glow/brillo**:
-  - .glow-card: Brillo sutil para tarjetas
+- **Efectos visuales de glow/brillo VISIBLES**:
+  - .glow-card: Brillo visible para tarjetas con bordes luminosos
   - .glow-moderate: Brillo moderado para elementos importantes
-  - .glow-strong: Brillo fuerte para botones principales
-  - .glow-border: Bordes con efecto de brillo interno/externo
-  - Glow automático en bg-card y btn-primary
+  - .glow-strong: Brillo fuerte para botones principales (muy visible)
+  - .glow-border: Bordes con efecto de brillo interno/externo intenso
+  - Glow automático y MUY visible en bg-card y btn-primary
   - Variantes dark/light con diferentes intensidades
+  - Efectos de neon inspirados en diseño moderno con sombras y bordes luminosos
+  - Aumentada la intensidad de todos los efectos para máxima visibilidad
 - **Librerías UI agregadas**:
   - Material UI (@mui/material) v7.3.7
   - Emotion (@emotion/react, @emotion/styled) para styled-components
@@ -42,7 +44,11 @@ Todas las notas de las versiones de FitPro se documentan en este archivo.
 - **RoutineTimer**: Lógica mejorada del timer para diferenciar entre ejercicios regulares, ejercicios por tiempo, WODs y bloques ESD
 - **Layout de bloques en rutinas**: Selector de tipo de bloque ocupa ancho completo para mejor UX
 - **Visualización en timer**: Cada tipo de elemento (ejercicio, WOD, ESD) tiene su propia UI distintiva
-- **Corrección de colores de fondo**: Body y bg-base ahora usan el mismo color (#F1F5F9) en modo claro
+- **Corrección COMPLETA de colores de fondo**:
+  - Body y bg-base ahora usan el mismo color (#F1F5F9) en modo claro
+  - Cards y inputs usan fondo blanco (#FFFFFF) para resaltar contra el fondo
+  - Consistencia total: todos los paneles tienen el mismo color de fondo
+  - Solo las cards destacan con fondo blanco y efectos de glow
 - **Interfaz minimalista para ESDs**: Diseño simple y limpio sin badges excesivas
 - Ruta /esds agregada con protección de roles
 - Navegación actualizada en constants.js para todos los roles administrativos
