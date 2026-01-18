@@ -71,12 +71,12 @@ body.dark-mode {
 /* ============ MODO CLARO ============ */
 .light body,
 body.light-mode {
-  background-color: rgb(var(--color-bg-primary, 248, 250, 252)) !important;
+  background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important;
   color: #1E293B;
 }
 
 .light .bg-base {
-  background-color: rgb(var(--color-bg-50, 248, 250, 252)) !important;
+  background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important;
 }
 .light .bg-card {
   background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important;
@@ -224,4 +224,133 @@ input:focus, select:focus, textarea:focus {
 /* Transiciones suaves */
 .transition-theme {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ============ EFECTOS DE GLOW/BRILLO SUTIL ============ */
+/* Glow sutil para tarjetas */
+.glow-card {
+  box-shadow:
+    0 0 10px rgba(var(--color-primary), 0.05),
+    0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.dark .glow-card {
+  box-shadow:
+    0 0 10px rgba(var(--color-primary), 0.08),
+    0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.glow-card:hover {
+  box-shadow:
+    0 0 15px rgba(var(--color-primary), 0.12),
+    0 8px 10px -2px rgba(0, 0, 0, 0.1);
+}
+
+.dark .glow-card:hover {
+  box-shadow:
+    0 0 15px rgba(var(--color-primary), 0.15),
+    0 8px 10px -2px rgba(0, 0, 0, 0.4);
+}
+
+/* Glow moderado para elementos importantes */
+.glow-moderate {
+  box-shadow:
+    0 0 15px rgba(var(--color-primary), 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.dark .glow-moderate {
+  box-shadow:
+    0 0 15px rgba(var(--color-primary), 0.15),
+    0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.glow-moderate:hover {
+  box-shadow:
+    0 0 20px rgba(var(--color-primary), 0.2),
+    0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dark .glow-moderate:hover {
+  box-shadow:
+    0 0 20px rgba(var(--color-primary), 0.25),
+    0 8px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Glow fuerte para botones principales */
+.glow-strong {
+  box-shadow:
+    0 0 20px rgba(var(--color-primary), 0.25),
+    0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.3s ease;
+}
+
+.dark .glow-strong {
+  box-shadow:
+    0 0 20px rgba(var(--color-primary), 0.3),
+    0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.glow-strong:hover {
+  box-shadow:
+    0 0 30px rgba(var(--color-primary), 0.35),
+    0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.dark .glow-strong:hover {
+  box-shadow:
+    0 0 30px rgba(var(--color-primary), 0.4),
+    0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Bordes con glow sutil */
+.glow-border {
+  border: 1px solid rgba(var(--color-primary), 0.3);
+  box-shadow:
+    inset 0 0 10px rgba(var(--color-primary), 0.05),
+    0 0 10px rgba(var(--color-primary), 0.05);
+}
+
+.dark .glow-border {
+  border: 1px solid rgba(var(--color-primary), 0.4);
+  box-shadow:
+    inset 0 0 10px rgba(var(--color-primary), 0.08),
+    0 0 10px rgba(var(--color-primary), 0.08);
+}
+
+/* Aplicar glow automático a elementos clave */
+.bg-card {
+  box-shadow: 0 0 8px rgba(var(--color-primary), 0.04);
+  transition: box-shadow 0.3s ease;
+}
+
+.dark .bg-card {
+  box-shadow: 0 0 8px rgba(var(--color-primary), 0.06);
+}
+
+/* Botón primario con glow */
+.btn-primary {
+  box-shadow:
+    0 0 15px rgba(var(--color-primary), 0.2),
+    0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dark .btn-primary {
+  box-shadow:
+    0 0 15px rgba(var(--color-primary), 0.25),
+    0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary:hover {
+  box-shadow:
+    0 0 25px rgba(var(--color-primary), 0.3),
+    0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dark .btn-primary:hover {
+  box-shadow:
+    0 0 25px rgba(var(--color-primary), 0.35),
+    0 8px 12px rgba(0, 0, 0, 0.4);
 }
