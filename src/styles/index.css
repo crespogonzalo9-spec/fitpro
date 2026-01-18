@@ -514,13 +514,15 @@ h1 {
   box-shadow: 0 0 25px rgba(var(--color-primary), 0.12);
 }
 
-/* Links de navegación con glow base (todos los items del sidebar) */
+/* Links de navegación con glow base (todos los items del sidebar) - MUY VISIBLE */
 aside nav a,
 aside nav button,
 aside a span,
 aside button span,
 .nav-link {
-  text-shadow: 0 0 8px rgba(var(--color-primary), 0.3) !important;
+  text-shadow:
+    0 0 20px rgba(var(--color-primary), 0.8),
+    0 0 40px rgba(var(--color-primary), 0.5) !important;
   transition: text-shadow 0.3s ease;
 }
 
@@ -529,7 +531,9 @@ aside button span,
 .dark aside a span,
 .dark aside button span,
 .dark .nav-link {
-  text-shadow: 0 0 10px rgba(var(--color-primary), 0.4) !important;
+  text-shadow:
+    0 0 25px rgba(var(--color-primary), 0.9),
+    0 0 50px rgba(var(--color-primary), 0.6) !important;
 }
 
 /* Links de navegación activos con glow fuerte */
@@ -540,14 +544,18 @@ aside button span,
   box-shadow:
     inset 0 0 15px rgba(var(--color-primary), 0.1),
     0 0 10px rgba(var(--color-primary), 0.2);
-  text-shadow: 0 0 10px rgba(var(--color-primary), 0.5) !important;
+  text-shadow:
+    0 0 30px rgba(var(--color-primary), 1),
+    0 0 60px rgba(var(--color-primary), 0.7) !important;
 }
 
 .dark .nav-link-active {
   box-shadow:
     inset 0 0 20px rgba(var(--color-primary), 0.15),
     0 0 15px rgba(var(--color-primary), 0.25);
-  text-shadow: 0 0 12px rgba(var(--color-primary), 0.6) !important;
+  text-shadow:
+    0 0 35px rgba(var(--color-primary), 1),
+    0 0 70px rgba(var(--color-primary), 0.8) !important;
 }
 
 /* Links de navegación con hover y glow más fuerte */
@@ -556,7 +564,9 @@ aside nav button:hover,
 aside a:hover,
 aside button:hover,
 .nav-link:hover {
-  text-shadow: 0 0 12px rgba(var(--color-primary), 0.5) !important;
+  text-shadow:
+    0 0 25px rgba(var(--color-primary), 0.9),
+    0 0 50px rgba(var(--color-primary), 0.6) !important;
 }
 
 .dark aside nav a:hover,
@@ -564,5 +574,7 @@ aside button:hover,
 .dark aside a:hover,
 .dark aside button:hover,
 .dark .nav-link:hover {
-  text-shadow: 0 0 14px rgba(var(--color-primary), 0.6) !important;
+  text-shadow:
+    0 0 30px rgba(var(--color-primary), 1),
+    0 0 60px rgba(var(--color-primary), 0.7) !important;
 }

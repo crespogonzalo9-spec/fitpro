@@ -2,6 +2,30 @@
 
 Todas las notas de las versiones de FitPro se documentan en este archivo.
 
+## [1.0.15] - 2025-01-18
+
+### Modificado
+- **Efectos de text-shadow neon en sidebar DRÁSTICAMENTE aumentados**:
+  - Blur aumentado de 8-10px a 20-50px para máxima visibilidad
+  - Opacidad aumentada de 0.3-0.4 a 0.8-0.9 para impacto visual
+  - Doble text-shadow para efecto de glow más pronunciado
+  - Items no seleccionados: text-shadow 20px blur con opacidad 0.8
+  - Items con hover: text-shadow 25-30px blur con opacidad 0.9-1
+  - Items activos: text-shadow 30-35px blur con opacidad 1
+  - Efecto neon ahora MUY visible en Dashboard, Gimnasios, Usuarios, Alumnos, Profesores, Clases, Ejercicios, etc.
+
+### Añadido
+- **Botón de acceso rápido a ESDs en rutinas**:
+  - Nuevo botón "ESDs" en la sección de WODs del modal de rutinas
+  - Abre la página de ESDs en nueva pestaña para facilitar acceso
+  - Icono Clock para identificación visual
+  - Ubicado junto al botón "Agregar" en cada bloque
+
+### Técnico
+- Modificado: src/styles/index.css - Text-shadow aumentado drásticamente (líneas 517-580)
+- Modificado: src/pages/Routines.js - Botón de acceso a ESDs (línea 964-973)
+- Modificado: package.json - Versión actualizada a 1.0.15
+
 ## [1.0.14] - 2025-01-18
 
 ### Modificado

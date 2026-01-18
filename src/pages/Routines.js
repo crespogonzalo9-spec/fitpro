@@ -960,9 +960,21 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
                         <label className="text-sm font-medium text-gray-300">
                           WODs ({block.wods.length})
                         </label>
-                        <Button type="button" variant="secondary" size="sm" icon={Plus} onClick={addWod}>
-                          Agregar
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            icon={Clock}
+                            onClick={() => window.open('/esds', '_blank')}
+                            title="Abrir página de ESDs"
+                          >
+                            ESDs
+                          </Button>
+                          <Button type="button" variant="secondary" size="sm" icon={Plus} onClick={addWod}>
+                            Agregar
+                          </Button>
+                        </div>
                       </div>
 
                       {wods.length === 0 && (
