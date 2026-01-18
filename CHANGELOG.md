@@ -2,6 +2,36 @@
 
 Todas las notas de las versiones de FitPro se documentan en este archivo.
 
+## [1.0.13] - 2025-01-18
+
+### Añadido
+- **Sistema ESD (Every X Seconds/Minutes Day)**: Nuevo tipo de bloque en rutinas para entrenamientos intervalados
+  - Selector de tipo de bloque: Regular o ESD
+  - Configuración de intervalo: 30s, 45s, 1min, 90s, 2min, 2:30min, 3min, 4min, 5min
+  - Configuración de número de rondas: 1-60 rondas
+  - Timer especial para bloques ESD con:
+    - Contador de ronda actual con barra de progreso visual
+    - Timer de intervalo con cuenta progresiva
+    - Beep de audio automático entre rondas
+    - Auto-avance a la siguiente ronda al completar intervalo
+    - UI distintiva con tema púrpura/morado
+  - Card informativo explicando la configuración del bloque ESD
+  - Integración completa con sistema de pausar/reanudar rutina
+
+### Modificado
+- **RoutineTimer**: Lógica mejorada del timer para diferenciar entre ejercicios regulares, ejercicios por tiempo, WODs y bloques ESD
+- **Layout de bloques en rutinas**: Selector de tipo de bloque ocupa ancho completo para mejor UX
+- **Visualización en timer**: Cada tipo de elemento (ejercicio, WOD, ESD) tiene su propia UI distintiva
+
+### Técnico
+- Modificado: `src/pages/Routines.js` - Sistema de bloques con selector de tipo ESD
+- Modificado: `src/components/Common/RoutineTimer.js` - Lógica de timer para ESD con estados separados
+- Nuevo: Estados `esdCurrentRound` y `esdIntervalTime` en RoutineTimer
+- Nuevo: Función `playBeep()` para notificaciones de audio entre rondas
+- Modificado: `src/utils/constants.js` - Agregadas constantes ESD_INTERVALS
+
+---
+
 ## [1.0.12] - 2025-01-16
 
 ### Añadido
