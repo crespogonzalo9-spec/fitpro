@@ -61,7 +61,12 @@ body.dark-mode {
 .dark .text-subtle { color: #64748B; }
 
 /* Clases sin dark/light que funcionan por defecto en modo oscuro */
-.bg-card { background-color: rgb(var(--color-bg-800, 30, 41, 59)) !important; }
+.bg-card {
+  background-color: rgb(var(--color-bg-800, 30, 41, 59)) !important;
+}
+.light .bg-card {
+  background-color: #FFFFFF !important;
+}
 .bg-card-hover { background-color: rgb(var(--color-bg-700, 51, 65, 85)) !important; }
 .hover\:bg-card-hover:hover { background-color: rgb(var(--color-bg-700, 51, 65, 85)) !important; }
 .bg-input { background-color: rgb(var(--color-bg-800, 30, 41, 59)) !important; }
@@ -78,9 +83,6 @@ body.light-mode {
 .light .bg-base {
   background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important;
 }
-.light .bg-card {
-  background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important;
-}
 .light .bg-card-hover {
   background-color: rgb(var(--color-bg-200, 226, 232, 240)) !important;
 }
@@ -91,7 +93,7 @@ body.light-mode {
   background-color: rgb(var(--color-bg-200, 226, 232, 240)) !important;
 }
 .light .bg-input {
-  background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important;
+  background-color: #FFFFFF !important;
 }
 .light .bg-sidebar {
   background-color: rgb(var(--color-bg-200, 226, 232, 240)) !important;
@@ -226,131 +228,165 @@ input:focus, select:focus, textarea:focus {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* ============ EFECTOS DE GLOW/BRILLO SUTIL ============ */
-/* Glow sutil para tarjetas */
+/* ============ EFECTOS DE GLOW/BRILLO VISIBLE ============ */
+/* Glow visible para tarjetas - MÁS FUERTE */
 .glow-card {
   box-shadow:
-    0 0 10px rgba(var(--color-primary), 0.05),
-    0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    0 0 20px rgba(var(--color-primary), 0.15),
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    inset 0 0 1px rgba(var(--color-primary), 0.1);
   transition: box-shadow 0.3s ease;
+  border: 1px solid rgba(var(--color-primary), 0.2);
 }
 
 .dark .glow-card {
   box-shadow:
-    0 0 10px rgba(var(--color-primary), 0.08),
-    0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    0 0 25px rgba(var(--color-primary), 0.25),
+    0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    inset 0 0 1px rgba(var(--color-primary), 0.15);
+  border: 1px solid rgba(var(--color-primary), 0.3);
 }
 
 .glow-card:hover {
   box-shadow:
-    0 0 15px rgba(var(--color-primary), 0.12),
-    0 8px 10px -2px rgba(0, 0, 0, 0.1);
+    0 0 30px rgba(var(--color-primary), 0.3),
+    0 8px 10px -2px rgba(0, 0, 0, 0.1),
+    inset 0 0 2px rgba(var(--color-primary), 0.2);
+  border: 1px solid rgba(var(--color-primary), 0.4);
 }
 
 .dark .glow-card:hover {
   box-shadow:
-    0 0 15px rgba(var(--color-primary), 0.15),
-    0 8px 10px -2px rgba(0, 0, 0, 0.4);
+    0 0 35px rgba(var(--color-primary), 0.4),
+    0 8px 10px -2px rgba(0, 0, 0, 0.4),
+    inset 0 0 2px rgba(var(--color-primary), 0.25);
+  border: 1px solid rgba(var(--color-primary), 0.5);
 }
 
 /* Glow moderado para elementos importantes */
 .glow-moderate {
   box-shadow:
-    0 0 15px rgba(var(--color-primary), 0.1),
-    0 4px 8px rgba(0, 0, 0, 0.1);
+    0 0 25px rgba(var(--color-primary), 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    inset 0 0 2px rgba(var(--color-primary), 0.15);
   transition: box-shadow 0.3s ease;
+  border: 1px solid rgba(var(--color-primary), 0.3);
 }
 
 .dark .glow-moderate {
   box-shadow:
-    0 0 15px rgba(var(--color-primary), 0.15),
-    0 4px 8px rgba(0, 0, 0, 0.3);
+    0 0 30px rgba(var(--color-primary), 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 0 2px rgba(var(--color-primary), 0.2);
+  border: 1px solid rgba(var(--color-primary), 0.4);
 }
 
 .glow-moderate:hover {
   box-shadow:
-    0 0 20px rgba(var(--color-primary), 0.2),
-    0 8px 12px rgba(0, 0, 0, 0.15);
+    0 0 35px rgba(var(--color-primary), 0.35),
+    0 8px 12px rgba(0, 0, 0, 0.15),
+    inset 0 0 3px rgba(var(--color-primary), 0.25);
+  border: 1px solid rgba(var(--color-primary), 0.5);
 }
 
 .dark .glow-moderate:hover {
   box-shadow:
-    0 0 20px rgba(var(--color-primary), 0.25),
-    0 8px 12px rgba(0, 0, 0, 0.4);
+    0 0 40px rgba(var(--color-primary), 0.45),
+    0 8px 12px rgba(0, 0, 0, 0.4),
+    inset 0 0 3px rgba(var(--color-primary), 0.3);
+  border: 1px solid rgba(var(--color-primary), 0.6);
 }
 
-/* Glow fuerte para botones principales */
+/* Glow fuerte para botones principales - MUY VISIBLE */
 .glow-strong {
   box-shadow:
-    0 0 20px rgba(var(--color-primary), 0.25),
-    0 4px 10px rgba(0, 0, 0, 0.15);
+    0 0 30px rgba(var(--color-primary), 0.4),
+    0 4px 10px rgba(0, 0, 0, 0.15),
+    inset 0 0 3px rgba(var(--color-primary), 0.2);
   transition: box-shadow 0.3s ease;
+  border: 1px solid rgba(var(--color-primary), 0.5);
 }
 
 .dark .glow-strong {
   box-shadow:
-    0 0 20px rgba(var(--color-primary), 0.3),
-    0 4px 10px rgba(0, 0, 0, 0.4);
+    0 0 35px rgba(var(--color-primary), 0.5),
+    0 4px 10px rgba(0, 0, 0, 0.4),
+    inset 0 0 3px rgba(var(--color-primary), 0.3);
+  border: 1px solid rgba(var(--color-primary), 0.6);
 }
 
 .glow-strong:hover {
   box-shadow:
-    0 0 30px rgba(var(--color-primary), 0.35),
-    0 8px 16px rgba(0, 0, 0, 0.2);
+    0 0 45px rgba(var(--color-primary), 0.6),
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    inset 0 0 5px rgba(var(--color-primary), 0.3);
+  border: 1px solid rgba(var(--color-primary), 0.7);
 }
 
 .dark .glow-strong:hover {
   box-shadow:
-    0 0 30px rgba(var(--color-primary), 0.4),
-    0 8px 16px rgba(0, 0, 0, 0.5);
+    0 0 50px rgba(var(--color-primary), 0.7),
+    0 8px 16px rgba(0, 0, 0, 0.5),
+    inset 0 0 5px rgba(var(--color-primary), 0.4);
+  border: 1px solid rgba(var(--color-primary), 0.8);
 }
 
-/* Bordes con glow sutil */
+/* Bordes con glow visible */
 .glow-border {
-  border: 1px solid rgba(var(--color-primary), 0.3);
+  border: 1px solid rgba(var(--color-primary), 0.5);
   box-shadow:
-    inset 0 0 10px rgba(var(--color-primary), 0.05),
-    0 0 10px rgba(var(--color-primary), 0.05);
+    inset 0 0 15px rgba(var(--color-primary), 0.15),
+    0 0 20px rgba(var(--color-primary), 0.2);
 }
 
 .dark .glow-border {
-  border: 1px solid rgba(var(--color-primary), 0.4);
+  border: 1px solid rgba(var(--color-primary), 0.6);
   box-shadow:
-    inset 0 0 10px rgba(var(--color-primary), 0.08),
-    0 0 10px rgba(var(--color-primary), 0.08);
+    inset 0 0 20px rgba(var(--color-primary), 0.2),
+    0 0 25px rgba(var(--color-primary), 0.3);
 }
 
 /* Aplicar glow automático a elementos clave */
 .bg-card {
-  box-shadow: 0 0 8px rgba(var(--color-primary), 0.04);
+  box-shadow:
+    0 0 15px rgba(var(--color-primary), 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
+  border: 1px solid rgba(var(--color-primary), 0.15);
 }
 
 .dark .bg-card {
-  box-shadow: 0 0 8px rgba(var(--color-primary), 0.06);
+  box-shadow:
+    0 0 20px rgba(var(--color-primary), 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(var(--color-primary), 0.2);
 }
 
-/* Botón primario con glow */
+/* Botón primario con glow MUY VISIBLE */
 .btn-primary {
   box-shadow:
-    0 0 15px rgba(var(--color-primary), 0.2),
-    0 4px 6px rgba(0, 0, 0, 0.1);
+    0 0 25px rgba(var(--color-primary), 0.4),
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    inset 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
 .dark .btn-primary {
   box-shadow:
-    0 0 15px rgba(var(--color-primary), 0.25),
-    0 4px 6px rgba(0, 0, 0, 0.3);
+    0 0 30px rgba(var(--color-primary), 0.5),
+    0 4px 6px rgba(0, 0, 0, 0.3),
+    inset 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
 .btn-primary:hover {
   box-shadow:
-    0 0 25px rgba(var(--color-primary), 0.3),
-    0 8px 12px rgba(0, 0, 0, 0.15);
+    0 0 40px rgba(var(--color-primary), 0.6),
+    0 8px 12px rgba(0, 0, 0, 0.15),
+    inset 0 0 3px rgba(255, 255, 255, 0.3);
 }
 
 .dark .btn-primary:hover {
   box-shadow:
-    0 0 25px rgba(var(--color-primary), 0.35),
-    0 8px 12px rgba(0, 0, 0, 0.4);
+    0 0 45px rgba(var(--color-primary), 0.7),
+    0 8px 12px rgba(0, 0, 0, 0.4),
+    inset 0 0 3px rgba(255, 255, 255, 0.3);
 }
