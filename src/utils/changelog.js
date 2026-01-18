@@ -1,9 +1,22 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.16';
+export const CURRENT_VERSION = '1.0.17';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.17',
+    date: '2025-01-18',
+    title: 'Mejoras estéticas en panel de Alumnos',
+    changes: [
+      'Email movido a la parte inferior de las tarjetas de miembros',
+      'Email con fuente más pequeña y truncado automáticamente si es muy largo',
+      'Tooltip con email completo al hacer hover sobre el email',
+      'Tarjetas clickeables para ver perfil del alumno (solo profes, admins y sysadmin)',
+      'Efecto hover mejorado en tarjetas con borde primary',
+      'Mejorada la estructura visual y alineación de las tarjetas'
+    ]
+  },
   {
     version: '1.0.16',
     date: '2025-01-18',

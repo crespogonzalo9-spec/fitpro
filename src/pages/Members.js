@@ -249,70 +249,89 @@ const MembersContent = () => {
         <EmptyState icon={Users} title="No hay miembros" description="Invitá personas a tu gimnasio" />
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {filteredMembers.map(member => (
-            <Card key={member.id} className={member.isBlocked ? 'border-red-500/30 bg-red-500/5' : ''}>
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="relative">
-                    <Avatar name={member.name} size="lg" />
-                    {member.isBlocked && (
-                      <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                        <ShieldX size={12} className="text-white" />
+          {filteredMembers.map(member => {
+            const canViewProfile = userData?.roles?.includes('sysadmin') || userData?.roles?.includes('admin') || userData?.roles?.includes('profesor');
+
+            return (
+              <Card
+                key={member.id}
+                className={`${member.isBlocked ? 'border-red-500/30 bg-red-500/5' : ''} ${canViewProfile ? 'cursor-pointer hover:border-primary/50 transition-all' : ''}`}
+                onClick={() => canViewProfile && setSelected(member) && setShowProgress(true)}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="relative flex-shrink-0">
+                      <Avatar name={member.name} size="lg" />
+                      {member.isBlocked && (
+                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                          <ShieldX size={12} className="text-white" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold truncate">{member.name}</h3>
+                        {member.id === userData.id && <Badge className="bg-blue-500/20 text-blue-400 flex-shrink-0">Vos</Badge>}
                       </div>
-                    )}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold">{member.name}</h3>
-                      {member.id === userData.id && <Badge className="bg-blue-500/20 text-blue-400">Vos</Badge>}
+                      <div className="mt-1">
+                        {getRoleBadges(member.roles)}
+                      </div>
+                      {member.isBlocked && (
+                        <Badge className="mt-1 bg-red-500/20 text-red-400">🚫 Bloqueado</Badge>
+                      )}
                     </div>
-                    <p className="text-sm text-gray-400">{member.email}</p>
-                    <div className="mt-1">
-                      {getRoleBadges(member.roles)}
-                    </div>
-                    {member.isBlocked && (
-                      <Badge className="mt-1 bg-red-500/20 text-red-400">🚫 Bloqueado</Badge>
-                    )}
                   </div>
-                </div>
-                
-                {/* Menú de acciones */}
-                {(canEdit || canBlock) && member.id !== userData.id && !member.roles?.includes('sysadmin') && (
-                  <Dropdown trigger={<button className="p-2 hover:bg-gray-700 rounded-lg"><MoreVertical size={18} /></button>}>
-                    <DropdownItem icon={TrendingUp} onClick={() => { setSelected(member); setShowProgress(true); }}>
-                      Ver progreso
-                    </DropdownItem>
-                    {canEdit && !member.roles?.includes('admin') && (
-                      <DropdownItem icon={Shield} onClick={() => { setSelected(member); setShowModal(true); }}>
-                        Gestionar roles
-                      </DropdownItem>
-                    )}
-                    {canEdit && (
-                      <DropdownItem icon={KeyRound} onClick={() => { setSelected(member); setShowResetPassword(true); }}>
-                        Resetear contraseña
-                      </DropdownItem>
-                    )}
-                    {canBlock && !member.roles?.includes('admin') && (
-                      <DropdownItem
-                        icon={member.isBlocked ? ShieldCheck : ShieldX}
-                        danger={!member.isBlocked}
-                        onClick={() => { setSelected(member); setShowBlockConfirm(true); }}
+
+                  {/* Menú de acciones */}
+                  {(canEdit || canBlock) && member.id !== userData.id && !member.roles?.includes('sysadmin') && (
+                    <Dropdown trigger={
+                      <button
+                        className="p-2 hover:bg-gray-700 rounded-lg flex-shrink-0"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        {member.isBlocked ? 'Desbloquear' : 'Bloquear'}
+                        <MoreVertical size={18} />
+                      </button>
+                    }>
+                      <DropdownItem icon={TrendingUp} onClick={(e) => { e.stopPropagation(); setSelected(member); setShowProgress(true); }}>
+                        Ver progreso
                       </DropdownItem>
-                    )}
-                  </Dropdown>
-                )}
-              </div>
-              
-              <div className="mt-4 pt-3 border-t border-gray-700 text-sm text-gray-400">
-                {member.phone && (
-                  <p className="flex items-center gap-2"><Phone size={14} /> {member.phone}</p>
-                )}
-                <p className="text-xs mt-1">Desde: {formatDate(member.createdAt)}</p>
-              </div>
-            </Card>
-          ))}
+                      {canEdit && !member.roles?.includes('admin') && (
+                        <DropdownItem icon={Shield} onClick={(e) => { e.stopPropagation(); setSelected(member); setShowModal(true); }}>
+                          Gestionar roles
+                        </DropdownItem>
+                      )}
+                      {canEdit && (
+                        <DropdownItem icon={KeyRound} onClick={(e) => { e.stopPropagation(); setSelected(member); setShowResetPassword(true); }}>
+                          Resetear contraseña
+                        </DropdownItem>
+                      )}
+                      {canBlock && !member.roles?.includes('admin') && (
+                        <DropdownItem
+                          icon={member.isBlocked ? ShieldCheck : ShieldX}
+                          danger={!member.isBlocked}
+                          onClick={(e) => { e.stopPropagation(); setSelected(member); setShowBlockConfirm(true); }}
+                        >
+                          {member.isBlocked ? 'Desbloquear' : 'Bloquear'}
+                        </DropdownItem>
+                      )}
+                    </Dropdown>
+                  )}
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-gray-700">
+                  {member.phone && (
+                    <p className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                      <Phone size={14} /> {member.phone}
+                    </p>
+                  )}
+                  <p className="text-xs text-gray-500 mb-1">Desde: {formatDate(member.createdAt)}</p>
+                  <p className="text-xs text-gray-400 truncate" title={member.email}>
+                    {member.email}
+                  </p>
+                </div>
+              </Card>
+            );
+          })}
         </div>
       )}
 
