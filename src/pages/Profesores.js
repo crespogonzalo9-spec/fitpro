@@ -38,9 +38,9 @@ const ProfesoresContent = () => {
       );
       setProfesores(profs);
 
-      // Filtrar alumnos (usuarios que SOLO tienen rol 'alumno')
+      // Filtrar miembros (usuarios que SOLO tienen rol 'miembro')
       const alums = allUsers.filter(u =>
-        (!u.roles || u.roles.length === 0 || (u.roles.length === 1 && u.roles.includes('alumno')))
+        (!u.roles || u.roles.length === 0 || (u.roles.length === 1 && u.roles.includes('miembro')))
       );
       setAlumnos(alums);
 
@@ -52,15 +52,15 @@ const ProfesoresContent = () => {
 
   const handleAssign = async (alumnoId) => {
     try {
-      // Buscar el alumno
+      // Buscar el miembro
       const alumno = alumnos.find(a => a.id === alumnoId);
       if (!alumno) {
-        showError('Alumno no encontrado');
+        showError('Miembro no encontrado');
         return;
       }
 
-      // Agregar rol 'profesor' manteniendo 'alumno'
-      const currentRoles = alumno.roles || ['alumno'];
+      // Agregar rol 'profesor' manteniendo 'miembro'
+      const currentRoles = alumno.roles || ['miembro'];
       const newRoles = currentRoles.includes('profesor')
         ? currentRoles
         : [...currentRoles, 'profesor'];
@@ -83,9 +83,9 @@ const ProfesoresContent = () => {
       const currentRoles = selected.roles || [];
       const newRoles = currentRoles.filter(r => r !== 'profesor');
 
-      // Asegurarse que al menos queda 'alumno'
+      // Asegurarse que al menos queda 'miembro'
       if (newRoles.length === 0) {
-        newRoles.push('alumno');
+        newRoles.push('miembro');
       }
 
       await updateDoc(doc(db, 'users', selected.id), {
@@ -124,9 +124,9 @@ const ProfesoresContent = () => {
 
       {filteredProfesores.length === 0 ? (
         <EmptyState 
-          icon={UserCheck} 
-          title="No hay profesores" 
-          description="Asigná el rol de profesor a alumnos existentes"
+          icon={UserCheck}
+          title="No hay profesores"
+          description="Asigná el rol de profesor a miembros existentes"
           action={canEdit && <Button icon={Plus} onClick={() => setShowModal(true)}>Asignar</Button>}
         />
       ) : (
@@ -162,9 +162,9 @@ const ProfesoresContent = () => {
       {/* Modal asignar profesor */}
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Asignar Profesor">
         <div className="space-y-4">
-          <p className="text-gray-400">Seleccioná un alumno para convertirlo en profesor:</p>
+          <p className="text-gray-400">Seleccioná un miembro para convertirlo en profesor:</p>
           {alumnos.length === 0 ? (
-            <p className="text-center py-4 text-gray-500">No hay alumnos disponibles</p>
+            <p className="text-center py-4 text-gray-500">No hay miembros disponibles</p>
           ) : (
             <div className="space-y-2 max-h-60 overflow-y-auto">
               {alumnos.map(alumno => (
@@ -189,8 +189,8 @@ const ProfesoresContent = () => {
         isOpen={showRemove} 
         onClose={() => setShowRemove(false)} 
         onConfirm={handleRemove} 
-        title="Quitar rol de profesor" 
-        message={`¿Quitar el rol de profesor a "${selected?.name}"? Volverá a ser alumno.`}
+        title="Quitar rol de profesor"
+        message={`¿Quitar el rol de profesor a "${selected?.name}"? Volverá a ser miembro.`}
         confirmText="Quitar rol" 
       />
     </div>

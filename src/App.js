@@ -145,8 +145,9 @@ function AppRoutes() {
         {/* Todos los usuarios autenticados */}
         <Route path="calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
         <Route path="news" element={<ProtectedRoute><News /></ProtectedRoute>} />
-        
-        {/* Alumno */}
+
+
+        {/* Miembro */}
         <Route path="schedule" element={<Schedule />} />
         <Route path="my-classes" element={<MyClasses />} />
         <Route path="my-routines" element={<Routines />} />

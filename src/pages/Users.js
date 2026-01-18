@@ -69,10 +69,10 @@ const UsersPage = () => {
     }
     
     // Ordenar por roles (sysadmin primero)
-    const roleOrder = { sysadmin: 0, admin: 1, profesor: 2, alumno: 3 };
+    const roleOrder = { sysadmin: 0, admin: 1, profesor: 2, miembro: 3 };
     filtered.sort((a, b) => {
-      const aTop = Math.min(...(a.roles || ['alumno']).map(r => roleOrder[r] ?? 4));
-      const bTop = Math.min(...(b.roles || ['alumno']).map(r => roleOrder[r] ?? 4));
+      const aTop = Math.min(...(a.roles || ['miembro']).map(r => roleOrder[r] ?? 4));
+      const bTop = Math.min(...(b.roles || ['miembro']).map(r => roleOrder[r] ?? 4));
       return aTop - bTop;
     });
     
@@ -113,24 +113,24 @@ const UsersPage = () => {
   const getGymName = (gymId) => gyms.find(g => g.id === gymId)?.name || 'Sin gimnasio';
 
   const getRoleBadges = (roles) => {
-    if (!roles || roles.length === 0) return <Badge className="bg-gray-500/20 text-gray-400">Alumno</Badge>;
-    
+    if (!roles || roles.length === 0) return <Badge className="bg-gray-500/20 text-gray-400">Miembro</Badge>;
+
     const roleConfig = {
       sysadmin: { color: 'bg-yellow-500/20 text-yellow-400', icon: '👑' },
       admin: { color: 'bg-blue-500/20 text-blue-400', icon: '🔧' },
       profesor: { color: 'bg-purple-500/20 text-purple-400', icon: '👨‍🏫' },
-      alumno: { color: 'bg-gray-500/20 text-gray-400', icon: '👤' }
+      miembro: { color: 'bg-gray-500/20 text-gray-400', icon: '👤' }
     };
 
     return (
       <div className="flex flex-wrap gap-1">
-        {roles.filter(r => r !== 'alumno').map(role => (
+        {roles.filter(r => r !== 'miembro').map(role => (
           <Badge key={role} className={roleConfig[role]?.color || 'bg-gray-500/20'}>
             {roleConfig[role]?.icon} {role.charAt(0).toUpperCase() + role.slice(1)}
           </Badge>
         ))}
-        {roles.length === 1 && roles[0] === 'alumno' && (
-          <Badge className="bg-gray-500/20 text-gray-400">👤 Alumno</Badge>
+        {roles.length === 1 && roles[0] === 'miembro' && (
+          <Badge className="bg-gray-500/20 text-gray-400">👤 Miembro</Badge>
         )}
       </div>
     );
@@ -203,7 +203,7 @@ const UsersPage = () => {
             { value: 'sysadmin', label: '👑 Sysadmin' },
             { value: 'admin', label: '🔧 Admin' },
             { value: 'profesor', label: '👨‍🏫 Profesor' },
-            { value: 'alumno', label: '👤 Alumno' }
+            { value: 'miembro', label: '👤 Miembro' }
           ]}
           className="w-full sm:w-48"
         />
@@ -278,20 +278,20 @@ const UsersPage = () => {
 };
 
 const UserModal = ({ isOpen, onClose, onSave, user, gyms, currentGym, viewAllGyms, currentUserId, canAssignRole, canRemoveRole, isSysadmin }) => {
-  const [form, setForm] = useState({ roles: ['alumno'], gymId: '', isActive: true });
+  const [form, setForm] = useState({ roles: ['miembro'], gymId: '', isActive: true });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
       setForm({
-        roles: user.roles || ['alumno'],
+        roles: user.roles || ['miembro'],
         gymId: user.gymId || '',
         isActive: user.isActive !== false
       });
     } else {
       // Si hay un gym seleccionado, usarlo por defecto
       setForm({
-        roles: ['alumno'],
+        roles: ['miembro'],
         gymId: currentGym?.id || '',
         isActive: true
       });
@@ -300,9 +300,9 @@ const UserModal = ({ isOpen, onClose, onSave, user, gyms, currentGym, viewAllGym
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Asegurar que siempre tenga al menos alumno
-    const roles = form.roles.length > 0 ? form.roles : ['alumno'];
-    if (!roles.includes('alumno')) roles.push('alumno');
+    // Asegurar que siempre tenga al menos miembro
+    const roles = form.roles.length > 0 ? form.roles : ['miembro'];
+    if (!roles.includes('miembro')) roles.push('miembro');
     setLoading(true);
     await onSave({ ...form, roles });
     setLoading(false);
@@ -314,7 +314,7 @@ const UserModal = ({ isOpen, onClose, onSave, user, gyms, currentGym, viewAllGym
     if (hasRole) {
       // Verificar si puede quitar el rol
       if (!canRemoveRole(role)) return;
-      if (role === 'alumno') return; // No se puede quitar alumno
+      if (role === 'miembro') return; // No se puede quitar miembro
       setForm(prev => ({ ...prev, roles: prev.roles.filter(r => r !== role) }));
     } else {
       // Verificar si puede asignar el rol
@@ -330,7 +330,7 @@ const UserModal = ({ isOpen, onClose, onSave, user, gyms, currentGym, viewAllGym
     { id: 'sysadmin', name: 'Sysadmin', desc: 'Poder absoluto en toda la app', icon: '👑' },
     { id: 'admin', name: 'Admin', desc: 'Gestión completa del gimnasio', icon: '🔧' },
     { id: 'profesor', name: 'Profesor', desc: 'Crear rutinas, WODs, validar PRs', icon: '👨‍🏫' },
-    { id: 'alumno', name: 'Alumno', desc: 'Acceso básico (siempre incluido)', icon: '👤', locked: true },
+    { id: 'miembro', name: 'Miembro', desc: 'Acceso básico (siempre incluido)', icon: '👤', locked: true },
   ];
 
   return (

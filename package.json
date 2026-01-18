@@ -1,6 +1,6 @@
 {
   "name": "fitpro",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "FitPro - Sistema Integral de Gestión de Gimnasios y Entrenamientos",
   "private": true,
   "dependencies": {

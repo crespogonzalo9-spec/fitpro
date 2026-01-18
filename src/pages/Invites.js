@@ -186,12 +186,12 @@ const InvitesContent = () => {
   };
 
   const getRolesText = (roles) => {
-    if (!roles || roles.length === 0) return 'Alumno';
+    if (!roles || roles.length === 0) return 'Miembro';
     const roleNames = {
       sysadmin: 'Sysadmin',
       admin: 'Admin',
       profesor: 'Profesor',
-      alumno: 'Alumno'
+      miembro: 'Miembro'
     };
     return roles.map(r => roleNames[r] || r).join(', ');
   };
@@ -372,13 +372,13 @@ const InvitesContent = () => {
 
 const InviteModal = ({ isOpen, onClose, onCreate, gymName }) => {
   const { isSysadmin } = useAuth();
-  const [form, setForm] = useState({ description: '', email: '', roles: ['alumno'], expiresInDays: 0 });
+  const [form, setForm] = useState({ description: '', email: '', roles: ['miembro'], expiresInDays: 0 });
   const [loading, setLoading] = useState(false);
 
   // Reset form cuando se abre el modal
   useEffect(() => {
     if (isOpen) {
-      setForm({ description: '', email: '', roles: ['alumno'], expiresInDays: 7 });
+      setForm({ description: '', email: '', roles: ['miembro'], expiresInDays: 7 });
     }
   }, [isOpen]);
 
@@ -393,24 +393,24 @@ const InviteModal = ({ isOpen, onClose, onCreate, gymName }) => {
     setForm(prev => {
       const hasRole = prev.roles.includes(role);
       let newRoles;
-      
+
       if (hasRole) {
-        if (role === 'alumno' && prev.roles.length === 1) return prev;
+        if (role === 'miembro' && prev.roles.length === 1) return prev;
         newRoles = prev.roles.filter(r => r !== role);
       } else {
         newRoles = [...prev.roles, role];
       }
-      
-      if (!newRoles.includes('alumno')) {
-        newRoles.push('alumno');
+
+      if (!newRoles.includes('miembro')) {
+        newRoles.push('miembro');
       }
-      
+
       return { ...prev, roles: newRoles };
     });
   };
 
   const availableRoles = [
-    { id: 'alumno', name: 'Alumno', description: 'Acceso básico', always: true },
+    { id: 'miembro', name: 'Miembro', description: 'Acceso básico', always: true },
     { id: 'profesor', name: 'Profesor', description: 'Crear rutinas, WODs, validar PRs' },
     { id: 'admin', name: 'Admin', description: 'Gestión completa del gimnasio' },
   ];

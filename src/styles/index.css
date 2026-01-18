@@ -250,13 +250,13 @@ input:focus, select:focus, textarea:focus {
 }
 
 /* ============ EFECTO NEON BLANCO GLOBAL EN TODO EL TEXTO ============ */
-/* Aplicar text-shadow blanco a TODO el texto de la aplicación */
+/* Aplicar text-shadow blanco a TODO el texto de la aplicación - BLUR REDUCIDO PARA MAYOR DEFINICIÓN */
 body, p, span, div, a, button, h1, h2, h3, h4, h5, h6, label, input, textarea, select, li, td, th {
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px rgba(255, 255, 255, 0.3) !important;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.7), 0 0 16px rgba(255, 255, 255, 0.4) !important;
 }
 
 .dark body, .dark p, .dark span, .dark div, .dark a, .dark button, .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6, .dark label, .dark input, .dark textarea, .dark select, .dark li, .dark td, .dark th {
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 35px rgba(255, 255, 255, 0.4) !important;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 18px rgba(255, 255, 255, 0.5) !important;
 }
 
 /* ============ EFECTOS DE GLOW/BRILLO MUY VISIBLE (+10%) ============ */
