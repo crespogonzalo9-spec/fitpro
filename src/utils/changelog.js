@@ -1,9 +1,75 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.11';
+export const CURRENT_VERSION = '1.0.16';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.16',
+    date: '2025-01-18',
+    title: 'Tab ESDs en rutinas + efecto neon blanco GLOBAL',
+    changes: [
+      'Tercer tab "ESDs" en el modal de creación de rutinas junto a "Ejercicios" y "WODs"',
+      'CRUD completo para agregar/editar/eliminar ESDs en bloques de rutinas',
+      'Selector de ESDs desde la lista de ESDs creados',
+      'Configuración de descanso y notas para cada ESD',
+      'Efecto neon blanco aplicado a TODO el texto de la aplicación',
+      'Text-shadow visible en sidebar, títulos, contenido, modales y cards',
+      'Doble capa de glow para máxima visibilidad en modo claro y oscuro'
+    ]
+  },
+  {
+    version: '1.0.15',
+    date: '2025-01-18',
+    title: 'Efectos neon aumentados + acceso rápido a ESDs',
+    changes: [
+      'Efectos de text-shadow neon en sidebar drásticamente aumentados',
+      'Blur aumentado de 8-10px a 20-50px para máxima visibilidad',
+      'Opacidad aumentada de 0.3-0.4 a 0.8-0.9 para impacto visual',
+      'Nuevo botón de acceso rápido a ESDs en la sección de WODs del modal de rutinas',
+      'Botón "ESDs" con icono Clock abre la página de ESDs en nueva pestaña'
+    ]
+  },
+  {
+    version: '1.0.14',
+    date: '2025-01-18',
+    title: 'Efectos neon en navegación del sidebar',
+    changes: [
+      'Aplicado text-shadow a todos los enlaces y botones dentro del sidebar',
+      'Items no seleccionados: text-shadow 8-10px con opacidad 0.3-0.4',
+      'Items con hover: text-shadow 12-14px con opacidad 0.5-0.6',
+      'Items activos: text-shadow 10-12px con opacidad 0.5-0.6',
+      'Efecto visible en Dashboard, Gimnasios, Usuarios, Alumnos, Profesores, Clases, Ejercicios'
+    ]
+  },
+  {
+    version: '1.0.13',
+    date: '2025-01-18',
+    title: 'Sistema ESD completo + efectos visuales mejorados',
+    changes: [
+      'Nueva sección completa de ESDs (Every X Seconds/Minutes Day)',
+      'CRUD completo: crear, editar, eliminar y asignar ESDs',
+      'Bloques ESD en rutinas con configuración de intervalo y rondas',
+      'Timer especializado para bloques ESD con contador de rondas y beep automático',
+      'Efectos visuales de glow/brillo visibles en toda la aplicación',
+      'Control de posición de imagen de banner con 9 opciones de enfoque',
+      'Corrección completa de colores de fondo en modo claro',
+      'Librerías UI agregadas: Material UI, Emotion, Framer Motion',
+      'ESDs se almacenan en colección wods con campo type: esd'
+    ]
+  },
+  {
+    version: '1.0.12',
+    date: '2025-01-18',
+    title: 'Mejoras masivas en rutinas y WODs',
+    changes: [
+      'Sistema de bloques en rutinas con selector de tipo',
+      'Campo de intensidad para rutinas (Baja, Moderada, Alta, Muy Alta)',
+      'Cada bloque en su propio cuadro editable con UI mejorada',
+      'Mejorada la visualización y gestión de bloques',
+      'Correcciones en el sistema de WODs'
+    ]
+  },
   {
     version: '1.0.11',
     date: '2026-01-15',
