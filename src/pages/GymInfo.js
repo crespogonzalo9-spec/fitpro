@@ -162,6 +162,7 @@ const GymInfoContent = () => {
             src={gymCoverImage}
             alt={`Banner de ${currentGym.name}`}
             className="w-full h-full object-cover"
+            style={{ objectPosition: currentGym?.bannerPosition || 'center' }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent flex items-end p-6">
             <div className="flex items-center gap-4 w-full">

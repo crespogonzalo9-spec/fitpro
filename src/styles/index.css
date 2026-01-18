@@ -454,12 +454,52 @@ input:focus, select:focus, textarea:focus {
 }
 
 /* Aplicar glow automático a títulos importantes */
-h1, h2 {
-  text-shadow: 0 0 8px rgba(var(--color-primary), 0.3);
+h1, h2, h3 {
+  text-shadow: 0 0 10px rgba(var(--color-primary), 0.4);
 }
 
-.dark h1, .dark h2 {
-  text-shadow: 0 0 12px rgba(var(--color-primary), 0.4);
+.dark h1, .dark h2, .dark h3 {
+  text-shadow: 0 0 15px rgba(var(--color-primary), 0.5);
+}
+
+/* Glow en títulos de página y secciones */
+h1 {
+  text-shadow:
+    0 0 15px rgba(var(--color-primary), 0.5),
+    0 0 25px rgba(var(--color-primary), 0.3);
+}
+
+.dark h1 {
+  text-shadow:
+    0 0 20px rgba(var(--color-primary), 0.6),
+    0 0 30px rgba(var(--color-primary), 0.4);
+}
+
+/* Glow en texto con clase text-primary */
+.text-primary {
+  text-shadow: 0 0 12px rgba(var(--color-primary), 0.6);
+}
+
+.dark .text-primary {
+  text-shadow: 0 0 15px rgba(var(--color-primary), 0.7);
+}
+
+/* Glow en badges */
+.badge-primary, [class*="badge"] {
+  text-shadow: 0 0 8px rgba(var(--color-primary), 0.5);
+}
+
+.dark .badge-primary, .dark [class*="badge"] {
+  text-shadow: 0 0 10px rgba(var(--color-primary), 0.6);
+}
+
+/* Glow en números y métricas destacadas */
+.font-bold, .font-semibold {
+  text-shadow: 0 0 6px rgba(var(--color-primary), 0.3);
+}
+
+.dark .font-bold, .dark .font-semibold {
+  text-shadow: 0 0 8px rgba(var(--color-primary), 0.4);
 }
 
 /* ============ EFECTOS DE NEON EN SIDEBAR Y NAVEGACIÓN ============ */
@@ -474,6 +514,26 @@ h1, h2 {
   box-shadow: 0 0 25px rgba(var(--color-primary), 0.12);
 }
 
+/* Links de navegación con glow base (todos los items del sidebar) */
+aside nav a,
+aside nav button,
+aside a,
+aside button,
+.nav-link,
+.text-gray-400 {
+  text-shadow: 0 0 8px rgba(var(--color-primary), 0.3) !important;
+  transition: text-shadow 0.3s ease;
+}
+
+.dark aside nav a,
+.dark aside nav button,
+.dark aside a,
+.dark aside button,
+.dark .nav-link,
+.dark .text-gray-400 {
+  text-shadow: 0 0 10px rgba(var(--color-primary), 0.4) !important;
+}
+
 /* Links de navegación activos con glow fuerte */
 .nav-link-active {
   background-color: rgba(var(--color-primary), 0.1);
@@ -482,21 +542,29 @@ h1, h2 {
   box-shadow:
     inset 0 0 15px rgba(var(--color-primary), 0.1),
     0 0 10px rgba(var(--color-primary), 0.2);
-  text-shadow: 0 0 8px rgba(var(--color-primary), 0.4);
+  text-shadow: 0 0 10px rgba(var(--color-primary), 0.5) !important;
 }
 
 .dark .nav-link-active {
   box-shadow:
     inset 0 0 20px rgba(var(--color-primary), 0.15),
     0 0 15px rgba(var(--color-primary), 0.25);
-  text-shadow: 0 0 10px rgba(var(--color-primary), 0.5);
+  text-shadow: 0 0 12px rgba(var(--color-primary), 0.6) !important;
 }
 
-/* Links de navegación con hover y glow */
-a[href]:hover, button[class*="hover"]:hover {
-  text-shadow: 0 0 6px rgba(var(--color-primary), 0.3);
+/* Links de navegación con hover y glow más fuerte */
+aside nav a:hover,
+aside nav button:hover,
+aside a:hover,
+aside button:hover,
+.nav-link:hover {
+  text-shadow: 0 0 12px rgba(var(--color-primary), 0.5) !important;
 }
 
-.dark a[href]:hover, .dark button[class*="hover"]:hover {
-  text-shadow: 0 0 8px rgba(var(--color-primary), 0.4);
+.dark aside nav a:hover,
+.dark aside nav button:hover,
+.dark aside a:hover,
+.dark aside button:hover,
+.dark .nav-link:hover {
+  text-shadow: 0 0 14px rgba(var(--color-primary), 0.6) !important;
 }
