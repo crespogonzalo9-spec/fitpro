@@ -517,20 +517,18 @@ h1 {
 /* Links de navegación con glow base (todos los items del sidebar) */
 aside nav a,
 aside nav button,
-aside a,
-aside button,
-.nav-link,
-.text-gray-400 {
+aside a span,
+aside button span,
+.nav-link {
   text-shadow: 0 0 8px rgba(var(--color-primary), 0.3) !important;
   transition: text-shadow 0.3s ease;
 }
 
 .dark aside nav a,
 .dark aside nav button,
-.dark aside a,
-.dark aside button,
-.dark .nav-link,
-.dark .text-gray-400 {
+.dark aside a span,
+.dark aside button span,
+.dark .nav-link {
   text-shadow: 0 0 10px rgba(var(--color-primary), 0.4) !important;
 }
 
