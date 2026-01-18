@@ -2,6 +2,30 @@
 
 Todas las notas de las versiones de FitPro se documentan en este archivo.
 
+## [1.0.16] - 2025-01-18
+
+### Añadido
+- **Tab de ESDs en creación de rutinas**:
+  - Tercer tab "ESDs" junto a "Ejercicios" y "WODs" en el modal de rutinas
+  - CRUD completo para agregar/editar/eliminar ESDs en bloques de rutinas
+  - Selector de ESDs desde la lista de ESDs creados (filtrados por type: 'esd')
+  - Configuración de descanso después de cada ESD
+  - Notas opcionales por ESD
+  - Contador visual de ESDs agregados
+  - Icono Clock para identificación del tab
+- **Efecto neon blanco GLOBAL en todo el texto**:
+  - Text-shadow blanco aplicado a TODO el texto de la aplicación
+  - Incluye: títulos, párrafos, botones, labels, inputs, links, listas, tablas
+  - Modo claro: text-shadow 15-30px con opacidad 0.6-0.3
+  - Modo oscuro: text-shadow 20-35px con opacidad 0.7-0.4
+  - Doble capa de glow para máxima visibilidad
+  - Efecto visible en TODA la interfaz (sidebar, contenido, modales, cards)
+
+### Técnico
+- Modificado: src/pages/Routines.js - Tab ESDs + funciones addEsd/updateEsd/removeEsd (líneas 570-602, 836-840, 1072-1139)
+- Modificado: src/styles/index.css - Text-shadow blanco global (líneas 252-260)
+- Modificado: package.json - Versión actualizada a 1.0.16
+
 ## [1.0.15] - 2025-01-18
 
 ### Modificado
