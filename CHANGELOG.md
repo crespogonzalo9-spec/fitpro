@@ -39,6 +39,11 @@ Todas las notas de las versiones de FitPro se documentan en este archivo.
   - Material UI (@mui/material) v7.3.7
   - Emotion (@emotion/react, @emotion/styled) para styled-components
   - Framer Motion v12.26.2 para animaciones
+- **Control de posición de imagen de banner**:
+  - Selector de posición de foco en Configuración > Identidad Visual
+  - 9 opciones: Centro, Arriba, Abajo, Izquierda, Derecha, y combinaciones de esquinas
+  - Vista previa en tiempo real del posicionamiento
+  - Se aplica automáticamente en Dashboard y GymInfo
 
 ### Modificado
 - **RoutineTimer**: Lógica mejorada del timer para diferenciar entre ejercicios regulares, ejercicios por tiempo, WODs y bloques ESD
@@ -50,6 +55,11 @@ Todas las notas de las versiones de FitPro se documentan en este archivo.
   - Consistencia total: todos los paneles tienen el mismo color de fondo
   - Solo las cards destacan con fondo blanco y efectos de glow
 - **Interfaz minimalista para ESDs**: Diseño simple y limpio sin badges excesivas
+- **Efectos de text-shadow con neon en texto**:
+  - Títulos h1, h2, h3 con glow visible
+  - Clase .text-primary con efecto de brillo
+  - Badges con text-shadow
+  - Números y métricas destacadas (.font-bold, .font-semibold) con glow sutil
 - Ruta /esds agregada con protección de roles
 - Navegación actualizada en constants.js para todos los roles administrativos
 - Iconografía de Sidebar extendida con icono Clock
@@ -61,8 +71,12 @@ Todas las notas de las versiones de FitPro se documentan en este archivo.
 - Modificado: src/components/Common/RoutineTimer.js - Lógica de timer para ESD con estados separados
 - Modificado: src/components/Common/Sidebar.js - Icono Clock en iconMap
 - Modificado: src/utils/constants.js - Entrada de menú y constantes ESD_INTERVALS
-- Modificado: src/styles/index.css - Efectos de glow y corrección de colores de fondo
+- Modificado: src/styles/index.css - Efectos de glow, text-shadow y corrección de colores de fondo
+- Modificado: src/pages/Settings.js - Selector de posición de banner (bannerPosition) con 9 opciones
+- Modificado: src/pages/Dashboard.js - Aplicar objectPosition desde currentGym.bannerPosition
+- Modificado: src/pages/GymInfo.js - Aplicar objectPosition desde currentGym.bannerPosition
 - Nuevo: Estados esdCurrentRound y esdIntervalTime en RoutineTimer
 - Nuevo: Función playBeep() para notificaciones de audio entre rondas
 - Firebase: ESDs se almacenan en colección wods con campo type: esd
+- Firebase: Campo bannerPosition agregado a documento de gyms
 - Dependencias: +1486 paquetes agregados para Material UI y Framer Motion

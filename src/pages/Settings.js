@@ -24,6 +24,7 @@ const Settings = () => {
   const [logoPreview, setLogoPreview] = useState(null);
   const [coverFile, setCoverFile] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
+  const [bannerPosition, setBannerPosition] = useState('center');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRoleForSimulation, setSelectedRoleForSimulation] = useState('');
 
@@ -37,6 +38,7 @@ const Settings = () => {
       setSlogan(gymSlogan || '');
       setLogoPreview(gymLogo);
       setCoverPreview(gymCoverImage);
+      setBannerPosition(currentGym.bannerPosition || 'center');
     }
   }, [currentGym, paletteId, secondaryPaletteId, isDark, gymSlogan, gymLogo, gymCoverImage]);
 
@@ -88,7 +90,8 @@ const Settings = () => {
         colorPrimary: selectedPrimaryColor,
         colorSecondary: selectedSecondaryColor,
         darkMode: selectedDarkMode,
-        slogan: slogan.trim()
+        slogan: slogan.trim(),
+        bannerPosition: bannerPosition
       };
 
       // Guardar logo como base64 si cambió
@@ -430,7 +433,12 @@ const Settings = () => {
               <div className="space-y-3">
                 {coverPreview && (
                   <div className="rounded-lg overflow-hidden bg-gray-800">
-                    <img src={coverPreview} alt="Banner" className="w-full h-32 object-cover" />
+                    <img
+                      src={coverPreview}
+                      alt="Banner"
+                      className="w-full h-32 object-cover"
+                      style={{ objectPosition: bannerPosition }}
+                    />
                   </div>
                 )}
                 <label className="block">
@@ -446,6 +454,31 @@ const Settings = () => {
                   </div>
                 </label>
                 <p className="text-xs text-gray-400">Tamaño máximo: 5MB. Formato: PNG, JPG. Recomendado: 1920x400px</p>
+
+                {/* Posición del banner */}
+                {coverPreview && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Posición de la imagen
+                    </label>
+                    <Select
+                      value={bannerPosition}
+                      onChange={(e) => setBannerPosition(e.target.value)}
+                      options={[
+                        { value: 'center', label: 'Centro' },
+                        { value: 'top', label: 'Arriba' },
+                        { value: 'bottom', label: 'Abajo' },
+                        { value: 'left', label: 'Izquierda' },
+                        { value: 'right', label: 'Derecha' },
+                        { value: 'left top', label: 'Arriba Izquierda' },
+                        { value: 'right top', label: 'Arriba Derecha' },
+                        { value: 'left bottom', label: 'Abajo Izquierda' },
+                        { value: 'right bottom', label: 'Abajo Derecha' }
+                      ]}
+                    />
+                    <p className="text-xs text-gray-400 mt-1">Ajusta el punto focal de la imagen cuando es más grande que el contenedor</p>
+                  </div>
+                )}
               </div>
             </Card>
 
@@ -476,7 +509,12 @@ const Settings = () => {
                 {/* Cover Image Preview */}
                 {coverPreview && (
                   <div className="w-full h-32 overflow-hidden">
-                    <img src={coverPreview} alt="Cover preview" className="w-full h-full object-cover" />
+                    <img
+                      src={coverPreview}
+                      alt="Cover preview"
+                      className="w-full h-full object-cover"
+                      style={{ objectPosition: bannerPosition }}
+                    />
                   </div>
                 )}
 
