@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { getRoleName, getRolesNames, formatRelativeDate, formatDate } from '../utils/helpers';
 
 const Dashboard = () => {
-  const { userData, isSysadmin, isAdmin, isProfesor, isAlumno } = useAuth();
+  const { userData, isSysadmin, isAdmin, isProfesor, isMiembro } = useAuth();
   const { currentGym, availableGyms, selectGym, viewAllGyms } = useGym();
   const { gymCoverImage, gymLogo, gymSlogan } = useTheme();
 
@@ -453,7 +453,7 @@ const Dashboard = () => {
       )}
 
       {/* Estadísticas de rutinas personales */}
-      {isAlumno() && recentRoutineSessions.length > 0 && routineStats && (
+      {isMiembro() && recentRoutineSessions.length > 0 && routineStats && (
         <Card className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border-blue-500/30">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
             <Clock size={20} className="text-blue-400" />
@@ -488,7 +488,7 @@ const Dashboard = () => {
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Rutinas Recientes */}
-        {isAlumno() && (
+        {isMiembro() && (
           <Card>
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-semibold">Rutinas Recientes</h3>
@@ -550,7 +550,7 @@ const Dashboard = () => {
         </Card>
 
         {/* Próximos Eventos */}
-        {!isAlumno() || recentRoutineSessions.length === 0 ? (
+        {!isMiembro() || recentRoutineSessions.length === 0 ? (
           <Card>
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-semibold">Próximos Eventos</h3>
