@@ -2,6 +2,23 @@
 
 Todas las notas de las versiones de FitPro se documentan en este archivo.
 
+## [1.0.17] - 2025-01-18
+
+### Modificado
+- **Mejoras estéticas en panel de Alumnos/Miembros**:
+  - Email movido a la parte inferior de la tarjeta
+  - Email con fuente más pequeña (text-xs) y truncado con "..." si es muy largo
+  - Email muestra tooltip con el texto completo al hacer hover
+  - Tarjetas ahora clickeables para ver perfil del alumno (solo profes, admins y sysadmin)
+  - Agregado efecto hover en tarjetas con borde primary
+  - Agregado cursor-pointer para indicar interactividad
+  - Mejorada la estructura de flexbox para mejor alineación
+  - Eliminados problemas visuales en diseño de tarjetas
+
+### Técnico
+- Modificado: src/pages/Members.js - Reestructuración de tarjetas de miembros (líneas 248-336)
+- Modificado: package.json - Versión actualizada a 1.0.17
+
 ## [1.0.16] - 2025-01-18
 
 ### Añadido
