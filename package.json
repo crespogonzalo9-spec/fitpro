@@ -1,11 +1,15 @@
 {
   "name": "fitpro",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "FitPro - Sistema Integral de Gestión de Gimnasios y Entrenamientos",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^7.3.7",
     "date-fns": "^2.30.0",
     "firebase": "^12.8.0",
+    "framer-motion": "^12.26.2",
     "lucide-react": "^0.294.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
