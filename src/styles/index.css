@@ -114,15 +114,21 @@ body.light-mode {
   border-color: rgba(var(--color-primary), 1) !important;
 }
 
-/* Override específicos para modo claro */
-.light .bg-slate-900 { background-color: #F8FAFC; }
-.light .bg-slate-800 { background-color: #FFFFFF; }
-.light .bg-slate-800\/50 { background-color: rgba(255, 255, 255, 0.8); }
-.light .bg-gray-800 { background-color: #F1F5F9; }
-.light .bg-gray-800\/50 { background-color: rgba(241, 245, 249, 0.8); }
-.light .bg-gray-700 { background-color: #E2E8F0; }
-.light .bg-gray-900 { background-color: #F8FAFC; }
-.light .bg-gray-900\/30 { background-color: rgba(248, 250, 252, 0.3); }
+/* Override específicos para modo claro - TODO MISMO FONDO BASE */
+.light .bg-slate-900 { background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important; }
+.light .bg-slate-800 { background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important; }
+.light .bg-slate-800\/50 { background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important; }
+.light .bg-slate-700 { background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important; }
+.light .bg-slate-600 { background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important; }
+.light .bg-gray-900 { background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important; }
+.light .bg-gray-900\/30 { background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important; }
+.light .bg-gray-900\/50 { background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important; }
+.light .bg-gray-800 { background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important; }
+.light .bg-gray-800\/50 { background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important; }
+.light .bg-gray-800\/30 { background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important; }
+.light .bg-gray-700 { background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important; }
+.light .bg-gray-700\/50 { background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important; }
+.light .bg-gray-600 { background-color: rgb(var(--color-bg-100, 241, 245, 249)) !important; }
 .light .border-gray-700 { border-color: #E2E8F0; }
 .light .border-gray-700\/50 { border-color: rgba(226, 232, 240, 0.5); }
 .light .border-gray-800 { border-color: #E2E8F0; }
