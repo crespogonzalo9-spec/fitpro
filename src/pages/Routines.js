@@ -567,6 +567,40 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
     }));
   };
 
+  // Funciones para manejar ESDs dentro del bloque actual
+  const addEsd = () => {
+    setForm(prev => ({
+      ...prev,
+      blocks: prev.blocks.map((block, i) =>
+        i === currentBlockIndex
+          ? { ...block, esds: [...(block.esds || []), { esdId: '', notes: '', restDuration: 60 }] }
+          : block
+      )
+    }));
+  };
+
+  const updateEsd = (index, field, value) => {
+    setForm(prev => ({
+      ...prev,
+      blocks: prev.blocks.map((block, i) =>
+        i === currentBlockIndex
+          ? { ...block, esds: block.esds.map((e, j) => j === index ? { ...e, [field]: value } : e) }
+          : block
+      )
+    }));
+  };
+
+  const removeEsd = (index) => {
+    setForm(prev => ({
+      ...prev,
+      blocks: prev.blocks.map((block, i) =>
+        i === currentBlockIndex
+          ? { ...block, esds: (block.esds || []).filter((_, j) => j !== index) }
+          : block
+      )
+    }));
+  };
+
   const toggleMember = (id) => {
     setForm(prev => ({ 
       ...prev, 
@@ -832,11 +866,12 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
                     )}
                   </div>
 
-                  {/* Tabs para Ejercicios y WODs dentro del bloque */}
+                  {/* Tabs para Ejercicios, WODs y ESDs dentro del bloque */}
                   <Tabs
                     tabs={[
                       { id: 'exercises', label: 'Ejercicios', icon: Dumbbell },
-                      { id: 'wods', label: 'WODs', icon: Flame }
+                      { id: 'wods', label: 'WODs', icon: Flame },
+                      { id: 'esds', label: 'ESDs', icon: Clock }
                     ]}
                     activeTab={currentBlockIndex === idx ? activeTab : 'exercises'}
                     onChange={(tab) => {
@@ -1026,6 +1061,75 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
                             <Input
                               value={wod.notes || ''}
                               onChange={e => updateWod(wodIdx, 'notes', e.target.value)}
+                              placeholder="Notas (opcional)"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ESDs */}
+                  {currentBlockIndex === idx && activeTab === 'esds' && (
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <label className="text-sm font-medium text-gray-300">
+                          ESDs ({(block.esds || []).length})
+                        </label>
+                        <Button type="button" variant="secondary" size="sm" icon={Plus} onClick={addEsd}>
+                          Agregar
+                        </Button>
+                      </div>
+
+                      {wods.filter(w => w.type === 'esd').length === 0 && (
+                        <Card className="bg-yellow-500/10 border-yellow-500/30 mb-2">
+                          <p className="text-yellow-400 text-sm">
+                            No hay ESDs cargados. Agregá ESDs desde la sección correspondiente.
+                          </p>
+                        </Card>
+                      )}
+
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {(block.esds || []).map((esd, esdIdx) => (
+                          <div key={esdIdx} className="p-3 bg-gray-700/50 rounded-xl space-y-2">
+                            <div className="flex items-center gap-2 mb-2">
+                              <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-purple-400">
+                                {esdIdx + 1}
+                              </div>
+                              <Select
+                                value={esd.esdId}
+                                onChange={e => updateEsd(esdIdx, 'esdId', e.target.value)}
+                                options={[
+                                  { value: '', label: 'Seleccionar ESD...' },
+                                  ...wods.filter(w => w.type === 'esd').map(w => ({ value: w.id, label: w.name }))
+                                ]}
+                                className="flex-1"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeEsd(esdIdx)}
+                                className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                            {form.hasRestBetweenExercises && (
+                              <div>
+                                <label className="text-xs text-gray-400 mb-1 block">Descanso después del ESD (segundos)</label>
+                                <Input
+                                  type="number"
+                                  value={esd.restDuration || 60}
+                                  onChange={e => updateEsd(esdIdx, 'restDuration', e.target.value)}
+                                  placeholder="60"
+                                />
+                                <p className="text-xs text-gray-500 mt-1">
+                                  Tiempo de descanso antes del siguiente elemento
+                                </p>
+                              </div>
+                            )}
+                            <Input
+                              value={esd.notes || ''}
+                              onChange={e => updateEsd(esdIdx, 'notes', e.target.value)}
                               placeholder="Notas (opcional)"
                             />
                           </div>

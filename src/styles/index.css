@@ -249,6 +249,16 @@ input:focus, select:focus, textarea:focus {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
+/* ============ EFECTO NEON BLANCO GLOBAL EN TODO EL TEXTO ============ */
+/* Aplicar text-shadow blanco a TODO el texto de la aplicación */
+body, p, span, div, a, button, h1, h2, h3, h4, h5, h6, label, input, textarea, select, li, td, th {
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dark body, .dark p, .dark span, .dark div, .dark a, .dark button, .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6, .dark label, .dark input, .dark textarea, .dark select, .dark li, .dark td, .dark th {
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 35px rgba(255, 255, 255, 0.4) !important;
+}
+
 /* ============ EFECTOS DE GLOW/BRILLO MUY VISIBLE (+10%) ============ */
 /* Glow visible para tarjetas - AUMENTADO 10% */
 .glow-card {
