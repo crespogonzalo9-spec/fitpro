@@ -2,6 +2,46 @@
 
 Todas las notas de las versiones de FitPro se documentan en este archivo.
 
+## [1.0.13] - 2026-01-17
+
+### Añadido
+- **Sección dedicada de ESDs (Every Second/Minute Dedicated)**: Nueva página completa para gestión de entrenamientos ESD
+  - Menú propio en sidebar con icono Clock
+  - Acceso para roles: Sysadmin, Admin, Profesor
+  - CRUD completo: crear, editar, eliminar y asignar ESDs
+- **Estructura CrossFit para ESDs**: Los ESDs utilizan ejercicios de la base de datos
+  - Ejercicios referenciados por `exerciseId` (no texto libre)
+  - Selector de ejercicios desde la biblioteca existente
+  - Soporte para repeticiones, peso y notas por ejercicio
+  - Configuración de intervalos (30s a 5min) y rondas
+- **ESDs integrables en rutinas**: Los ESDs pueden agregarse como bloques dentro de rutinas
+  - Disponibles en la pestaña "WODs" al crear bloques
+  - Almacenados como WODs con `type: 'esd'`
+- **Interfaz minimalista para ESDs**: Diseño simple y limpio
+  - Sin badges ni decoraciones excesivas
+  - Formato de texto compacto con símbolos (×, •)
+  - Tarjetas simples con hover effects sutiles
+  - Espaciado optimizado y layout eficiente
+- **Librerías UI agregadas**:
+  - Material UI (@mui/material) v7.3.7
+  - Emotion (@emotion/react, @emotion/styled) para styled-components
+  - Framer Motion v12.26.2 para animaciones
+
+### Modificado
+- Ruta `/esds` agregada con protección de roles
+- Navegación actualizada en constants.js para todos los roles administrativos
+- Iconografía de Sidebar extendida con icono Clock
+
+### Técnico
+- Nuevo: `src/pages/ESDs.js` - Página completa de gestión de ESDs (675 líneas)
+- Modificado: `src/App.js` - Ruta y import de ESDs
+- Modificado: `src/utils/constants.js` - Entrada de menú para ESDs en todos los roles
+- Modificado: `src/components/Common/Sidebar.js` - Icono Clock en iconMap
+- Firebase: ESDs se almacenan en colección `wods` con campo `type: 'esd'`
+- Dependencias: +1486 paquetes agregados para Material UI y Framer Motion
+
+---
+
 ## [1.0.12] - 2025-01-16
 
 ### Añadido
