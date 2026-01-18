@@ -87,13 +87,13 @@ const RoutinesContent = () => {
       const membersQuery = query(collection(db, 'users'), where('gymId', '==', currentGym.id));
       const unsubMembers = onSnapshot(membersQuery, (snap) => {
         const allMembers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        // Filtrar solo alumnos
-        setMembers(allMembers.filter(m => m.roles?.includes('alumno') || !m.roles || m.roles.length === 0));
+        // Filtrar solo miembros
+        setMembers(allMembers.filter(m => m.roles?.includes('miembro') || !m.roles || m.roles.length === 0));
       });
       return () => { unsubRoutines(); unsubClasses(); unsubEx(); unsubWods(); unsubMembers(); };
     }
 
-    // Para alumnos: cargar inscripciones
+    // Para miembros: cargar inscripciones
     if (isOnlyAlumno() && userData?.id) {
       const enrollQuery = query(collection(db, 'enrollments'), where('userId', '==', userData.id));
       const unsubEnroll = onSnapshot(enrollQuery, (snap) => {
@@ -108,7 +108,7 @@ const RoutinesContent = () => {
   const getVisibleRoutines = () => {
     let visible = routines;
 
-    // Filtrar por visibilidad para alumnos
+    // Filtrar por visibilidad para miembros
     if (isOnlyAlumno()) {
       visible = routines.filter(r => {
         if (r.assignmentType === 'individual' && r.memberIds?.includes(userData.id)) return true;
@@ -261,7 +261,7 @@ const RoutinesContent = () => {
       {canEdit && members.length === 0 && (
         <Card className="bg-yellow-500/10 border-yellow-500/30">
           <p className="text-yellow-400 text-sm">
-            No hay alumnos en este gimnasio. Las rutinas individuales requieren alumnos registrados.
+            No hay miembros en este gimnasio. Las rutinas individuales requieren miembros registrados.
           </p>
         </Card>
       )}
@@ -454,9 +454,9 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
       alert('Seleccioná una clase'); 
       return; 
     }
-    if (form.assignmentType === 'individual' && form.memberIds.length === 0) { 
-      alert('Seleccioná al menos un alumno'); 
-      return; 
+    if (form.assignmentType === 'individual' && form.memberIds.length === 0) {
+      alert('Seleccioná al menos un miembro');
+      return;
     }
     setLoading(true);
     await onSave(form);
@@ -647,9 +647,9 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
           value={form.assignmentType} 
           onChange={e => setForm({ ...form, assignmentType: e.target.value, classId: '', memberIds: [] })} 
           options={[
-            { value: 'general', label: '🌐 General (todos la ven)' }, 
-            { value: 'class', label: '📅 Clase específica' }, 
-            { value: 'individual', label: '👤 Alumnos específicos' }
+            { value: 'general', label: '🌐 General (todos la ven)' },
+            { value: 'class', label: '📅 Clase específica' },
+            { value: 'individual', label: '👤 Miembros específicos' }
           ]} 
         />
 
@@ -669,7 +669,7 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-medium text-gray-300">
-                Alumnos ({form.memberIds.length} seleccionados)
+                Miembros ({form.memberIds.length} seleccionados)
               </label>
               <div className="flex gap-2">
                 <button 
@@ -693,14 +693,14 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
               type="text"
               value={memberSearch}
               onChange={e => setMemberSearch(e.target.value)}
-              placeholder="Buscar alumno..."
+              placeholder="Buscar miembro..."
               className="w-full px-3 py-2 mb-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary"
             />
             
             <div className="max-h-40 overflow-y-auto space-y-1 p-3 bg-gray-800/50 rounded-xl border border-gray-700">
               {filteredMembers.length === 0 ? (
                 <p className="text-sm text-gray-500 text-center py-4">
-                  {members.length === 0 ? 'No hay alumnos en el gimnasio' : 'No se encontraron alumnos'}
+                  {members.length === 0 ? 'No hay miembros en el gimnasio' : 'No se encontraron miembros'}
                 </p>
               ) : (
                 filteredMembers.map(m => (
