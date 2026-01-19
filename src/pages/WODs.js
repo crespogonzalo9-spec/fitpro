@@ -9,7 +9,7 @@ import { collection, query, where, onSnapshot, addDoc, updateDoc, deleteDoc, doc
 import { WOD_TYPES, BENCHMARK_WODS, ESD_INTERVALS } from '../utils/constants';
 
 const WODsContent = () => {
-  const { userData, canCreateRoutines, isOnlyAlumno } = useAuth();
+  const { userData, canCreateRoutines, isMiembro } = useAuth();
   const { currentGym } = useGym();
   const { success, error: showError } = useToast();
   
@@ -77,7 +77,7 @@ const WODsContent = () => {
     }
 
     // Para alumnos: cargar sus inscripciones
-    if (isOnlyAlumno() && userData?.id) {
+    if (isMiembro() && userData?.id) {
       const enrollQuery = query(collection(db, 'enrollments'), where('userId', '==', userData.id));
       const unsubEnroll = onSnapshot(enrollQuery, (snap) => {
         setMyEnrollments(snap.docs.map(d => d.data().classId));
@@ -86,13 +86,13 @@ const WODsContent = () => {
     }
 
     return () => { unsubWods(); unsubClasses(); };
-  }, [currentGym, userData, canEdit, isOnlyAlumno]);
+  }, [currentGym, userData, canEdit, isMiembro]);
 
   const getVisibleWods = () => {
     let visible = wods;
 
     // Filtrar por visibilidad para alumnos
-    if (isOnlyAlumno()) {
+    if (isMiembro()) {
       visible = wods.filter(w => {
         if (w.assignmentType === 'individual' && w.memberIds?.includes(userData.id)) return true;
         if (w.assignmentType === 'class' && myEnrollments.includes(w.classId)) return true;
