@@ -1,9 +1,22 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.19';
+export const CURRENT_VERSION = '1.0.20';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.20',
+    date: '2025-01-18',
+    title: 'Efecto neon ultra fino para máxima nitidez',
+    changes: [
+      'Reducción drástica de blur: de 5-20px a 2-7px para texto perfectamente nítido',
+      'Texto global con blur de 2-4px (antes 5-13px) - completamente legible',
+      'Sidebar con blur de 2-5px (antes 5-11px) - efecto sutil sin perder legibilidad',
+      'Elementos activos y hover con blur de 3-7px (antes 8-20px) - definidos y claros',
+      'Todos los textos de la app ahora son perfectamente legibles con efecto neon sutil',
+      'Panel de ESDs y modales completamente nítidos'
+    ]
+  },
   {
     version: '1.0.19',
     date: '2025-01-18',
