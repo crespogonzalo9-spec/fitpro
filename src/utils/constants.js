@@ -3,7 +3,7 @@ export const ROLES = [
   { id: 'sysadmin', name: 'Sysadmin', level: 4 },
   { id: 'admin', name: 'Administrador', level: 3 },
   { id: 'profesor', name: 'Profesor', level: 2 },
-  { id: 'alumno', name: 'Alumno', level: 1 }
+  { id: 'miembro', name: 'Miembro', level: 1 }
 ];
 
 // Tipos de ejercicios
@@ -66,6 +66,18 @@ export const ESD_INTERVALS = [
   { value: 300, label: '5 minutos', unit: 'seconds' }
 ];
 
+// Tipos de ESD
+export const ESD_TYPES = [
+  { id: 'emom', name: 'EMOM', description: 'Every Minute On the Minute' },
+  { id: 'e2mom', name: 'E2MOM', description: 'Every 2 Minutes On the Minute' },
+  { id: 'e3mom', name: 'E3MOM', description: 'Every 3 Minutes On the Minute' },
+  { id: 'e4mom', name: 'E4MOM', description: 'Every 4 Minutes On the Minute' },
+  { id: 'e30s', name: 'E30S', description: 'Every 30 Seconds' },
+  { id: 'e45s', name: 'E45S', description: 'Every 45 Seconds' },
+  { id: 'e90s', name: 'E90S', description: 'Every 90 Seconds' },
+  { id: 'custom', name: 'Personalizado', description: 'Intervalo personalizado' }
+];
+
 // Tipos de ranking
 export const RANKING_TYPES = [
   { id: 'exercise', name: 'Por Ejercicio', description: 'Ranking de un ejercicio específico' },
@@ -112,12 +124,13 @@ export const NAV_ROUTES = {
     { path: '/dashboard', name: 'Dashboard', icon: 'LayoutDashboard' },
     { path: '/gyms', name: 'Gimnasios', icon: 'Building2' },
     { path: '/users', name: 'Usuarios', icon: 'Users' },
-    { path: '/members', name: 'Alumnos', icon: 'Users' },
+    { path: '/members', name: 'Miembros', icon: 'Users' },
     { path: '/profesores', name: 'Profesores', icon: 'UserCheck' },
     { path: '/classes', name: 'Clases', icon: 'Calendar' },
     { path: '/exercises', name: 'Ejercicios', icon: 'Dumbbell' },
     { path: '/routines', name: 'Rutinas', icon: 'ClipboardList' },
     { path: '/wods', name: 'WODs', icon: 'Flame' },
+    { path: '/esds', name: 'ESDs', icon: 'Clock' },
     { path: '/calendar', name: 'Calendario', icon: 'CalendarDays' },
     { path: '/news', name: 'Novedades', icon: 'Megaphone' },
     { path: '/rankings', name: 'Rankings', icon: 'Trophy' },
@@ -128,12 +141,13 @@ export const NAV_ROUTES = {
   ],
   admin: [
     { path: '/dashboard', name: 'Dashboard', icon: 'LayoutDashboard' },
-    { path: '/members', name: 'Alumnos', icon: 'Users' },
+    { path: '/members', name: 'Miembros', icon: 'Users' },
     { path: '/profesores', name: 'Profesores', icon: 'UserCheck' },
     { path: '/classes', name: 'Clases', icon: 'Calendar' },
     { path: '/exercises', name: 'Ejercicios', icon: 'Dumbbell' },
     { path: '/routines', name: 'Rutinas', icon: 'ClipboardList' },
     { path: '/wods', name: 'WODs', icon: 'Flame' },
+    { path: '/esds', name: 'ESDs', icon: 'Clock' },
     { path: '/calendar', name: 'Calendario', icon: 'CalendarDays' },
     { path: '/news', name: 'Novedades', icon: 'Megaphone' },
     { path: '/rankings', name: 'Rankings', icon: 'Trophy' },
@@ -145,17 +159,18 @@ export const NAV_ROUTES = {
   profesor: [
     { path: '/dashboard', name: 'Dashboard', icon: 'LayoutDashboard' },
     { path: '/my-classes', name: 'Mis Clases', icon: 'Calendar' },
-    { path: '/members', name: 'Alumnos', icon: 'Users' },
+    { path: '/members', name: 'Miembros', icon: 'Users' },
     { path: '/exercises', name: 'Ejercicios', icon: 'Dumbbell' },
     { path: '/routines', name: 'Rutinas', icon: 'ClipboardList' },
     { path: '/wods', name: 'WODs', icon: 'Flame' },
+    { path: '/esds', name: 'ESDs', icon: 'Clock' },
     { path: '/calendar', name: 'Calendario', icon: 'CalendarDays' },
     { path: '/news', name: 'Novedades', icon: 'Megaphone' },
     { path: '/prs', name: 'Validar PRs', icon: 'CheckCircle' },
     { path: '/rankings', name: 'Rankings', icon: 'Trophy' },
     { path: '/gym-info', name: 'Info Gimnasio', icon: 'Building2' }
   ],
-  alumno: [
+  miembro: [
     { path: '/dashboard', name: 'Dashboard', icon: 'LayoutDashboard' },
     { path: '/schedule', name: 'Horarios', icon: 'Calendar' },
     { path: '/my-classes', name: 'Mis Clases', icon: 'CheckSquare' },
