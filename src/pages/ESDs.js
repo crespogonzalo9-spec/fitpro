@@ -343,6 +343,7 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
     esdType: 'emom',
     esdInterval: 60,
     esdRounds: 10,
+    timeLimit: '',
     exercises: [],
     assignmentType: 'general',
     classId: '',
@@ -359,6 +360,7 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
         esdType: esd.esdType || 'emom',
         esdInterval: esd.esdInterval || 60,
         esdRounds: esd.esdRounds || 10,
+        timeLimit: esd.timeLimit || '',
         exercises: esd.exercises || [],
         assignmentType: esd.assignmentType || 'general',
         classId: esd.classId || '',
@@ -371,6 +373,7 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
         esdType: 'emom',
         esdInterval: 60,
         esdRounds: 10,
+        timeLimit: '',
         exercises: [],
         assignmentType: 'general',
         classId: '',
@@ -443,30 +446,49 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
           required
         />
 
-        <Select
-          label="Tipo de ESD"
-          value={form.esdType}
-          onChange={e => setForm({ ...form, esdType: e.target.value })}
-          options={ESD_TYPES.map(t => ({ value: t.id, label: `${t.name} - ${t.description}` }))}
-        />
-
         <div className="grid grid-cols-2 gap-4">
           <Select
-            label="Intervalo"
-            value={form.esdInterval}
-            onChange={e => setForm({ ...form, esdInterval: parseInt(e.target.value) })}
-            options={ESD_INTERVALS.map(i => ({ value: i.value, label: i.label }))}
+            label="Tipo"
+            value={form.esdType}
+            onChange={e => setForm({ ...form, esdType: e.target.value })}
+            options={ESD_TYPES.map(t => ({ value: t.id, label: t.name }))}
           />
           <Input
-            label="Rondas"
+            label="Time Cap (min)"
             type="number"
-            min="1"
-            max="60"
-            value={form.esdRounds}
-            onChange={e => setForm({ ...form, esdRounds: parseInt(e.target.value) || 1 })}
-            placeholder="10"
+            value={form.timeLimit}
+            onChange={e => setForm({ ...form, timeLimit: e.target.value })}
+            placeholder="20"
           />
         </div>
+
+        {/* Configuración ESD */}
+        <Card className="bg-blue-500/10 border-blue-500/30">
+          <h4 className="text-sm font-medium text-blue-400 mb-3 flex items-center gap-2">
+            <Clock size={16} />
+            Configuración ESD
+          </h4>
+          <div className="grid grid-cols-2 gap-4">
+            <Select
+              label="Intervalo"
+              value={form.esdInterval}
+              onChange={e => setForm({ ...form, esdInterval: parseInt(e.target.value) })}
+              options={ESD_INTERVALS.map(i => ({ value: i.value, label: i.label }))}
+            />
+            <Input
+              label="Rondas"
+              type="number"
+              min="1"
+              max="60"
+              value={form.esdRounds}
+              onChange={e => setForm({ ...form, esdRounds: parseInt(e.target.value) || 1 })}
+              placeholder="10"
+            />
+          </div>
+          <p className="text-xs text-gray-400 mt-2">
+            Ejemplo: Intervalo de 1 minuto con 10 rondas = E1MOM 10
+          </p>
+        </Card>
 
         {/* Ejercicios */}
         <div>
@@ -631,6 +653,11 @@ const ViewESDModal = ({ isOpen, onClose, esd, getClassName, getMemberNames, memb
         <div className="flex items-center gap-2 flex-wrap">
           {esd.esdType && (
             <Badge className="bg-blue-500/20 text-blue-400">{getTypeName(esd.esdType)}</Badge>
+          )}
+          {esd.timeLimit && (
+            <Badge className="bg-gray-500/20 text-gray-400">
+              <Clock size={10} className="mr-1" />{esd.timeLimit}'
+            </Badge>
           )}
           <Badge className="bg-gray-500/20 text-gray-400">
             {formatInterval(esd.esdInterval || 60)} × {esd.esdRounds || 10} rondas
