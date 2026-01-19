@@ -1,9 +1,23 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.20';
+export const CURRENT_VERSION = '1.0.21';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.21',
+    date: '2025-01-18',
+    title: 'Sin efectos neon + Modal ESDs reestructurado',
+    changes: [
+      'Eliminados completamente todos los efectos neon de texto',
+      'Texto perfectamente nítido sin text-shadow en toda la app',
+      'Máxima legibilidad en sidebar, modales y contenido',
+      'Modal de ESDs con estructura idéntica a WODs',
+      'Selector de Tipo y Time Cap en la misma fila',
+      'Configuración ESD destacada en card azul con ícono',
+      'Interfaz limpia y profesional sin efectos visuales distractivos'
+    ]
+  },
   {
     version: '1.0.20',
     date: '2025-01-18',
