@@ -6,7 +6,7 @@ import { useGym } from '../contexts/GymContext';
 import { useToast } from '../contexts/ToastContext';
 import { db } from '../firebase';
 import { collection, query, where, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
-import { ESD_INTERVALS, ESD_TYPES } from '../utils/constants';
+import { ESD_INTERVALS, WOD_TYPES } from '../utils/constants';
 
 const ESDsContent = () => {
   const { userData, canCreateRoutines, isMiembro } = useAuth();
@@ -127,7 +127,7 @@ const ESDsContent = () => {
 
     // Filtro de tipo de ESD
     if (typeFilter !== 'all') {
-      visible = visible.filter(e => e.esdType === typeFilter);
+      visible = visible.filter(e => e.type === typeFilter);
     }
 
     // Filtro de asignación
@@ -190,7 +190,7 @@ const ESDsContent = () => {
   };
 
   const getTypeName = (typeId) => {
-    return ESD_TYPES.find(t => t.id === typeId)?.name || 'Personalizado';
+    return WOD_TYPES.find(t => t.id === typeId)?.name || typeId;
   };
 
   const visibleEsds = getVisibleEsds();
@@ -221,7 +221,7 @@ const ESDsContent = () => {
           onChange={e => setTypeFilter(e.target.value)}
           options={[
             { value: 'all', label: 'Todos los tipos' },
-            ...ESD_TYPES.map(t => ({ value: t.id, label: t.name }))
+            ...WOD_TYPES.map(t => ({ value: t.id, label: t.name }))
           ]}
           className="sm:w-48"
         />
@@ -266,14 +266,19 @@ const ESDsContent = () => {
                 <div className="flex-1">
                   <h3 className="font-medium text-base mb-1">{esd.name}</h3>
                   <div className="flex items-center gap-2 flex-wrap mb-1">
-                    {esd.esdType && (
-                      <Badge className="bg-blue-500/20 text-blue-400">{getTypeName(esd.esdType)}</Badge>
+                    {esd.type && (
+                      <Badge className="bg-orange-500/20 text-orange-400">{getTypeName(esd.type)}</Badge>
+                    )}
+                    {esd.type === 'esd' && esd.esdInterval && esd.esdRounds && (
+                      <Badge className="bg-blue-500/20 text-blue-400">
+                        <Clock size={10} className="mr-1" />
+                        {formatInterval(esd.esdInterval)} × {esd.esdRounds}
+                      </Badge>
                     )}
                   </div>
                   <p className="text-sm text-gray-400">
-                    {formatInterval(esd.esdInterval || 60)} × {esd.esdRounds || 10}
                     {esd.exercises && esd.exercises.length > 0 && (
-                      <span className="ml-2">• {esd.exercises.length} ejercicios</span>
+                      <span>{esd.exercises.length} ejercicios</span>
                     )}
                   </p>
                 </div>
@@ -340,7 +345,7 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
   const [form, setForm] = useState({
     name: '',
     description: '',
-    esdType: 'emom',
+    type: 'esd',
     esdInterval: 60,
     esdRounds: 10,
     timeLimit: '',
@@ -357,7 +362,7 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
       setForm({
         name: esd.name || '',
         description: esd.description || '',
-        esdType: esd.esdType || 'emom',
+        type: esd.type || 'esd',
         esdInterval: esd.esdInterval || 60,
         esdRounds: esd.esdRounds || 10,
         timeLimit: esd.timeLimit || '',
@@ -370,7 +375,7 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
       setForm({
         name: '',
         description: '',
-        esdType: 'emom',
+        type: 'esd',
         esdInterval: 60,
         esdRounds: 10,
         timeLimit: '',
@@ -449,9 +454,9 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
         <div className="grid grid-cols-2 gap-4">
           <Select
             label="Tipo"
-            value={form.esdType}
-            onChange={e => setForm({ ...form, esdType: e.target.value })}
-            options={ESD_TYPES.map(t => ({ value: t.id, label: t.name }))}
+            value={form.type}
+            onChange={e => setForm({ ...form, type: e.target.value })}
+            options={WOD_TYPES.map(t => ({ value: t.id, label: t.name }))}
           />
           <Input
             label="Time Cap (min)"
@@ -462,33 +467,35 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
           />
         </div>
 
-        {/* Configuración ESD */}
-        <Card className="bg-blue-500/10 border-blue-500/30">
-          <h4 className="text-sm font-medium text-blue-400 mb-3 flex items-center gap-2">
-            <Clock size={16} />
-            Configuración ESD
-          </h4>
-          <div className="grid grid-cols-2 gap-4">
-            <Select
-              label="Intervalo"
-              value={form.esdInterval}
-              onChange={e => setForm({ ...form, esdInterval: parseInt(e.target.value) })}
-              options={ESD_INTERVALS.map(i => ({ value: i.value, label: i.label }))}
-            />
-            <Input
-              label="Rondas"
-              type="number"
-              min="1"
-              max="60"
-              value={form.esdRounds}
-              onChange={e => setForm({ ...form, esdRounds: parseInt(e.target.value) || 1 })}
-              placeholder="10"
-            />
-          </div>
-          <p className="text-xs text-gray-400 mt-2">
-            Ejemplo: Intervalo de 1 minuto con 10 rondas = E1MOM 10
-          </p>
-        </Card>
+        {/* Configuración ESD - Solo visible cuando type === 'esd' */}
+        {form.type === 'esd' && (
+          <Card className="bg-blue-500/10 border-blue-500/30">
+            <h4 className="text-sm font-medium text-blue-400 mb-3 flex items-center gap-2">
+              <Clock size={16} />
+              Configuración ESD
+            </h4>
+            <div className="grid grid-cols-2 gap-4">
+              <Select
+                label="Intervalo"
+                value={form.esdInterval}
+                onChange={e => setForm({ ...form, esdInterval: parseInt(e.target.value) })}
+                options={ESD_INTERVALS.map(i => ({ value: i.value, label: i.label }))}
+              />
+              <Input
+                label="Rondas"
+                type="number"
+                min="1"
+                max="60"
+                value={form.esdRounds}
+                onChange={e => setForm({ ...form, esdRounds: parseInt(e.target.value) || 1 })}
+                placeholder="10"
+              />
+            </div>
+            <p className="text-xs text-gray-400 mt-2">
+              Ejemplo: Intervalo de 1 minuto con 10 rondas = E1MOM 10
+            </p>
+          </Card>
+        )}
 
         <Textarea
           label="Descripción / Movimientos *"
@@ -656,24 +663,27 @@ const ViewESDModal = ({ isOpen, onClose, esd, getClassName, getMemberNames, memb
   };
 
   const getTypeName = (typeId) => {
-    return ESD_TYPES.find(t => t.id === typeId)?.name || 'Personalizado';
+    return WOD_TYPES.find(t => t.id === typeId)?.name || typeId;
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={esd.name} size="md">
       <div className="space-y-4">
         <div className="flex items-center gap-2 flex-wrap">
-          {esd.esdType && (
-            <Badge className="bg-blue-500/20 text-blue-400">{getTypeName(esd.esdType)}</Badge>
+          {esd.type && (
+            <Badge className="bg-orange-500/20 text-orange-400">{getTypeName(esd.type)}</Badge>
           )}
           {esd.timeLimit && (
             <Badge className="bg-gray-500/20 text-gray-400">
               <Clock size={10} className="mr-1" />{esd.timeLimit}'
             </Badge>
           )}
-          <Badge className="bg-gray-500/20 text-gray-400">
-            {formatInterval(esd.esdInterval || 60)} × {esd.esdRounds || 10} rondas
-          </Badge>
+          {esd.type === 'esd' && esd.esdInterval && esd.esdRounds && (
+            <Badge className="bg-blue-500/20 text-blue-400">
+              <Clock size={10} className="mr-1" />
+              {formatInterval(esd.esdInterval)} × {esd.esdRounds} rondas
+            </Badge>
+          )}
         </div>
 
         {esd.description && (
