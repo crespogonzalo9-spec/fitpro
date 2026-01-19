@@ -66,6 +66,18 @@ export const ESD_INTERVALS = [
   { value: 300, label: '5 minutos', unit: 'seconds' }
 ];
 
+// Tipos de ESD
+export const ESD_TYPES = [
+  { id: 'emom', name: 'EMOM', description: 'Every Minute On the Minute' },
+  { id: 'e2mom', name: 'E2MOM', description: 'Every 2 Minutes On the Minute' },
+  { id: 'e3mom', name: 'E3MOM', description: 'Every 3 Minutes On the Minute' },
+  { id: 'e4mom', name: 'E4MOM', description: 'Every 4 Minutes On the Minute' },
+  { id: 'e30s', name: 'E30S', description: 'Every 30 Seconds' },
+  { id: 'e45s', name: 'E45S', description: 'Every 45 Seconds' },
+  { id: 'e90s', name: 'E90S', description: 'Every 90 Seconds' },
+  { id: 'custom', name: 'Personalizado', description: 'Intervalo personalizado' }
+];
+
 // Tipos de ranking
 export const RANKING_TYPES = [
   { id: 'exercise', name: 'Por Ejercicio', description: 'Ranking de un ejercicio específico' },

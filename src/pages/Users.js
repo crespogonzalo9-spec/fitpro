@@ -214,37 +214,39 @@ const UsersPage = () => {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredUsers.map(user => (
-            <Card key={user.id}>
+            <Card key={user.id} className="cursor-pointer hover:border-primary/50 transition-all">
               <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-1 min-w-0">
                   <Avatar name={user.name} size="lg" />
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-semibold">{user.name}</h3>
-                      {user.roles?.includes('sysadmin') && <Crown size={16} className="text-yellow-500" />}
+                      <h3 className="font-semibold truncate">{user.name}</h3>
+                      {user.roles?.includes('sysadmin') && <Crown size={16} className="text-yellow-500 flex-shrink-0" />}
                     </div>
-                    <p className="text-sm text-gray-400">{user.email}</p>
                     <div className="mt-1">
                       {getRoleBadges(user.roles)}
                     </div>
                     {user.id === userData.id && <Badge className="mt-1 bg-blue-500/20 text-blue-400">Vos</Badge>}
                   </div>
                 </div>
-                <Dropdown trigger={<button className="p-2 hover:bg-gray-700 rounded-lg"><MoreVertical size={18} /></button>}>
-                  <DropdownItem icon={Edit} onClick={() => { setSelected(user); setShowModal(true); }}>Editar</DropdownItem>
+                <Dropdown trigger={<button className="p-2 hover:bg-gray-700 rounded-lg flex-shrink-0" onClick={(e) => e.stopPropagation()}><MoreVertical size={18} /></button>}>
+                  <DropdownItem icon={Edit} onClick={(e) => { e.stopPropagation(); setSelected(user); setShowModal(true); }}>Editar</DropdownItem>
                   {user.id !== userData.id && (
-                    <DropdownItem icon={Trash2} danger onClick={() => { setSelected(user); setShowDelete(true); }}>Eliminar</DropdownItem>
+                    <DropdownItem icon={Trash2} danger onClick={(e) => { e.stopPropagation(); setSelected(user); setShowDelete(true); }}>Eliminar</DropdownItem>
                   )}
                 </Dropdown>
               </div>
-              
+
               <div className="mt-4 pt-3 border-t border-gray-700 text-sm text-gray-400">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 mb-2">
                   <Building2 size={14} />
                   <span>{getGymName(user.gymId)}</span>
                 </div>
-                <p className="text-xs mt-1">Registrado: {formatDate(user.createdAt)}</p>
+                <p className="text-xs mb-1">Registrado: {formatDate(user.createdAt)}</p>
                 {!user.isActive && <Badge className="mt-1 bg-red-500/20 text-red-400">Inactivo</Badge>}
+                <p className="text-xs text-gray-400 truncate mt-2" title={user.email}>
+                  {user.email}
+                </p>
               </div>
             </Card>
           ))}

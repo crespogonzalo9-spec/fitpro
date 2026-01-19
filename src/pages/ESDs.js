@@ -6,7 +6,7 @@ import { useGym } from '../contexts/GymContext';
 import { useToast } from '../contexts/ToastContext';
 import { db } from '../firebase';
 import { collection, query, where, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
-import { ESD_INTERVALS } from '../utils/constants';
+import { ESD_INTERVALS, ESD_TYPES } from '../utils/constants';
 
 const ESDsContent = () => {
   const { userData, canCreateRoutines, isMiembro } = useAuth();
@@ -21,6 +21,7 @@ const ESDsContent = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
 
   const [showModal, setShowModal] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
@@ -39,6 +40,7 @@ const ESDsContent = () => {
     setLoading(true);
     setSearch('');
     setFilter('all');
+    setTypeFilter('all');
   }, [currentGym?.id]);
 
   useEffect(() => {
@@ -123,6 +125,11 @@ const ESDsContent = () => {
       );
     }
 
+    // Filtro de tipo de ESD
+    if (typeFilter !== 'all') {
+      visible = visible.filter(e => e.esdType === typeFilter);
+    }
+
     // Filtro de asignación
     if (filter !== 'all') {
       if (filter === 'general') visible = visible.filter(e => !e.assignmentType || e.assignmentType === 'general');
@@ -182,6 +189,10 @@ const ESDsContent = () => {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')} minutos`;
   };
 
+  const getTypeName = (typeId) => {
+    return ESD_TYPES.find(t => t.id === typeId)?.name || 'Personalizado';
+  };
+
   const visibleEsds = getVisibleEsds();
 
   if (loading) return <LoadingState />;
@@ -206,13 +217,22 @@ const ESDsContent = () => {
       <div className="flex flex-col sm:flex-row gap-3">
         <SearchInput value={search} onChange={setSearch} placeholder="Buscar ESDs..." className="flex-1" />
         <Select
+          value={typeFilter}
+          onChange={e => setTypeFilter(e.target.value)}
+          options={[
+            { value: 'all', label: 'Todos los tipos' },
+            ...ESD_TYPES.map(t => ({ value: t.id, label: t.name }))
+          ]}
+          className="sm:w-48"
+        />
+        <Select
           value={filter}
           onChange={e => setFilter(e.target.value)}
           options={[
-            { value: 'all', label: 'Todos' },
-            { value: 'general', label: 'Generales' },
-            { value: 'class', label: 'Por Clase' },
-            { value: 'individual', label: 'Individuales' }
+            { value: 'all', label: 'Todas las asignaciones' },
+            { value: 'general', label: '🌐 Generales' },
+            { value: 'class', label: '📅 Por Clase' },
+            { value: 'individual', label: '👤 Individuales' }
           ]}
           className="sm:w-48"
         />
@@ -245,6 +265,11 @@ const ESDsContent = () => {
               <div className="flex justify-between items-start mb-3">
                 <div className="flex-1">
                   <h3 className="font-medium text-base mb-1">{esd.name}</h3>
+                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                    {esd.esdType && (
+                      <Badge className="bg-blue-500/20 text-blue-400">{getTypeName(esd.esdType)}</Badge>
+                    )}
+                  </div>
                   <p className="text-sm text-gray-400">
                     {formatInterval(esd.esdInterval || 60)} × {esd.esdRounds || 10}
                     {esd.exercises && esd.exercises.length > 0 && (
@@ -315,6 +340,7 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
   const [form, setForm] = useState({
     name: '',
     description: '',
+    esdType: 'emom',
     esdInterval: 60,
     esdRounds: 10,
     exercises: [],
@@ -330,6 +356,7 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
       setForm({
         name: esd.name || '',
         description: esd.description || '',
+        esdType: esd.esdType || 'emom',
         esdInterval: esd.esdInterval || 60,
         esdRounds: esd.esdRounds || 10,
         exercises: esd.exercises || [],
@@ -341,6 +368,7 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
       setForm({
         name: '',
         description: '',
+        esdType: 'emom',
         esdInterval: 60,
         esdRounds: 10,
         exercises: [],
@@ -413,6 +441,13 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
           onChange={e => setForm({ ...form, name: e.target.value })}
           placeholder="E.g. E1MOM 10, E45S 12, etc."
           required
+        />
+
+        <Select
+          label="Tipo de ESD"
+          value={form.esdType}
+          onChange={e => setForm({ ...form, esdType: e.target.value })}
+          options={ESD_TYPES.map(t => ({ value: t.id, label: `${t.name} - ${t.description}` }))}
         />
 
         <div className="grid grid-cols-2 gap-4">
@@ -586,11 +621,20 @@ const ViewESDModal = ({ isOpen, onClose, esd, getClassName, getMemberNames, memb
     return exercise?.name || 'Ejercicio';
   };
 
+  const getTypeName = (typeId) => {
+    return ESD_TYPES.find(t => t.id === typeId)?.name || 'Personalizado';
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={esd.name} size="md">
       <div className="space-y-4">
-        <div className="text-sm text-gray-400">
-          {formatInterval(esd.esdInterval || 60)} × {esd.esdRounds || 10} rondas
+        <div className="flex items-center gap-2 flex-wrap">
+          {esd.esdType && (
+            <Badge className="bg-blue-500/20 text-blue-400">{getTypeName(esd.esdType)}</Badge>
+          )}
+          <Badge className="bg-gray-500/20 text-gray-400">
+            {formatInterval(esd.esdInterval || 60)} × {esd.esdRounds || 10} rondas
+          </Badge>
         </div>
 
         {/* Ejercicios */}
