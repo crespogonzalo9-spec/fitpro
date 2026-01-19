@@ -1,9 +1,23 @@
 // Sistema de changelog con versiones
 // Versión actual de la aplicación
-export const CURRENT_VERSION = '1.0.18';
+export const CURRENT_VERSION = '1.0.19';
 
 // Historial de versiones (más reciente primero)
 export const CHANGELOG = [
+  {
+    version: '1.0.19',
+    date: '2025-01-18',
+    title: 'Mejoras UI Usuarios + Sistema de tipos para ESDs',
+    changes: [
+      'Panel de Usuarios con mismo estilo que panel de Miembros',
+      'Email movido al final de tarjetas con tooltip en panel de Usuarios',
+      'Tarjetas de usuarios con mejor jerarquía visual y efecto hover',
+      'Sistema de tipos para ESDs: EMOM, E2MOM, E3MOM, E4MOM, E30S, E45S, E90S, Personalizado',
+      'Filtro por tipo de ESD en la lista principal',
+      'Badge de tipo visible en tarjetas de ESDs',
+      'ESDs ahora tienen la misma estructura de categorización que los WODs'
+    ]
+  },
   {
     version: '1.0.18',
     date: '2025-01-18',
