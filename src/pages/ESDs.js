@@ -490,6 +490,18 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
           </p>
         </Card>
 
+        <Textarea
+          label="Descripción / Movimientos *"
+          value={form.description}
+          onChange={e => setForm({ ...form, description: e.target.value })}
+          rows={5}
+          placeholder="Ejemplo:
+5 Thrusters (43/30 kg)
+10 Pull-ups
+15 Air Squats"
+          required
+        />
+
         {/* Ejercicios */}
         <div>
           <div className="flex items-center justify-between mb-2">
@@ -664,6 +676,12 @@ const ViewESDModal = ({ isOpen, onClose, esd, getClassName, getMemberNames, memb
           </Badge>
         </div>
 
+        {esd.description && (
+          <div className="bg-gray-800 rounded-xl p-4 whitespace-pre-wrap font-mono text-sm">
+            {esd.description}
+          </div>
+        )}
+
         {/* Ejercicios */}
         {esd.exercises && esd.exercises.length > 0 && (
           <div>
@@ -681,13 +699,6 @@ const ViewESDModal = ({ isOpen, onClose, esd, getClassName, getMemberNames, memb
                 </div>
               ))}
             </div>
-          </div>
-        )}
-
-        {esd.description && (
-          <div>
-            <h4 className="text-sm font-medium mb-2">Notas</h4>
-            <p className="text-sm text-gray-400">{esd.description}</p>
           </div>
         )}
 
