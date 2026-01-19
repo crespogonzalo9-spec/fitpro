@@ -9,7 +9,7 @@ import { db } from '../firebase';
 import { collection, query, where, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
 
 const RoutinesContent = () => {
-  const { userData, canCreateRoutines, isOnlyAlumno } = useAuth();
+  const { userData, canCreateRoutines, isMiembro } = useAuth();
   const { currentGym } = useGym();
   const { success, error: showError } = useToast();
   
@@ -94,7 +94,7 @@ const RoutinesContent = () => {
     }
 
     // Para miembros: cargar inscripciones
-    if (isOnlyAlumno() && userData?.id) {
+    if (isMiembro() && userData?.id) {
       const enrollQuery = query(collection(db, 'enrollments'), where('userId', '==', userData.id));
       const unsubEnroll = onSnapshot(enrollQuery, (snap) => {
         setMyEnrollments(snap.docs.map(d => d.data().classId));
@@ -103,13 +103,13 @@ const RoutinesContent = () => {
     }
 
     return () => { unsubRoutines(); unsubClasses(); unsubEx(); unsubWods(); };
-  }, [currentGym, userData, canEdit, isOnlyAlumno]);
+  }, [currentGym, userData, canEdit, isMiembro]);
 
   const getVisibleRoutines = () => {
     let visible = routines;
 
     // Filtrar por visibilidad para miembros
-    if (isOnlyAlumno()) {
+    if (isMiembro()) {
       visible = routines.filter(r => {
         if (r.assignmentType === 'individual' && r.memberIds?.includes(userData.id)) return true;
         if (r.assignmentType === 'class' && myEnrollments.includes(r.classId)) return true;
