@@ -291,12 +291,15 @@ export const Dropdown = ({ trigger, children }) => {
       setIsOpen(false);
     };
 
-    // Usar capture phase para asegurar que se ejecute primero
-    document.addEventListener('mousedown', handleClickOutside, true);
-    document.addEventListener('touchstart', handleClickOutside, true);
+    // Pequeño delay para evitar que el click que abrió el dropdown lo cierre inmediatamente
+    const timer = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside, true);
+      document.addEventListener('touchstart', handleClickOutside, true);
+    }, 10);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside, true);
+      clearTimeout(timer);
+      document.removeEventListener('click', handleClickOutside, true);
       document.removeEventListener('touchstart', handleClickOutside, true);
     };
   }, [isOpen]);
@@ -364,7 +367,6 @@ export const Dropdown = ({ trigger, children }) => {
     <>
       <div
         ref={triggerRef}
-        onMouseDown={handleTriggerClick}
         onClick={handleTriggerClick}
         style={{ display: 'inline-block' }}
       >
