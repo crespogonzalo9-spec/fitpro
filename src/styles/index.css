@@ -1000,89 +1000,137 @@ html.theme-neon.dark [class*="bg-gray-800"] {
 /* Preview con Industrial */
 .theme-industrial .bg-card,
 #theme-preview-container.theme-industrial .bg-card {
-  background: linear-gradient(145deg, rgba(45, 55, 65, 0.95), rgba(35, 45, 55, 0.98)) !important;
-  border: 2px solid rgba(80, 90, 100, 0.6) !important;
+  background:
+    radial-gradient(circle at 8px 8px, rgba(70, 80, 90, 0.4) 2px, transparent 2px),
+    radial-gradient(circle at calc(100% - 8px) 8px, rgba(70, 80, 90, 0.4) 2px, transparent 2px),
+    radial-gradient(circle at 8px calc(100% - 8px), rgba(70, 80, 90, 0.4) 2px, transparent 2px),
+    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(70, 80, 90, 0.4) 2px, transparent 2px),
+    repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.05) 1px, rgba(0,0,0,0.05) 2px),
+    linear-gradient(145deg, rgba(50, 58, 66, 0.95), rgba(38, 45, 52, 0.98)) !important;
+  border: 3px solid rgba(85, 95, 105, 0.7) !important;
   box-shadow:
-    4px 4px 0px rgba(0, 0, 0, 0.4),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.05) !important;
+    5px 5px 0px rgba(0, 0, 0, 0.5),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.08),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
 }
 
 .theme-industrial .btn-primary,
 #theme-preview-container.theme-industrial .btn-primary {
-  background: linear-gradient(145deg, rgba(var(--preview-primary), 0.9), rgba(var(--preview-primary), 0.7)) !important;
-  border: 2px solid rgba(var(--preview-primary), 0.6) !important;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px),
+    linear-gradient(145deg, rgba(var(--preview-primary), 0.95), rgba(var(--preview-primary), 0.75)) !important;
+  border: 3px solid rgba(var(--preview-primary), 0.7) !important;
   box-shadow:
-    3px 3px 0px rgba(0, 0, 0, 0.3),
-    inset -1px -1px 0px rgba(0, 0, 0, 0.2) !important;
+    4px 4px 0px rgba(0, 0, 0, 0.4),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.15),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 700;
+  letter-spacing: 1px;
+  font-weight: 800;
 }
 
 /* ========== TEMA INDUSTRIAL ========== */
-/* Estética de gimnasio: metal, concreto, brutalismo sutil */
+/* Estética de gimnasio: hierro, ladrillo, madera */
 
+/* Fondo principal - Textura de concreto */
+html.theme-industrial body,
+html.theme-industrial.dark body {
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px),
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px),
+    linear-gradient(180deg, #1a1f26 0%, #0d1117 100%) !important;
+  min-height: 100vh;
+}
+
+/* Cards - Textura de hierro con remaches */
 html.theme-industrial .bg-card {
-  background: linear-gradient(145deg, rgba(45, 55, 65, 0.95), rgba(35, 45, 55, 0.98)) !important;
-  border: 2px solid rgba(80, 90, 100, 0.6) !important;
+  background:
+    radial-gradient(circle at 8px 8px, rgba(70, 80, 90, 0.4) 2px, transparent 2px),
+    radial-gradient(circle at calc(100% - 8px) 8px, rgba(70, 80, 90, 0.4) 2px, transparent 2px),
+    radial-gradient(circle at 8px calc(100% - 8px), rgba(70, 80, 90, 0.4) 2px, transparent 2px),
+    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(70, 80, 90, 0.4) 2px, transparent 2px),
+    repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.05) 1px, rgba(0,0,0,0.05) 2px),
+    linear-gradient(145deg, rgba(50, 58, 66, 0.95), rgba(38, 45, 52, 0.98)) !important;
+  border: 3px solid rgba(85, 95, 105, 0.7) !important;
   box-shadow:
-    4px 4px 0px rgba(0, 0, 0, 0.4),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.05) !important;
+    5px 5px 0px rgba(0, 0, 0, 0.5),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.08),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 html.theme-industrial.dark .bg-card {
-  background: linear-gradient(145deg, rgba(35, 42, 50, 0.98), rgba(25, 32, 40, 1)) !important;
-  border: 2px solid rgba(70, 80, 90, 0.7) !important;
+  background:
+    radial-gradient(circle at 8px 8px, rgba(60, 70, 80, 0.5) 2px, transparent 2px),
+    radial-gradient(circle at calc(100% - 8px) 8px, rgba(60, 70, 80, 0.5) 2px, transparent 2px),
+    radial-gradient(circle at 8px calc(100% - 8px), rgba(60, 70, 80, 0.5) 2px, transparent 2px),
+    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(60, 70, 80, 0.5) 2px, transparent 2px),
+    repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.08) 1px, rgba(0,0,0,0.08) 2px),
+    linear-gradient(145deg, rgba(38, 44, 50, 0.98), rgba(28, 34, 40, 1)) !important;
+  border: 3px solid rgba(75, 85, 95, 0.8) !important;
   box-shadow:
-    4px 4px 0px rgba(0, 0, 0, 0.5),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.03) !important;
+    5px 5px 0px rgba(0, 0, 0, 0.6),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.05),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.4) !important;
 }
 
 html.theme-industrial .bg-card:hover {
-  transform: translate(-1px, -1px);
+  transform: translate(-2px, -2px);
   box-shadow:
-    5px 5px 0px rgba(0, 0, 0, 0.5),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(var(--color-primary), 0.5) !important;
+    7px 7px 0px rgba(0, 0, 0, 0.6),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.12),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.25) !important;
+  border-color: rgba(var(--color-primary), 0.6) !important;
 }
 
 html.theme-industrial.dark .bg-card:hover {
   box-shadow:
-    5px 5px 0px rgba(0, 0, 0, 0.6),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.05) !important;
+    7px 7px 0px rgba(0, 0, 0, 0.7),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.08),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.35) !important;
 }
 
+/* Botones - Textura de hierro pesado */
 html.theme-industrial .btn-primary {
-  background: linear-gradient(145deg, rgba(var(--color-primary), 0.9), rgba(var(--color-primary), 0.7)) !important;
-  border: 2px solid rgba(var(--color-primary), 0.6) !important;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px),
+    linear-gradient(145deg, rgba(var(--color-primary), 0.95), rgba(var(--color-primary), 0.75)) !important;
+  border: 3px solid rgba(var(--color-primary), 0.7) !important;
   box-shadow:
-    3px 3px 0px rgba(0, 0, 0, 0.3),
-    inset -1px -1px 0px rgba(0, 0, 0, 0.2) !important;
+    4px 4px 0px rgba(0, 0, 0, 0.4),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.15),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 700;
+  letter-spacing: 1px;
+  font-weight: 800;
+  position: relative;
 }
 
 html.theme-industrial.dark .btn-primary {
-  background: linear-gradient(145deg, rgba(var(--color-primary), 0.85), rgba(var(--color-primary), 0.65)) !important;
-  border: 2px solid rgba(var(--color-primary), 0.7) !important;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px),
+    linear-gradient(145deg, rgba(var(--color-primary), 0.9), rgba(var(--color-primary), 0.7)) !important;
+  border: 3px solid rgba(var(--color-primary), 0.8) !important;
   box-shadow:
-    3px 3px 0px rgba(0, 0, 0, 0.4),
-    inset -1px -1px 0px rgba(0, 0, 0, 0.3) !important;
+    4px 4px 0px rgba(0, 0, 0, 0.5),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.12),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.4) !important;
 }
 
 html.theme-industrial .btn-primary:hover {
-  transform: translate(-1px, -1px);
+  transform: translate(-2px, -2px);
   box-shadow:
-    4px 4px 0px rgba(0, 0, 0, 0.4),
-    inset -1px -1px 0px rgba(0, 0, 0, 0.15) !important;
+    6px 6px 0px rgba(0, 0, 0, 0.5),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.2),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.25) !important;
 }
 
 html.theme-industrial.dark .btn-primary:hover {
   box-shadow:
-    4px 4px 0px rgba(0, 0, 0, 0.5),
-    inset -1px -1px 0px rgba(0, 0, 0, 0.25) !important;
+    6px 6px 0px rgba(0, 0, 0, 0.6),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.15),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
 }
 
 /* Tipografía más robusta para industrial */
@@ -1105,77 +1153,153 @@ html.theme-industrial .text-primary {
   text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
 }
 
-/* Sidebar industrial */
+/* Sidebar - Textura de madera oscura con vetas */
 html.theme-industrial .bg-sidebar {
-  background: linear-gradient(180deg, rgba(40, 48, 56, 0.98), rgba(30, 38, 46, 1)) !important;
-  border-right: 3px solid rgba(60, 70, 80, 0.8) !important;
-  box-shadow: inset -2px 0 4px rgba(0, 0, 0, 0.3);
+  background:
+    repeating-linear-gradient(180deg,
+      transparent, transparent 3px,
+      rgba(0, 0, 0, 0.08) 3px, rgba(0, 0, 0, 0.08) 4px,
+      transparent 4px, transparent 12px,
+      rgba(0, 0, 0, 0.05) 12px, rgba(0, 0, 0, 0.05) 13px
+    ),
+    repeating-linear-gradient(90deg,
+      transparent, transparent 80px,
+      rgba(0, 0, 0, 0.03) 80px, rgba(0, 0, 0, 0.03) 82px
+    ),
+    linear-gradient(180deg, rgba(42, 38, 34, 0.98), rgba(32, 28, 24, 1)) !important;
+  border-right: 4px solid rgba(70, 60, 50, 0.9) !important;
+  box-shadow:
+    inset -3px 0 6px rgba(0, 0, 0, 0.4),
+    3px 0 8px rgba(0, 0, 0, 0.3);
 }
 
 html.theme-industrial.dark .bg-sidebar {
-  background: linear-gradient(180deg, rgba(30, 36, 42, 1), rgba(20, 26, 32, 1)) !important;
-  border-right: 3px solid rgba(50, 60, 70, 0.9) !important;
-  box-shadow: inset -2px 0 4px rgba(0, 0, 0, 0.4);
+  background:
+    repeating-linear-gradient(180deg,
+      transparent, transparent 3px,
+      rgba(0, 0, 0, 0.12) 3px, rgba(0, 0, 0, 0.12) 4px,
+      transparent 4px, transparent 12px,
+      rgba(0, 0, 0, 0.08) 12px, rgba(0, 0, 0, 0.08) 13px
+    ),
+    repeating-linear-gradient(90deg,
+      transparent, transparent 80px,
+      rgba(0, 0, 0, 0.05) 80px, rgba(0, 0, 0, 0.05) 82px
+    ),
+    linear-gradient(180deg, rgba(28, 26, 24, 1), rgba(18, 16, 14, 1)) !important;
+  border-right: 4px solid rgba(60, 50, 40, 1) !important;
+  box-shadow:
+    inset -3px 0 6px rgba(0, 0, 0, 0.5),
+    3px 0 8px rgba(0, 0, 0, 0.4);
 }
 
 html.theme-industrial .nav-link-active {
-  background: linear-gradient(90deg, rgba(var(--color-primary), 0.2), transparent) !important;
+  background:
+    linear-gradient(90deg, rgba(var(--color-primary), 0.25), rgba(var(--color-primary), 0.08), transparent) !important;
   color: rgba(var(--color-primary), 1);
-  border-left: 4px solid rgba(var(--color-primary), 1) !important;
-  font-weight: 700;
+  border-left: 5px solid rgba(var(--color-primary), 1) !important;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: inset 3px 0 6px rgba(var(--color-primary), 0.15);
+  letter-spacing: 1px;
+  box-shadow:
+    inset 4px 0 8px rgba(var(--color-primary), 0.2),
+    inset 0 0 12px rgba(var(--color-primary), 0.1);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 html.theme-industrial .nav-link:hover {
-  background: rgba(255, 255, 255, 0.03) !important;
-  border-left: 2px solid rgba(var(--color-primary), 0.3);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05), transparent) !important;
+  border-left: 3px solid rgba(var(--color-primary), 0.4);
+  box-shadow: inset 2px 0 4px rgba(255, 255, 255, 0.02);
 }
 
-/* Inputs industriales */
+/* Inputs - Hierro hundido */
 html.theme-industrial .bg-input,
 html.theme-industrial input,
 html.theme-industrial select,
 html.theme-industrial textarea {
-  background: rgba(25, 32, 40, 0.9) !important;
-  border: 2px solid rgba(70, 80, 90, 0.6) !important;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.03) 1px, rgba(0,0,0,0.03) 2px),
+    rgba(28, 35, 42, 0.95) !important;
+  border: 3px solid rgba(75, 85, 95, 0.7) !important;
   box-shadow:
-    inset 2px 2px 4px rgba(0, 0, 0, 0.4),
-    1px 1px 0px rgba(255, 255, 255, 0.03) !important;
+    inset 3px 3px 6px rgba(0, 0, 0, 0.5),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.03),
+    1px 1px 0px rgba(255, 255, 255, 0.05) !important;
 }
 
 html.theme-industrial .bg-input:focus,
 html.theme-industrial input:focus,
 html.theme-industrial select:focus,
 html.theme-industrial textarea:focus {
-  border-color: rgba(var(--color-primary), 0.6) !important;
+  border-color: rgba(var(--color-primary), 0.8) !important;
   box-shadow:
-    inset 2px 2px 4px rgba(0, 0, 0, 0.4),
-    0 0 0 2px rgba(var(--color-primary), 0.2) !important;
+    inset 3px 3px 6px rgba(0, 0, 0, 0.5),
+    inset -1px -1px 2px rgba(var(--color-primary), 0.1),
+    0 0 0 3px rgba(var(--color-primary), 0.2) !important;
 }
 
-/* Cards internas con estilo industrial */
+/* Cards internas - Textura de ladrillo */
 html.theme-industrial .bg-gray-800\/50,
 html.theme-industrial [class*="bg-gray-800"] {
-  background: linear-gradient(135deg, rgba(40, 48, 56, 0.9), rgba(30, 38, 46, 0.95)) !important;
-  border: 2px solid rgba(70, 80, 90, 0.5) !important;
-  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3) !important;
+  background:
+    repeating-linear-gradient(0deg,
+      transparent, transparent 16px,
+      rgba(0, 0, 0, 0.15) 16px, rgba(0, 0, 0, 0.15) 17px
+    ),
+    repeating-linear-gradient(90deg,
+      transparent, transparent 60px,
+      rgba(0, 0, 0, 0.12) 60px, rgba(0, 0, 0, 0.12) 61px
+    ),
+    repeating-linear-gradient(90deg,
+      transparent 0px, transparent 30px,
+      rgba(0, 0, 0, 0.08) 30px, rgba(0, 0, 0, 0.08) 31px,
+      transparent 31px, transparent 91px,
+      rgba(0, 0, 0, 0.08) 91px, rgba(0, 0, 0, 0.08) 92px
+    ),
+    linear-gradient(135deg, rgba(48, 44, 40, 0.9), rgba(38, 34, 30, 0.95)) !important;
+  border: 3px solid rgba(75, 65, 55, 0.6) !important;
+  box-shadow:
+    4px 4px 0px rgba(0, 0, 0, 0.4),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.04) !important;
 }
 
 html.theme-industrial.dark .bg-gray-800\/50,
 html.theme-industrial.dark [class*="bg-gray-800"] {
-  background: linear-gradient(135deg, rgba(30, 36, 42, 0.95), rgba(20, 26, 32, 1)) !important;
-  border: 2px solid rgba(60, 70, 80, 0.6) !important;
-  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.4) !important;
+  background:
+    repeating-linear-gradient(0deg,
+      transparent, transparent 16px,
+      rgba(0, 0, 0, 0.2) 16px, rgba(0, 0, 0, 0.2) 17px
+    ),
+    repeating-linear-gradient(90deg,
+      transparent, transparent 60px,
+      rgba(0, 0, 0, 0.15) 60px, rgba(0, 0, 0, 0.15) 61px
+    ),
+    repeating-linear-gradient(90deg,
+      transparent 0px, transparent 30px,
+      rgba(0, 0, 0, 0.1) 30px, rgba(0, 0, 0, 0.1) 31px,
+      transparent 31px, transparent 91px,
+      rgba(0, 0, 0, 0.1) 91px, rgba(0, 0, 0, 0.1) 92px
+    ),
+    linear-gradient(135deg, rgba(32, 30, 28, 0.95), rgba(22, 20, 18, 1)) !important;
+  border: 3px solid rgba(65, 55, 45, 0.7) !important;
+  box-shadow:
+    4px 4px 0px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.02) !important;
 }
 
-/* Badge industrial */
+/* Badge - Placa de hierro */
 html.theme-industrial .badge-primary {
-  background: linear-gradient(135deg, rgba(var(--color-primary), 0.9), rgba(var(--color-primary), 0.7)) !important;
-  border: 2px solid rgba(var(--color-primary), 0.5);
-  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
-  font-weight: 700;
+  background:
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px),
+    linear-gradient(135deg, rgba(var(--color-primary), 0.95), rgba(var(--color-primary), 0.75)) !important;
+  border: 2px solid rgba(var(--color-primary), 0.6);
+  box-shadow:
+    3px 3px 0px rgba(0, 0, 0, 0.4),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.15),
+    inset -1px -1px 0px rgba(0, 0, 0, 0.2);
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
