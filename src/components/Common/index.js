@@ -332,7 +332,11 @@ export const Dropdown = ({ trigger, children }) => {
   const handleTriggerClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsOpen(prev => !prev);
+    console.log('Dropdown trigger clicked, current state:', isOpen);
+    setIsOpen(prev => {
+      console.log('Dropdown state changing from', prev, 'to', !prev);
+      return !prev;
+    });
   };
 
   // Clone children to add close functionality
@@ -347,6 +351,14 @@ export const Dropdown = ({ trigger, children }) => {
     }
     return child;
   });
+
+  // Debug: log when isOpen changes
+  useEffect(() => {
+    console.log('Dropdown isOpen changed to:', isOpen);
+    if (isOpen) {
+      console.log('Dropdown position:', position);
+    }
+  }, [isOpen, position]);
 
   return (
     <>
@@ -365,6 +377,7 @@ export const Dropdown = ({ trigger, children }) => {
           }}
           onClick={(e) => e.stopPropagation()}
         >
+          {console.log('Rendering dropdown menu with', React.Children.count(children), 'children')}
           {childrenWithClose}
         </div>,
         document.body
