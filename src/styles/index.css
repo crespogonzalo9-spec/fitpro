@@ -45,7 +45,7 @@ body {
 
 /* ============ GLASSMORPHISM BACKGROUND ============ */
 /* Fondo con degradado para el efecto glass - SOLO EN GLASSMORPHISM */
-.theme-glassmorphism body::before {
+html.theme-glassmorphism body::before {
   content: '';
   position: fixed;
   top: 0;
@@ -68,13 +68,13 @@ body {
 }
 
 /* Fondo base para glassmorphism */
-.theme-glassmorphism body,
-.theme-glassmorphism.dark body {
+html.theme-glassmorphism body,
+html.theme-glassmorphism.dark body {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%) !important;
   min-height: 100vh;
 }
 
-.theme-glassmorphism .bg-base {
+html.theme-glassmorphism .bg-base {
   background: transparent !important;
 }
 
