@@ -1045,70 +1045,112 @@ html.theme-industrial.dark body {
 /* Fondo base de contenido - Textura de ladrillo caricaturizado */
 html.theme-industrial .bg-base,
 html.theme-industrial.dark .bg-base {
+  background-color: #2d1f1a !important;
   background-image:
-    /* Mortero horizontal oscuro entre filas */
+    /* Sombras superiores de ladrillos para dar profundidad */
     repeating-linear-gradient(
       0deg,
       transparent 0px,
-      transparent 48px,
-      #2d1810 48px,
-      #2d1810 54px
+      transparent 4px,
+      rgba(0, 0, 0, 0.3) 4px,
+      rgba(0, 0, 0, 0.3) 8px,
+      transparent 8px,
+      transparent 72px,
+      rgba(0, 0, 0, 0.3) 76px,
+      rgba(0, 0, 0, 0.3) 80px
     ),
-    /* Mortero vertical - fila impar (ladrillos completos) */
+    /* Sombras laterales - filas impares */
     repeating-linear-gradient(
       90deg,
       transparent 0px,
-      transparent 96px,
-      #2d1810 96px,
-      #2d1810 102px
+      transparent 4px,
+      rgba(0, 0, 0, 0.25) 4px,
+      rgba(0, 0, 0, 0.25) 8px,
+      transparent 8px,
+      transparent 140px,
+      rgba(0, 0, 0, 0.25) 144px,
+      rgba(0, 0, 0, 0.25) 148px
     ),
-    /* Mortero vertical - fila par (ladrillos offset con medio ladrillo) */
-    repeating-linear-gradient(
-      90deg,
-      #2d1810 0px,
-      #2d1810 6px,
-      transparent 6px,
-      transparent 54px,
-      #2d1810 54px,
-      #2d1810 60px,
-      transparent 60px,
-      transparent 156px,
-      #2d1810 156px,
-      #2d1810 162px,
-      transparent 162px,
-      transparent 198px
-    ),
-    /* Ladrillos con colores variados - patrón de 4 filas */
+    /* Mortero horizontal entre filas */
     repeating-linear-gradient(
       0deg,
-      /* Fila 1 - ladrillos rojos oscuros */
-      #8b4a3a 0px,
-      #8b4a3a 48px,
-      /* Mortero */
-      transparent 48px,
-      transparent 54px,
-      /* Fila 2 - ladrillos naranjas */
-      #b35a45 54px,
-      #b35a45 102px,
-      /* Mortero */
-      transparent 102px,
-      transparent 108px,
-      /* Fila 3 - ladrillos marrones */
-      #7a4030 108px,
-      #7a4030 156px,
-      /* Mortero */
-      transparent 156px,
-      transparent 162px,
-      /* Fila 4 - ladrillos grises/púrpuras */
-      #6b4f5a 162px,
-      #6b4f5a 210px,
-      /* Mortero */
+      transparent 0px,
+      transparent 64px,
+      #2d1f1a 64px,
+      #2d1f1a 72px
+    ),
+    /* Mortero vertical - filas impares */
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 132px,
+      #2d1f1a 132px,
+      #2d1f1a 140px,
+      transparent 140px,
+      transparent 272px
+    ),
+    /* Mortero vertical - filas pares (offset 70px) */
+    repeating-linear-gradient(
+      90deg,
+      #2d1f1a 0px,
+      #2d1f1a 8px,
+      transparent 8px,
+      transparent 70px,
+      #2d1f1a 70px,
+      #2d1f1a 78px,
+      transparent 78px,
+      transparent 202px,
+      #2d1f1a 202px,
+      #2d1f1a 210px,
       transparent 210px,
-      transparent 216px
+      transparent 272px
+    ),
+    /* Colores de ladrillos - Patrón de 8 filas con variaciones */
+    repeating-linear-gradient(
+      0deg,
+      /* Fila 1 - Rojo oscuro */
+      #a04d3c 0px,
+      #a04d3c 64px,
+      transparent 64px,
+      transparent 72px,
+      /* Fila 2 - Naranja rojizo */
+      #c4654e 72px,
+      #c4654e 136px,
+      transparent 136px,
+      transparent 144px,
+      /* Fila 3 - Marrón púrpura */
+      #7a4f5c 144px,
+      #7a4f5c 208px,
+      transparent 208px,
+      transparent 216px,
+      /* Fila 4 - Rojo medio */
+      #b55544 216px,
+      #b55544 280px,
+      transparent 280px,
+      transparent 288px,
+      /* Fila 5 - Gris púrpura */
+      #6d5560 288px,
+      #6d5560 352px,
+      transparent 352px,
+      transparent 360px,
+      /* Fila 6 - Naranja brillante */
+      #d16f56 360px,
+      #d16f56 424px,
+      transparent 424px,
+      transparent 432px,
+      /* Fila 7 - Marrón oscuro */
+      #8b4536 432px,
+      #8b4536 496px,
+      transparent 496px,
+      transparent 504px,
+      /* Fila 8 - Rojo terroso */
+      #9e5240 504px,
+      #9e5240 568px,
+      transparent 568px,
+      transparent 576px
     );
-  background-color: #3a2520 !important;
-  background-size: 198px 216px;
-  background-position: 0 0, 0 0, 0 54px, 0 0;
+  background-size: 272px 576px;
+  background-position: 0 0, 0 0, 0 0, 0 0, 0 72px, 0 0;
 }
 
 /* Cards - Textura de hierro con remaches */
