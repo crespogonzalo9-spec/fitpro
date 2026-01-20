@@ -44,6 +44,25 @@ const Settings = () => {
     }
   }, [currentGym, paletteId, secondaryPaletteId, isDark, gymSlogan, gymLogo, gymCoverImage]);
 
+  // Aplicar tema visual al preview en tiempo real
+  useEffect(() => {
+    const previewElement = document.getElementById('theme-preview-container');
+    if (previewElement) {
+      // Remover todas las clases de tema
+      previewElement.classList.remove('theme-glassmorphism', 'theme-neon');
+
+      // Agregar la clase del tema seleccionado
+      previewElement.classList.add(`theme-${selectedVisualTheme}`);
+
+      // Aplicar clase dark si está seleccionado el modo oscuro
+      if (selectedDarkMode) {
+        previewElement.classList.add('dark');
+      } else {
+        previewElement.classList.remove('dark');
+      }
+    }
+  }, [selectedVisualTheme, selectedDarkMode]);
+
   const handleLogoChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -538,6 +557,7 @@ const Settings = () => {
               </div>
 
               <div
+                id="theme-preview-container"
                 className="rounded-lg overflow-hidden border-2 transition-all"
                 style={{
                   '--preview-primary': selectedPrimaryPalette?.primary || COLOR_PALETTES[0].primary,
@@ -588,26 +608,18 @@ const Settings = () => {
 
                 {/* Content Preview */}
                 <div className="p-4 space-y-3">
-                  <div
-                    className={`h-8 rounded ${selectedDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}
-                  ></div>
-                  <div
-                    className={`h-8 rounded w-3/4 ${selectedDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}
-                  ></div>
+                  <div className="bg-card h-8 rounded p-2"></div>
+                  <div className="bg-card h-8 rounded w-3/4 p-2"></div>
                   <div className="flex gap-2">
-                    <div
-                      className={`h-16 flex-1 rounded ${selectedDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}
-                    ></div>
-                    <div
-                      className={`h-16 flex-1 rounded ${selectedDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}
-                    ></div>
+                    <div className="bg-card h-16 flex-1 rounded p-2"></div>
+                    <div className="bg-card h-16 flex-1 rounded p-2"></div>
                   </div>
                 </div>
 
                 {/* Button Preview */}
                 <div className="p-4 pt-0">
                   <button
-                    className="w-full px-4 py-2 rounded-lg text-white font-medium transition-opacity hover:opacity-90"
+                    className="btn-primary w-full px-4 py-2 rounded-lg text-white font-medium"
                     style={{ backgroundColor: `rgb(var(--preview-primary))` }}
                   >
                     Botón de Ejemplo
