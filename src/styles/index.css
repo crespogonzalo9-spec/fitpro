@@ -955,3 +955,44 @@ html.theme-neon.dark [class*="bg-gray-800"] {
     inset 0 0 1px rgba(var(--color-primary), 0.15);
   border: 1px solid rgba(var(--color-primary), 0.35) !important;
 }
+
+/* ============================================ */
+/* ESTILOS PARA PREVIEW (sin requerir html)   */
+/* ============================================ */
+
+/* Preview con Glassmorphism */
+.theme-glassmorphism .bg-card,
+#theme-preview-container.theme-glassmorphism .bg-card {
+  background: rgba(30, 41, 59, 0.4) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4) !important;
+}
+
+.theme-glassmorphism .btn-primary,
+#theme-preview-container.theme-glassmorphism .btn-primary {
+  background: rgba(var(--preview-primary), 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(var(--preview-primary), 0.3) !important;
+  box-shadow: 0 8px 32px 0 rgba(var(--preview-primary), 0.2) !important;
+}
+
+/* Preview con Neon */
+.theme-neon .bg-card,
+#theme-preview-container.theme-neon .bg-card {
+  box-shadow:
+    0 0 30px rgba(var(--preview-primary), 0.35),
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    inset 0 0 1px rgba(var(--preview-primary), 0.15) !important;
+  border: 1px solid rgba(var(--preview-primary), 0.4) !important;
+}
+
+.theme-neon .btn-primary,
+#theme-preview-container.theme-neon .btn-primary {
+  box-shadow:
+    0 0 35px rgba(var(--preview-primary), 0.6),
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    inset 0 0 3px rgba(255, 255, 255, 0.3) !important;
+}
