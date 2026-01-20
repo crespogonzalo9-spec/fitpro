@@ -43,6 +43,41 @@ body {
   background: linear-gradient(135deg, rgba(var(--color-primary), 1), rgba(var(--color-primary), 0.7));
 }
 
+/* ============ GLASSMORPHISM BACKGROUND ============ */
+/* Fondo con degradado para el efecto glass - SOLO EN GLASSMORPHISM */
+.theme-glassmorphism body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(var(--color-primary), 0.25) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.25) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(139, 92, 246, 0.20) 0%, transparent 50%),
+    radial-gradient(circle at 60% 60%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Asegurar que el contenido esté encima del fondo */
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+/* Fondo base para glassmorphism */
+.theme-glassmorphism body,
+.theme-glassmorphism.dark body {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%) !important;
+  min-height: 100vh;
+}
+
+.theme-glassmorphism .bg-base {
+  background: transparent !important;
+}
+
 /* ============ MODO OSCURO (default) ============ */
 .dark body,
 body.dark-mode {
@@ -580,43 +615,70 @@ aside button:hover,
 /* ============================================ */
 
 /* ========== TEMA GLASSMORPHISM (por defecto) ========== */
-/* Estilo limpio, minimalista, sin efectos neon */
+/* Estilo limpio con efecto vidrio y blur intenso */
 .theme-glassmorphism .bg-card {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(100, 116, 139, 0.2);
-  backdrop-filter: blur(8px);
+  background: rgba(30, 41, 59, 0.4) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4) !important;
+  transition: all 0.3s ease;
 }
 
 .theme-glassmorphism.dark .bg-card {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(100, 116, 139, 0.3);
-  backdrop-filter: blur(10px);
+  background: rgba(30, 41, 59, 0.4) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4) !important;
 }
 
 .theme-glassmorphism .bg-card:hover {
-  box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.12), 0 4px 6px -1px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(100, 116, 139, 0.25);
+  background: rgba(30, 41, 59, 0.5) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5) !important;
 }
 
 .theme-glassmorphism.dark .bg-card:hover {
-  box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.35), 0 4px 6px -1px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(100, 116, 139, 0.35);
+  background: rgba(30, 41, 59, 0.5) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5) !important;
 }
 
 .theme-glassmorphism .btn-primary {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: rgba(var(--color-primary), 0.8) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(var(--color-primary), 0.3) !important;
+  box-shadow: 0 8px 32px 0 rgba(var(--color-primary), 0.2) !important;
 }
 
 .theme-glassmorphism.dark .btn-primary {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  background: rgba(var(--color-primary), 0.8) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(var(--color-primary), 0.3) !important;
+  box-shadow: 0 8px 32px 0 rgba(var(--color-primary), 0.2) !important;
 }
 
 .theme-glassmorphism .btn-primary:hover {
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  background: rgba(var(--color-primary), 0.9) !important;
+  border-color: rgba(var(--color-primary), 0.4) !important;
+  box-shadow: 0 12px 40px 0 rgba(var(--color-primary), 0.3) !important;
+  transform: translateY(-2px);
 }
 
 .theme-glassmorphism.dark .btn-primary:hover {
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+  background: rgba(var(--color-primary), 0.9) !important;
+  border-color: rgba(var(--color-primary), 0.4) !important;
+  box-shadow: 0 12px 40px 0 rgba(var(--color-primary), 0.3) !important;
+  transform: translateY(-2px);
 }
 
 /* Desactivar todos los efectos neon en glassmorphism */
@@ -637,19 +699,42 @@ aside button:hover,
 }
 
 .theme-glassmorphism .nav-link-active {
-  box-shadow: none;
-  background-color: rgba(var(--color-primary), 0.1);
+  background: rgba(var(--color-primary), 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(var(--color-primary), 1);
   border-left: 3px solid rgba(var(--color-primary), 1);
+  box-shadow: 0 4px 16px 0 rgba(var(--color-primary), 0.2);
 }
 
 .theme-glassmorphism .bg-sidebar {
-  border-right: 1px solid rgba(100, 116, 139, 0.2);
-  box-shadow: none;
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .theme-glassmorphism.dark .bg-sidebar {
-  border-right: 1px solid rgba(100, 116, 139, 0.3);
-  box-shadow: none;
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.theme-glassmorphism .bg-input,
+.theme-glassmorphism input,
+.theme-glassmorphism select,
+.theme-glassmorphism textarea {
+  background: rgba(30, 41, 59, 0.3) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+.theme-glassmorphism .nav-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 /* ========== TEMA NEON ========== */
