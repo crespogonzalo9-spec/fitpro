@@ -330,7 +330,6 @@ export const Dropdown = ({ trigger, children }) => {
   }, [isOpen]);
 
   const handleTriggerClick = (e) => {
-    e.preventDefault();
     e.stopPropagation();
     console.log('Dropdown trigger clicked, current state:', isOpen);
     setIsOpen(prev => {
@@ -362,7 +361,7 @@ export const Dropdown = ({ trigger, children }) => {
 
   return (
     <>
-      <div ref={triggerRef} onClick={handleTriggerClick} style={{ display: 'inline-block' }}>
+      <div ref={triggerRef} onMouseDown={handleTriggerClick} style={{ display: 'inline-block' }}>
         {trigger}
       </div>
       {isOpen && createPortal(

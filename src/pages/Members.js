@@ -290,10 +290,7 @@ const MembersContent = () => {
                   {/* Menú de acciones */}
                   {(canEdit || canBlock) && member.id !== userData.id && !member.roles?.includes('sysadmin') && (
                     <Dropdown trigger={
-                      <button
-                        className="p-2 hover:bg-gray-700 rounded-lg flex-shrink-0"
-                        onClick={(e) => e.stopPropagation()}
-                      >
+                      <button className="p-2 hover:bg-gray-700 rounded-lg flex-shrink-0">
                         <MoreVertical size={18} />
                       </button>
                     }>

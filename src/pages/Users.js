@@ -229,7 +229,7 @@ const UsersPage = () => {
                     {user.id === userData.id && <Badge className="mt-1 bg-blue-500/20 text-blue-400">Vos</Badge>}
                   </div>
                 </div>
-                <Dropdown trigger={<button className="p-2 hover:bg-gray-700 rounded-lg flex-shrink-0" onClick={(e) => e.stopPropagation()}><MoreVertical size={18} /></button>}>
+                <Dropdown trigger={<button className="p-2 hover:bg-gray-700 rounded-lg flex-shrink-0"><MoreVertical size={18} /></button>}>
                   <DropdownItem icon={Edit} onClick={(e) => { e.stopPropagation(); setSelected(user); setShowModal(true); }}>Editar</DropdownItem>
                   {user.id !== userData.id && (
                     <DropdownItem icon={Trash2} danger onClick={(e) => { e.stopPropagation(); setSelected(user); setShowDelete(true); }}>Eliminar</DropdownItem>
