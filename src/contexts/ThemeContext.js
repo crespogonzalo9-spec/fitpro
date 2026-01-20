@@ -146,13 +146,15 @@ export const ThemeProvider = ({ children }) => {
       root.classList.remove('dark');
     }
 
-    // Aplicar tema visual (neon o glassmorphism)
+    // Aplicar tema visual (glassmorphism, neon o industrial)
+    root.classList.remove('theme-glassmorphism', 'theme-neon', 'theme-industrial');
+
     if (visualTheme === 'neon') {
       root.classList.add('theme-neon');
-      root.classList.remove('theme-glassmorphism');
+    } else if (visualTheme === 'industrial') {
+      root.classList.add('theme-industrial');
     } else {
       root.classList.add('theme-glassmorphism');
-      root.classList.remove('theme-neon');
     }
   }, [isDark, paletteId, secondaryPaletteId, visualTheme]);
 

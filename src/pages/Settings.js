@@ -49,7 +49,7 @@ const Settings = () => {
     const previewElement = document.getElementById('theme-preview-container');
     if (previewElement) {
       // Remover todas las clases de tema
-      previewElement.classList.remove('theme-glassmorphism', 'theme-neon');
+      previewElement.classList.remove('theme-glassmorphism', 'theme-neon', 'theme-industrial');
 
       // Agregar la clase del tema seleccionado
       previewElement.classList.add(`theme-${selectedVisualTheme}`);
@@ -404,7 +404,7 @@ const Settings = () => {
                 <h2 className="text-lg font-semibold">Estilo Visual</h2>
               </div>
               <p className="text-sm text-gray-400 mb-3">Elige el estilo de los componentes de la interfaz</p>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <button
                   onClick={() => setSelectedVisualTheme('glassmorphism')}
                   className={`p-4 rounded-xl border-2 transition-all ${
@@ -415,7 +415,7 @@ const Settings = () => {
                 >
                   <div className="text-center">
                     <div className="text-2xl mb-2">🪟</div>
-                    <p className="font-medium">Glassmorphism</p>
+                    <p className="font-medium text-sm">Glassmorphism</p>
                     <p className="text-xs text-gray-400 mt-1">Transparencias y blur</p>
                   </div>
                 </button>
@@ -429,8 +429,22 @@ const Settings = () => {
                 >
                   <div className="text-center">
                     <div className="text-2xl mb-2">✨</div>
-                    <p className="font-medium">Neon</p>
+                    <p className="font-medium text-sm">Neon</p>
                     <p className="text-xs text-gray-400 mt-1">Brillos y efectos de luz</p>
+                  </div>
+                </button>
+                <button
+                  onClick={() => setSelectedVisualTheme('industrial')}
+                  className={`p-4 rounded-xl border-2 transition-all ${
+                    selectedVisualTheme === 'industrial'
+                      ? 'border-primary bg-primary/10'
+                      : 'border-gray-700 hover:border-gray-600'
+                  }`}
+                >
+                  <div className="text-center">
+                    <div className="text-2xl mb-2">🏋️</div>
+                    <p className="font-medium text-sm">Industrial</p>
+                    <p className="text-xs text-gray-400 mt-1">Estética de gimnasio</p>
                   </div>
                 </button>
               </div>

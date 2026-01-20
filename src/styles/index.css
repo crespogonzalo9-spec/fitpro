@@ -996,3 +996,186 @@ html.theme-neon.dark [class*="bg-gray-800"] {
     0 4px 6px rgba(0, 0, 0, 0.1),
     inset 0 0 3px rgba(255, 255, 255, 0.3) !important;
 }
+
+/* Preview con Industrial */
+.theme-industrial .bg-card,
+#theme-preview-container.theme-industrial .bg-card {
+  background: linear-gradient(145deg, rgba(45, 55, 65, 0.95), rgba(35, 45, 55, 0.98)) !important;
+  border: 2px solid rgba(80, 90, 100, 0.6) !important;
+  box-shadow:
+    4px 4px 0px rgba(0, 0, 0, 0.4),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.05) !important;
+}
+
+.theme-industrial .btn-primary,
+#theme-preview-container.theme-industrial .btn-primary {
+  background: linear-gradient(145deg, rgba(var(--preview-primary), 0.9), rgba(var(--preview-primary), 0.7)) !important;
+  border: 2px solid rgba(var(--preview-primary), 0.6) !important;
+  box-shadow:
+    3px 3px 0px rgba(0, 0, 0, 0.3),
+    inset -1px -1px 0px rgba(0, 0, 0, 0.2) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
+/* ========== TEMA INDUSTRIAL ========== */
+/* Estética de gimnasio: metal, concreto, brutalismo sutil */
+
+html.theme-industrial .bg-card {
+  background: linear-gradient(145deg, rgba(45, 55, 65, 0.95), rgba(35, 45, 55, 0.98)) !important;
+  border: 2px solid rgba(80, 90, 100, 0.6) !important;
+  box-shadow:
+    4px 4px 0px rgba(0, 0, 0, 0.4),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.05) !important;
+  transition: all 0.2s ease;
+}
+
+html.theme-industrial.dark .bg-card {
+  background: linear-gradient(145deg, rgba(35, 42, 50, 0.98), rgba(25, 32, 40, 1)) !important;
+  border: 2px solid rgba(70, 80, 90, 0.7) !important;
+  box-shadow:
+    4px 4px 0px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.03) !important;
+}
+
+html.theme-industrial .bg-card:hover {
+  transform: translate(-1px, -1px);
+  box-shadow:
+    5px 5px 0px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(var(--color-primary), 0.5) !important;
+}
+
+html.theme-industrial.dark .bg-card:hover {
+  box-shadow:
+    5px 5px 0px rgba(0, 0, 0, 0.6),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.05) !important;
+}
+
+html.theme-industrial .btn-primary {
+  background: linear-gradient(145deg, rgba(var(--color-primary), 0.9), rgba(var(--color-primary), 0.7)) !important;
+  border: 2px solid rgba(var(--color-primary), 0.6) !important;
+  box-shadow:
+    3px 3px 0px rgba(0, 0, 0, 0.3),
+    inset -1px -1px 0px rgba(0, 0, 0, 0.2) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
+html.theme-industrial.dark .btn-primary {
+  background: linear-gradient(145deg, rgba(var(--color-primary), 0.85), rgba(var(--color-primary), 0.65)) !important;
+  border: 2px solid rgba(var(--color-primary), 0.7) !important;
+  box-shadow:
+    3px 3px 0px rgba(0, 0, 0, 0.4),
+    inset -1px -1px 0px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.theme-industrial .btn-primary:hover {
+  transform: translate(-1px, -1px);
+  box-shadow:
+    4px 4px 0px rgba(0, 0, 0, 0.4),
+    inset -1px -1px 0px rgba(0, 0, 0, 0.15) !important;
+}
+
+html.theme-industrial.dark .btn-primary:hover {
+  box-shadow:
+    4px 4px 0px rgba(0, 0, 0, 0.5),
+    inset -1px -1px 0px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Tipografía más robusta para industrial */
+html.theme-industrial h1,
+html.theme-industrial h2,
+html.theme-industrial h3 {
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+html.theme-industrial.dark h1,
+html.theme-industrial.dark h2,
+html.theme-industrial.dark h3 {
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+}
+
+html.theme-industrial .text-primary {
+  font-weight: 700;
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
+}
+
+/* Sidebar industrial */
+html.theme-industrial .bg-sidebar {
+  background: linear-gradient(180deg, rgba(40, 48, 56, 0.98), rgba(30, 38, 46, 1)) !important;
+  border-right: 3px solid rgba(60, 70, 80, 0.8) !important;
+  box-shadow: inset -2px 0 4px rgba(0, 0, 0, 0.3);
+}
+
+html.theme-industrial.dark .bg-sidebar {
+  background: linear-gradient(180deg, rgba(30, 36, 42, 1), rgba(20, 26, 32, 1)) !important;
+  border-right: 3px solid rgba(50, 60, 70, 0.9) !important;
+  box-shadow: inset -2px 0 4px rgba(0, 0, 0, 0.4);
+}
+
+html.theme-industrial .nav-link-active {
+  background: linear-gradient(90deg, rgba(var(--color-primary), 0.2), transparent) !important;
+  color: rgba(var(--color-primary), 1);
+  border-left: 4px solid rgba(var(--color-primary), 1) !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: inset 3px 0 6px rgba(var(--color-primary), 0.15);
+}
+
+html.theme-industrial .nav-link:hover {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-left: 2px solid rgba(var(--color-primary), 0.3);
+}
+
+/* Inputs industriales */
+html.theme-industrial .bg-input,
+html.theme-industrial input,
+html.theme-industrial select,
+html.theme-industrial textarea {
+  background: rgba(25, 32, 40, 0.9) !important;
+  border: 2px solid rgba(70, 80, 90, 0.6) !important;
+  box-shadow:
+    inset 2px 2px 4px rgba(0, 0, 0, 0.4),
+    1px 1px 0px rgba(255, 255, 255, 0.03) !important;
+}
+
+html.theme-industrial .bg-input:focus,
+html.theme-industrial input:focus,
+html.theme-industrial select:focus,
+html.theme-industrial textarea:focus {
+  border-color: rgba(var(--color-primary), 0.6) !important;
+  box-shadow:
+    inset 2px 2px 4px rgba(0, 0, 0, 0.4),
+    0 0 0 2px rgba(var(--color-primary), 0.2) !important;
+}
+
+/* Cards internas con estilo industrial */
+html.theme-industrial .bg-gray-800\/50,
+html.theme-industrial [class*="bg-gray-800"] {
+  background: linear-gradient(135deg, rgba(40, 48, 56, 0.9), rgba(30, 38, 46, 0.95)) !important;
+  border: 2px solid rgba(70, 80, 90, 0.5) !important;
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.theme-industrial.dark .bg-gray-800\/50,
+html.theme-industrial.dark [class*="bg-gray-800"] {
+  background: linear-gradient(135deg, rgba(30, 36, 42, 0.95), rgba(20, 26, 32, 1)) !important;
+  border: 2px solid rgba(60, 70, 80, 0.6) !important;
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge industrial */
+html.theme-industrial .badge-primary {
+  background: linear-gradient(135deg, rgba(var(--color-primary), 0.9), rgba(var(--color-primary), 0.7)) !important;
+  border: 2px solid rgba(var(--color-primary), 0.5);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
