@@ -1046,24 +1046,35 @@ html.theme-industrial.dark body {
 html.theme-industrial .bg-base,
 html.theme-industrial.dark .bg-base {
   background:
+    /* Líneas horizontales entre ladrillos */
     repeating-linear-gradient(0deg,
-      transparent, transparent 18px,
-      rgba(0, 0, 0, 0.2) 18px, rgba(0, 0, 0, 0.2) 20px
+      transparent, transparent 24px,
+      rgba(20, 15, 12, 0.6) 24px, rgba(20, 15, 12, 0.6) 28px
     ),
+    /* Líneas verticales - fila 1 */
     repeating-linear-gradient(90deg,
-      transparent, transparent 70px,
-      rgba(0, 0, 0, 0.15) 70px, rgba(0, 0, 0, 0.15) 72px
+      transparent, transparent 80px,
+      rgba(20, 15, 12, 0.5) 80px, rgba(20, 15, 12, 0.5) 84px
     ),
+    /* Líneas verticales - fila 2 (offset) */
     repeating-linear-gradient(90deg,
-      transparent 0px, transparent 35px,
-      rgba(0, 0, 0, 0.1) 35px, rgba(0, 0, 0, 0.1) 37px,
-      transparent 37px, transparent 107px,
-      rgba(0, 0, 0, 0.1) 107px, rgba(0, 0, 0, 0.1) 109px
+      transparent 0px, transparent 40px,
+      rgba(20, 15, 12, 0.5) 40px, rgba(20, 15, 12, 0.5) 44px,
+      transparent 44px, transparent 124px,
+      rgba(20, 15, 12, 0.5) 124px, rgba(20, 15, 12, 0.5) 128px
     ),
+    /* Variaciones de color en los ladrillos */
+    repeating-linear-gradient(0deg,
+      rgba(95, 45, 35, 1) 0px, rgba(95, 45, 35, 1) 24px,
+      rgba(85, 40, 30, 1) 24px, rgba(85, 40, 30, 1) 28px,
+      rgba(90, 42, 32, 1) 28px, rgba(90, 42, 32, 1) 52px,
+      rgba(88, 43, 33, 1) 52px, rgba(88, 43, 33, 1) 56px
+    ),
+    /* Color base de ladrillo rojo */
     linear-gradient(135deg,
-      rgba(58, 48, 42, 1) 0%,
-      rgba(48, 38, 32, 1) 50%,
-      rgba(42, 34, 28, 1) 100%
+      rgba(92, 44, 34, 1) 0%,
+      rgba(78, 38, 28, 1) 50%,
+      rgba(85, 40, 30, 1) 100%
     ) !important;
 }
 
