@@ -1042,6 +1042,31 @@ html.theme-industrial.dark body {
   min-height: 100vh;
 }
 
+/* Fondo base de contenido - Textura de ladrillo */
+html.theme-industrial .bg-base,
+html.theme-industrial.dark .bg-base {
+  background:
+    repeating-linear-gradient(0deg,
+      transparent, transparent 18px,
+      rgba(0, 0, 0, 0.2) 18px, rgba(0, 0, 0, 0.2) 20px
+    ),
+    repeating-linear-gradient(90deg,
+      transparent, transparent 70px,
+      rgba(0, 0, 0, 0.15) 70px, rgba(0, 0, 0, 0.15) 72px
+    ),
+    repeating-linear-gradient(90deg,
+      transparent 0px, transparent 35px,
+      rgba(0, 0, 0, 0.1) 35px, rgba(0, 0, 0, 0.1) 37px,
+      transparent 37px, transparent 107px,
+      rgba(0, 0, 0, 0.1) 107px, rgba(0, 0, 0, 0.1) 109px
+    ),
+    linear-gradient(135deg,
+      rgba(58, 48, 42, 1) 0%,
+      rgba(48, 38, 32, 1) 50%,
+      rgba(42, 34, 28, 1) 100%
+    ) !important;
+}
+
 /* Cards - Textura de hierro con remaches */
 html.theme-industrial .bg-card {
   background:
