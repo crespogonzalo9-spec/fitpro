@@ -27,7 +27,7 @@ const Layout = () => {
       '/dashboard': 'Dashboard',
       '/gyms': 'Gimnasios',
       '/users': 'Usuarios',
-      '/members': 'Alumnos',
+      '/members': 'Miembros',
       '/profesores': 'Profesores',
       '/classes': 'Clases',
       '/exercises': 'Ejercicios',

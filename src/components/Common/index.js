@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Search, ChevronDown, Loader2 } from 'lucide-react';
 import { getInitials } from '../../utils/helpers';
 
@@ -272,16 +273,31 @@ export const ConfirmDialog = ({ isOpen, onClose, onConfirm, title, message, conf
 // Dropdown
 export const Dropdown = ({ trigger, children }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
   const ref = useRef(null);
   const triggerRef = useRef(null);
+  const menuRef = useRef(null);
 
   useEffect(() => {
     const handleClick = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) setIsOpen(false);
+      if (ref.current && !ref.current.contains(e.target) &&
+          menuRef.current && !menuRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
+
+  useEffect(() => {
+    if (isOpen && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setPosition({
+        top: rect.bottom + window.scrollY + 4,
+        left: rect.right + window.scrollX - 192 // 192px = w-48
+      });
+    }
+  }, [isOpen]);
 
   const handleTriggerClick = (e) => {
     e.stopPropagation();
@@ -301,16 +317,27 @@ export const Dropdown = ({ trigger, children }) => {
     return child;
   });
 
+  const dropdownMenu = isOpen && createPortal(
+    <div
+      ref={menuRef}
+      className="fixed w-48 bg-card border border-gray-700 rounded-xl shadow-xl py-1 animate-fadeIn"
+      style={{
+        top: `${position.top}px`,
+        left: `${position.left}px`,
+        zIndex: 9999
+      }}
+    >
+      {childrenWithClose}
+    </div>,
+    document.body
+  );
+
   return (
-    <div ref={ref} className="relative z-50">
+    <div ref={ref} className="relative">
       <div ref={triggerRef} onClick={handleTriggerClick} style={{ display: 'inline-block' }}>
         {trigger}
       </div>
-      {isOpen && (
-        <div className="absolute right-0 mt-1 w-48 bg-card border border-gray-700 rounded-xl shadow-xl z-[100] py-1 animate-fadeIn">
-          {childrenWithClose}
-        </div>
-      )}
+      {dropdownMenu}
     </div>
   );
 };
