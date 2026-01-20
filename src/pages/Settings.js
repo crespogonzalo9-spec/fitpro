@@ -19,6 +19,7 @@ const Settings = () => {
   const [selectedPrimaryColor, setSelectedPrimaryColor] = useState(paletteId);
   const [selectedSecondaryColor, setSelectedSecondaryColor] = useState(secondaryPaletteId);
   const [selectedDarkMode, setSelectedDarkMode] = useState(isDark);
+  const [selectedVisualTheme, setSelectedVisualTheme] = useState('glassmorphism');
   const [slogan, setSlogan] = useState('');
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
@@ -35,6 +36,7 @@ const Settings = () => {
       setSelectedPrimaryColor(currentGym.colorPrimary || currentGym.colorPalette || paletteId);
       setSelectedSecondaryColor(currentGym.colorSecondary || currentGym.colorPalette || secondaryPaletteId);
       setSelectedDarkMode(isDark);
+      setSelectedVisualTheme(currentGym.visualTheme || 'glassmorphism');
       setSlogan(gymSlogan || '');
       setLogoPreview(gymLogo);
       setCoverPreview(gymCoverImage);
@@ -90,6 +92,7 @@ const Settings = () => {
         colorPrimary: selectedPrimaryColor,
         colorSecondary: selectedSecondaryColor,
         darkMode: selectedDarkMode,
+        visualTheme: selectedVisualTheme,
         slogan: slogan.trim(),
         bannerPosition: bannerPosition
       };
@@ -283,22 +286,22 @@ const Settings = () => {
                 <h2 className="text-lg font-semibold">Color Primario</h2>
               </div>
               <p className="text-sm text-gray-400 mb-3">Botones, acentos y elementos interactivos</p>
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-8 gap-2">
                 {COLOR_PALETTES.map((palette) => (
                   <button
                     key={palette.id}
                     onClick={() => setSelectedPrimaryColor(palette.id)}
-                    className={`group relative aspect-square rounded-lg transition-all ${
+                    className={`group relative w-8 h-8 rounded-md transition-all ${
                       selectedPrimaryColor === palette.id
-                        ? 'ring-2 ring-white scale-105'
-                        : 'hover:scale-105'
+                        ? 'ring-2 ring-white scale-110'
+                        : 'hover:scale-110'
                     }`}
                     style={{ backgroundColor: palette.hex }}
                     title={palette.name}
                   >
                     {selectedPrimaryColor === palette.id && (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-3 h-3 bg-white rounded-full"></div>
+                        <div className="w-2 h-2 bg-white rounded-full"></div>
                       </div>
                     )}
                   </button>
@@ -316,22 +319,22 @@ const Settings = () => {
                 <h2 className="text-lg font-semibold">Color Secundario</h2>
               </div>
               <p className="text-sm text-gray-400 mb-3">Color de fondo (se adapta al modo oscuro/claro)</p>
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-8 gap-2">
                 {COLOR_PALETTES.map((palette) => (
                   <button
                     key={palette.id}
                     onClick={() => setSelectedSecondaryColor(palette.id)}
-                    className={`group relative aspect-square rounded-lg transition-all ${
+                    className={`group relative w-8 h-8 rounded-md transition-all ${
                       selectedSecondaryColor === palette.id
-                        ? 'ring-2 ring-white scale-105'
-                        : 'hover:scale-105'
+                        ? 'ring-2 ring-white scale-110'
+                        : 'hover:scale-110'
                     }`}
                     style={{ backgroundColor: palette.hex }}
                     title={palette.name}
                   >
                     {selectedSecondaryColor === palette.id && (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-3 h-3 bg-white rounded-full"></div>
+                        <div className="w-2 h-2 bg-white rounded-full"></div>
                       </div>
                     )}
                   </button>
@@ -371,6 +374,45 @@ const Settings = () => {
                       selectedDarkMode ? 'translate-x-6' : 'translate-x-1'
                     }`}
                   />
+                </button>
+              </div>
+            </Card>
+
+            {/* Estilo Visual */}
+            <Card>
+              <div className="flex items-center gap-2 mb-4">
+                <Palette className="text-primary" size={20} />
+                <h2 className="text-lg font-semibold">Estilo Visual</h2>
+              </div>
+              <p className="text-sm text-gray-400 mb-3">Elige el estilo de los componentes de la interfaz</p>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => setSelectedVisualTheme('glassmorphism')}
+                  className={`p-4 rounded-xl border-2 transition-all ${
+                    selectedVisualTheme === 'glassmorphism'
+                      ? 'border-primary bg-primary/10'
+                      : 'border-gray-700 hover:border-gray-600'
+                  }`}
+                >
+                  <div className="text-center">
+                    <div className="text-2xl mb-2">🪟</div>
+                    <p className="font-medium">Glassmorphism</p>
+                    <p className="text-xs text-gray-400 mt-1">Transparencias y blur</p>
+                  </div>
+                </button>
+                <button
+                  onClick={() => setSelectedVisualTheme('neon')}
+                  className={`p-4 rounded-xl border-2 transition-all ${
+                    selectedVisualTheme === 'neon'
+                      ? 'border-primary bg-primary/10'
+                      : 'border-gray-700 hover:border-gray-600'
+                  }`}
+                >
+                  <div className="text-center">
+                    <div className="text-2xl mb-2">✨</div>
+                    <p className="font-medium">Neon</p>
+                    <p className="text-xs text-gray-400 mt-1">Brillos y efectos de luz</p>
+                  </div>
                 </button>
               </div>
             </Card>

@@ -574,3 +574,271 @@ aside button:hover,
 .dark .nav-link:hover {
   text-shadow: none !important;
 }
+
+/* ============================================ */
+/* TEMAS VISUALES: GLASSMORPHISM vs NEON       */
+/* ============================================ */
+
+/* ========== TEMA GLASSMORPHISM (por defecto) ========== */
+/* Estilo limpio, minimalista, sin efectos neon */
+.theme-glassmorphism .bg-card {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(100, 116, 139, 0.2);
+  backdrop-filter: blur(8px);
+}
+
+.theme-glassmorphism.dark .bg-card {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.theme-glassmorphism .bg-card:hover {
+  box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.12), 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(100, 116, 139, 0.25);
+}
+
+.theme-glassmorphism.dark .bg-card:hover {
+  box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.35), 0 4px 6px -1px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(100, 116, 139, 0.35);
+}
+
+.theme-glassmorphism .btn-primary {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.theme-glassmorphism.dark .btn-primary {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.theme-glassmorphism .btn-primary:hover {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.theme-glassmorphism.dark .btn-primary:hover {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Desactivar todos los efectos neon en glassmorphism */
+.theme-glassmorphism h1,
+.theme-glassmorphism h2,
+.theme-glassmorphism h3,
+.theme-glassmorphism .text-primary,
+.theme-glassmorphism .badge-primary,
+.theme-glassmorphism .font-bold,
+.theme-glassmorphism .font-semibold,
+.theme-glassmorphism .glow-card,
+.theme-glassmorphism .glow-moderate,
+.theme-glassmorphism .glow-strong,
+.theme-glassmorphism .glow-border,
+.theme-glassmorphism .glow-text,
+.theme-glassmorphism .glow-text-strong {
+  text-shadow: none !important;
+}
+
+.theme-glassmorphism .nav-link-active {
+  box-shadow: none;
+  background-color: rgba(var(--color-primary), 0.1);
+  border-left: 3px solid rgba(var(--color-primary), 1);
+}
+
+.theme-glassmorphism .bg-sidebar {
+  border-right: 1px solid rgba(100, 116, 139, 0.2);
+  box-shadow: none;
+}
+
+.theme-glassmorphism.dark .bg-sidebar {
+  border-right: 1px solid rgba(100, 116, 139, 0.3);
+  box-shadow: none;
+}
+
+/* ========== TEMA NEON ========== */
+/* Efectos de brillo y glow intensos */
+.theme-neon .bg-card {
+  box-shadow:
+    0 0 30px rgba(var(--color-primary), 0.35),
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    inset 0 0 1px rgba(var(--color-primary), 0.15);
+  transition: box-shadow 0.3s ease;
+  border: 1px solid rgba(var(--color-primary), 0.4);
+}
+
+.theme-neon.dark .bg-card {
+  box-shadow:
+    0 0 35px rgba(var(--color-primary), 0.4),
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 0 1px rgba(var(--color-primary), 0.2);
+  border: 1px solid rgba(var(--color-primary), 0.45);
+}
+
+.theme-neon .bg-card:hover {
+  box-shadow:
+    0 0 40px rgba(var(--color-primary), 0.45),
+    0 6px 12px rgba(0, 0, 0, 0.2),
+    inset 0 0 2px rgba(var(--color-primary), 0.25);
+  border: 1px solid rgba(var(--color-primary), 0.55);
+}
+
+.theme-neon.dark .bg-card:hover {
+  box-shadow:
+    0 0 45px rgba(var(--color-primary), 0.5),
+    0 6px 12px rgba(0, 0, 0, 0.4),
+    inset 0 0 2px rgba(var(--color-primary), 0.3);
+  border: 1px solid rgba(var(--color-primary), 0.6);
+}
+
+.theme-neon .btn-primary {
+  box-shadow:
+    0 0 35px rgba(var(--color-primary), 0.6),
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    inset 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+.theme-neon.dark .btn-primary {
+  box-shadow:
+    0 0 40px rgba(var(--color-primary), 0.7),
+    0 4px 6px rgba(0, 0, 0, 0.3),
+    inset 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+.theme-neon .btn-primary:hover {
+  box-shadow:
+    0 0 50px rgba(var(--color-primary), 0.8),
+    0 8px 12px rgba(0, 0, 0, 0.15),
+    inset 0 0 4px rgba(255, 255, 255, 0.4);
+}
+
+.theme-neon.dark .btn-primary:hover {
+  box-shadow:
+    0 0 55px rgba(var(--color-primary), 0.9),
+    0 8px 12px rgba(0, 0, 0, 0.4),
+    inset 0 0 4px rgba(255, 255, 255, 0.4);
+}
+
+/* Efectos de texto neon */
+.theme-neon h1 {
+  text-shadow:
+    0 0 20px rgba(var(--color-primary), 0.6),
+    0 0 30px rgba(var(--color-primary), 0.4);
+}
+
+.theme-neon.dark h1 {
+  text-shadow:
+    0 0 25px rgba(var(--color-primary), 0.7),
+    0 0 35px rgba(var(--color-primary), 0.5);
+}
+
+.theme-neon h2,
+.theme-neon h3 {
+  text-shadow: 0 0 15px rgba(var(--color-primary), 0.5);
+}
+
+.theme-neon.dark h2,
+.theme-neon.dark h3 {
+  text-shadow: 0 0 18px rgba(var(--color-primary), 0.6);
+}
+
+.theme-neon .text-primary {
+  text-shadow: 0 0 15px rgba(var(--color-primary), 0.7);
+}
+
+.theme-neon.dark .text-primary {
+  text-shadow: 0 0 18px rgba(var(--color-primary), 0.8);
+}
+
+.theme-neon .badge-primary {
+  text-shadow: 0 0 10px rgba(var(--color-primary), 0.6);
+  box-shadow: 0 0 20px rgba(var(--color-primary), 0.3);
+}
+
+.theme-neon.dark .badge-primary {
+  text-shadow: 0 0 12px rgba(var(--color-primary), 0.7);
+  box-shadow: 0 0 25px rgba(var(--color-primary), 0.4);
+}
+
+/* Sidebar con efecto neon */
+.theme-neon .bg-sidebar {
+  border-right: 1px solid rgba(var(--color-primary), 0.25);
+  box-shadow: 0 0 25px rgba(var(--color-primary), 0.12);
+}
+
+.theme-neon.dark .bg-sidebar {
+  border-right: 1px solid rgba(var(--color-primary), 0.3);
+  box-shadow: 0 0 30px rgba(var(--color-primary), 0.15);
+}
+
+.theme-neon .nav-link-active {
+  background-color: rgba(var(--color-primary), 0.1);
+  color: rgba(var(--color-primary), 1);
+  border-left: 3px solid rgba(var(--color-primary), 1);
+  box-shadow: inset 0 0 10px rgba(var(--color-primary), 0.2);
+}
+
+.theme-neon.dark .nav-link-active {
+  box-shadow: inset 0 0 12px rgba(var(--color-primary), 0.25);
+}
+
+/* Clases auxiliares para neon */
+.theme-neon .glow-card {
+  box-shadow:
+    0 0 30px rgba(var(--color-primary), 0.3),
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    inset 0 0 2px rgba(var(--color-primary), 0.2);
+  border: 1px solid rgba(var(--color-primary), 0.35);
+}
+
+.theme-neon.dark .glow-card {
+  box-shadow:
+    0 0 35px rgba(var(--color-primary), 0.4),
+    0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    inset 0 0 2px rgba(var(--color-primary), 0.25);
+  border: 1px solid rgba(var(--color-primary), 0.45);
+}
+
+.theme-neon .glow-card:hover {
+  box-shadow:
+    0 0 40px rgba(var(--color-primary), 0.45),
+    0 8px 10px -2px rgba(0, 0, 0, 0.1),
+    inset 0 0 3px rgba(var(--color-primary), 0.35);
+  border: 1px solid rgba(var(--color-primary), 0.55);
+}
+
+.theme-neon.dark .glow-card:hover {
+  box-shadow:
+    0 0 45px rgba(var(--color-primary), 0.55),
+    0 8px 10px -2px rgba(0, 0, 0, 0.4),
+    inset 0 0 3px rgba(var(--color-primary), 0.4);
+  border: 1px solid rgba(var(--color-primary), 0.65);
+}
+
+.theme-neon .glow-moderate {
+  box-shadow:
+    0 0 35px rgba(var(--color-primary), 0.35),
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    inset 0 0 3px rgba(var(--color-primary), 0.3);
+  border: 1px solid rgba(var(--color-primary), 0.45);
+}
+
+.theme-neon.dark .glow-moderate {
+  box-shadow:
+    0 0 40px rgba(var(--color-primary), 0.45),
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 0 3px rgba(var(--color-primary), 0.35);
+  border: 1px solid rgba(var(--color-primary), 0.55);
+}
+
+.theme-neon .glow-strong {
+  box-shadow:
+    0 0 40px rgba(var(--color-primary), 0.6),
+    0 4px 10px rgba(0, 0, 0, 0.15),
+    inset 0 0 4px rgba(var(--color-primary), 0.35);
+  border: 1px solid rgba(var(--color-primary), 0.65);
+}
+
+.theme-neon.dark .glow-strong {
+  box-shadow:
+    0 0 45px rgba(var(--color-primary), 0.7),
+    0 4px 10px rgba(0, 0, 0, 0.4),
+    inset 0 0 4px rgba(var(--color-primary), 0.45);
+  border: 1px solid rgba(var(--color-primary), 0.75);
+}

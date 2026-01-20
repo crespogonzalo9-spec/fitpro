@@ -64,6 +64,7 @@ export const ThemeProvider = ({ children }) => {
   const [gymSlogan, setGymSlogan] = useState('');
   const [gymCoverImage, setGymCoverImage] = useState(null);
   const [currentGymId, setCurrentGymId] = useState(null);
+  const [visualTheme, setVisualTheme] = useState('glassmorphism');
 
   // Escuchar cambios del gimnasio actual
   useEffect(() => {
@@ -99,6 +100,12 @@ export const ThemeProvider = ({ children }) => {
         }
         // Cover image del gimnasio - MEJORADO
         setGymCoverImage(data.coverImage || null);
+        // Visual theme del gimnasio
+        if (data.visualTheme) {
+          setVisualTheme(data.visualTheme);
+        } else {
+          setVisualTheme('glassmorphism');
+        }
       }
     });
 
@@ -138,7 +145,16 @@ export const ThemeProvider = ({ children }) => {
       root.classList.add('light');
       root.classList.remove('dark');
     }
-  }, [isDark, paletteId, secondaryPaletteId]);
+
+    // Aplicar tema visual (neon o glassmorphism)
+    if (visualTheme === 'neon') {
+      root.classList.add('theme-neon');
+      root.classList.remove('theme-glassmorphism');
+    } else {
+      root.classList.add('theme-glassmorphism');
+      root.classList.remove('theme-neon');
+    }
+  }, [isDark, paletteId, secondaryPaletteId, visualTheme]);
 
   const toggleTheme = () => setIsDark(!isDark);
 
@@ -185,6 +201,8 @@ export const ThemeProvider = ({ children }) => {
       gymLogo,
       gymSlogan,
       gymCoverImage,
+      visualTheme,
+      setVisualTheme,
       setGymId,
       saveGymTheme,
       saveGymLogo
