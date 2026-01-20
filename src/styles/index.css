@@ -1042,40 +1042,73 @@ html.theme-industrial.dark body {
   min-height: 100vh;
 }
 
-/* Fondo base de contenido - Textura de ladrillo */
+/* Fondo base de contenido - Textura de ladrillo caricaturizado */
 html.theme-industrial .bg-base,
 html.theme-industrial.dark .bg-base {
-  background:
-    /* Líneas horizontales entre ladrillos */
-    repeating-linear-gradient(0deg,
-      transparent, transparent 24px,
-      rgba(20, 15, 12, 0.6) 24px, rgba(20, 15, 12, 0.6) 28px
+  background-image:
+    /* Mortero horizontal oscuro entre filas */
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 48px,
+      #2d1810 48px,
+      #2d1810 54px
     ),
-    /* Líneas verticales - fila 1 */
-    repeating-linear-gradient(90deg,
-      transparent, transparent 80px,
-      rgba(20, 15, 12, 0.5) 80px, rgba(20, 15, 12, 0.5) 84px
+    /* Mortero vertical - fila impar (ladrillos completos) */
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 96px,
+      #2d1810 96px,
+      #2d1810 102px
     ),
-    /* Líneas verticales - fila 2 (offset) */
-    repeating-linear-gradient(90deg,
-      transparent 0px, transparent 40px,
-      rgba(20, 15, 12, 0.5) 40px, rgba(20, 15, 12, 0.5) 44px,
-      transparent 44px, transparent 124px,
-      rgba(20, 15, 12, 0.5) 124px, rgba(20, 15, 12, 0.5) 128px
+    /* Mortero vertical - fila par (ladrillos offset con medio ladrillo) */
+    repeating-linear-gradient(
+      90deg,
+      #2d1810 0px,
+      #2d1810 6px,
+      transparent 6px,
+      transparent 54px,
+      #2d1810 54px,
+      #2d1810 60px,
+      transparent 60px,
+      transparent 156px,
+      #2d1810 156px,
+      #2d1810 162px,
+      transparent 162px,
+      transparent 198px
     ),
-    /* Variaciones de color en los ladrillos */
-    repeating-linear-gradient(0deg,
-      rgba(95, 45, 35, 1) 0px, rgba(95, 45, 35, 1) 24px,
-      rgba(85, 40, 30, 1) 24px, rgba(85, 40, 30, 1) 28px,
-      rgba(90, 42, 32, 1) 28px, rgba(90, 42, 32, 1) 52px,
-      rgba(88, 43, 33, 1) 52px, rgba(88, 43, 33, 1) 56px
-    ),
-    /* Color base de ladrillo rojo */
-    linear-gradient(135deg,
-      rgba(92, 44, 34, 1) 0%,
-      rgba(78, 38, 28, 1) 50%,
-      rgba(85, 40, 30, 1) 100%
-    ) !important;
+    /* Ladrillos con colores variados - patrón de 4 filas */
+    repeating-linear-gradient(
+      0deg,
+      /* Fila 1 - ladrillos rojos oscuros */
+      #8b4a3a 0px,
+      #8b4a3a 48px,
+      /* Mortero */
+      transparent 48px,
+      transparent 54px,
+      /* Fila 2 - ladrillos naranjas */
+      #b35a45 54px,
+      #b35a45 102px,
+      /* Mortero */
+      transparent 102px,
+      transparent 108px,
+      /* Fila 3 - ladrillos marrones */
+      #7a4030 108px,
+      #7a4030 156px,
+      /* Mortero */
+      transparent 156px,
+      transparent 162px,
+      /* Fila 4 - ladrillos grises/púrpuras */
+      #6b4f5a 162px,
+      #6b4f5a 210px,
+      /* Mortero */
+      transparent 210px,
+      transparent 216px
+    );
+  background-color: #3a2520 !important;
+  background-size: 198px 216px;
+  background-position: 0 0, 0 0, 0 54px, 0 0;
 }
 
 /* Cards - Textura de hierro con remaches */
