@@ -302,12 +302,12 @@ export const Dropdown = ({ trigger, children }) => {
   });
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative z-50">
       <div ref={triggerRef} onClick={handleTriggerClick} style={{ display: 'inline-block' }}>
         {trigger}
       </div>
       {isOpen && (
-        <div className="absolute right-0 mt-1 w-48 bg-card border border-gray-700 rounded-xl shadow-lg z-50 py-1 animate-fadeIn">
+        <div className="absolute right-0 mt-1 w-48 bg-card border border-gray-700 rounded-xl shadow-xl z-[100] py-1 animate-fadeIn">
           {childrenWithClose}
         </div>
       )}
