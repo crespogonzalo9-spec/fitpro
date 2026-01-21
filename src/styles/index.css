@@ -997,21 +997,32 @@ html.theme-neon.dark [class*="bg-gray-800"] {
     inset 0 0 3px rgba(255, 255, 255, 0.3) !important;
 }
 
-/* Preview con Industrial */
+/* Preview con Industrial - con TORNILLOS */
 .theme-industrial .bg-card,
 #theme-preview-container.theme-industrial .bg-card {
   background:
-    radial-gradient(circle at 8px 8px, rgba(70, 80, 90, 0.4) 2px, transparent 2px),
-    radial-gradient(circle at calc(100% - 8px) 8px, rgba(70, 80, 90, 0.4) 2px, transparent 2px),
-    radial-gradient(circle at 8px calc(100% - 8px), rgba(70, 80, 90, 0.4) 2px, transparent 2px),
-    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(70, 80, 90, 0.4) 2px, transparent 2px),
+    /* Tornillos en las esquinas */
+    radial-gradient(circle at 12px 12px, rgba(45, 52, 58, 1) 3px, transparent 3px),
+    radial-gradient(circle at 12px 12px, rgba(85, 95, 105, 1) 4px, transparent 4px),
+    radial-gradient(circle at 12px 12px, rgba(35, 42, 48, 1) 5px, transparent 5px),
+    radial-gradient(circle at calc(100% - 12px) 12px, rgba(45, 52, 58, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 12px) 12px, rgba(85, 95, 105, 1) 4px, transparent 4px),
+    radial-gradient(circle at calc(100% - 12px) 12px, rgba(35, 42, 48, 1) 5px, transparent 5px),
+    radial-gradient(circle at 12px calc(100% - 12px), rgba(45, 52, 58, 1) 3px, transparent 3px),
+    radial-gradient(circle at 12px calc(100% - 12px), rgba(85, 95, 105, 1) 4px, transparent 4px),
+    radial-gradient(circle at 12px calc(100% - 12px), rgba(35, 42, 48, 1) 5px, transparent 5px),
+    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(45, 52, 58, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(85, 95, 105, 1) 4px, transparent 4px),
+    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(35, 42, 48, 1) 5px, transparent 5px),
+    /* Textura de acero */
     repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.05) 1px, rgba(0,0,0,0.05) 2px),
-    linear-gradient(145deg, rgba(50, 58, 66, 0.95), rgba(38, 45, 52, 0.98)) !important;
-  border: 3px solid rgba(85, 95, 105, 0.7) !important;
+    repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(0,0,0,0.02) 50px, rgba(0,0,0,0.02) 51px),
+    linear-gradient(145deg, rgb(50, 58, 66), rgb(38, 45, 52)) !important;
+  border: 3px solid rgb(85, 95, 105) !important;
   box-shadow:
     5px 5px 0px rgba(0, 0, 0, 0.5),
-    inset 2px 2px 0px rgba(255, 255, 255, 0.08),
-    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
+    inset 3px 3px 0px rgba(255, 255, 255, 0.12),
+    inset -3px -3px 0px rgba(0, 0, 0, 0.4) !important;
 }
 
 .theme-industrial .btn-primary,
@@ -1054,14 +1065,28 @@ html.theme-industrial.dark .bg-base {
   min-height: 100vh;
 }
 
-/* Cards - Placas de acero opacas con remaches */
+/* Cards - Placas de acero opacas con TORNILLOS en las esquinas */
 html.theme-industrial .bg-card {
   background:
-    radial-gradient(circle at 8px 8px, rgba(70, 80, 90, 1) 2px, transparent 2px),
-    radial-gradient(circle at calc(100% - 8px) 8px, rgba(70, 80, 90, 1) 2px, transparent 2px),
-    radial-gradient(circle at 8px calc(100% - 8px), rgba(70, 80, 90, 1) 2px, transparent 2px),
-    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(70, 80, 90, 1) 2px, transparent 2px),
+    /* Tornillos esquina superior izquierda */
+    radial-gradient(circle at 12px 12px, rgba(45, 52, 58, 1) 3px, transparent 3px),
+    radial-gradient(circle at 12px 12px, rgba(85, 95, 105, 1) 4px, transparent 4px),
+    radial-gradient(circle at 12px 12px, rgba(35, 42, 48, 1) 5px, transparent 5px),
+    /* Tornillos esquina superior derecha */
+    radial-gradient(circle at calc(100% - 12px) 12px, rgba(45, 52, 58, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 12px) 12px, rgba(85, 95, 105, 1) 4px, transparent 4px),
+    radial-gradient(circle at calc(100% - 12px) 12px, rgba(35, 42, 48, 1) 5px, transparent 5px),
+    /* Tornillos esquina inferior izquierda */
+    radial-gradient(circle at 12px calc(100% - 12px), rgba(45, 52, 58, 1) 3px, transparent 3px),
+    radial-gradient(circle at 12px calc(100% - 12px), rgba(85, 95, 105, 1) 4px, transparent 4px),
+    radial-gradient(circle at 12px calc(100% - 12px), rgba(35, 42, 48, 1) 5px, transparent 5px),
+    /* Tornillos esquina inferior derecha */
+    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(45, 52, 58, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(85, 95, 105, 1) 4px, transparent 4px),
+    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(35, 42, 48, 1) 5px, transparent 5px),
+    /* Textura de acero rayado */
     repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.05) 1px, rgba(0,0,0,0.05) 2px),
+    repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(0,0,0,0.02) 50px, rgba(0,0,0,0.02) 51px),
     linear-gradient(145deg, rgb(50, 58, 66), rgb(38, 45, 52)) !important;
   border: 3px solid rgb(85, 95, 105) !important;
   box-shadow:
@@ -1074,11 +1099,25 @@ html.theme-industrial .bg-card {
 
 html.theme-industrial.dark .bg-card {
   background:
-    radial-gradient(circle at 8px 8px, rgba(60, 70, 80, 1) 2px, transparent 2px),
-    radial-gradient(circle at calc(100% - 8px) 8px, rgba(60, 70, 80, 1) 2px, transparent 2px),
-    radial-gradient(circle at 8px calc(100% - 8px), rgba(60, 70, 80, 1) 2px, transparent 2px),
-    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(60, 70, 80, 1) 2px, transparent 2px),
+    /* Tornillos esquina superior izquierda */
+    radial-gradient(circle at 12px 12px, rgba(40, 48, 56, 1) 3px, transparent 3px),
+    radial-gradient(circle at 12px 12px, rgba(75, 85, 95, 1) 4px, transparent 4px),
+    radial-gradient(circle at 12px 12px, rgba(25, 32, 38, 1) 5px, transparent 5px),
+    /* Tornillos esquina superior derecha */
+    radial-gradient(circle at calc(100% - 12px) 12px, rgba(40, 48, 56, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 12px) 12px, rgba(75, 85, 95, 1) 4px, transparent 4px),
+    radial-gradient(circle at calc(100% - 12px) 12px, rgba(25, 32, 38, 1) 5px, transparent 5px),
+    /* Tornillos esquina inferior izquierda */
+    radial-gradient(circle at 12px calc(100% - 12px), rgba(40, 48, 56, 1) 3px, transparent 3px),
+    radial-gradient(circle at 12px calc(100% - 12px), rgba(75, 85, 95, 1) 4px, transparent 4px),
+    radial-gradient(circle at 12px calc(100% - 12px), rgba(25, 32, 38, 1) 5px, transparent 5px),
+    /* Tornillos esquina inferior derecha */
+    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(40, 48, 56, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(75, 85, 95, 1) 4px, transparent 4px),
+    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(25, 32, 38, 1) 5px, transparent 5px),
+    /* Textura de acero rayado */
     repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.08) 1px, rgba(0,0,0,0.08) 2px),
+    repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(0,0,0,0.04) 50px, rgba(0,0,0,0.04) 51px),
     linear-gradient(145deg, rgb(38, 44, 50), rgb(28, 34, 40)) !important;
   border: 3px solid rgb(75, 85, 95) !important;
   box-shadow:
@@ -1165,18 +1204,27 @@ html.theme-industrial .text-primary {
   text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
 }
 
-/* Sidebar - Textura de madera oscura con vetas */
+/* Sidebar - Panel de acero con textura cepillada y remaches laterales */
 html.theme-industrial .bg-sidebar {
   background:
+    /* Remaches verticales en el borde derecho */
+    radial-gradient(circle at calc(100% - 8px) 40px, rgba(65, 72, 78, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 8px) 40px, rgba(85, 92, 98, 1) 4px, transparent 4px),
+    radial-gradient(circle at calc(100% - 8px) 120px, rgba(65, 72, 78, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 8px) 120px, rgba(85, 92, 98, 1) 4px, transparent 4px),
+    radial-gradient(circle at calc(100% - 8px) 200px, rgba(65, 72, 78, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 8px) 200px, rgba(85, 92, 98, 1) 4px, transparent 4px),
+    radial-gradient(circle at calc(100% - 8px) 280px, rgba(65, 72, 78, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 8px) 280px, rgba(85, 92, 98, 1) 4px, transparent 4px),
+    /* Textura de acero cepillado vertical */
     repeating-linear-gradient(180deg,
-      transparent, transparent 3px,
-      rgba(0, 0, 0, 0.08) 3px, rgba(0, 0, 0, 0.08) 4px,
-      transparent 4px, transparent 12px,
-      rgba(0, 0, 0, 0.05) 12px, rgba(0, 0, 0, 0.05) 13px
+      transparent, transparent 2px,
+      rgba(0, 0, 0, 0.06) 2px, rgba(0, 0, 0, 0.06) 3px
     ),
-    repeating-linear-gradient(90deg,
+    /* Paneles horizontales */
+    repeating-linear-gradient(0deg,
       transparent, transparent 80px,
-      rgba(0, 0, 0, 0.03) 80px, rgba(0, 0, 0, 0.03) 82px
+      rgba(0, 0, 0, 0.08) 80px, rgba(0, 0, 0, 0.08) 82px
     ),
     linear-gradient(180deg, rgba(42, 38, 34, 0.98), rgba(32, 28, 24, 1)) !important;
   border-right: 4px solid rgba(70, 60, 50, 0.9) !important;
@@ -1187,15 +1235,24 @@ html.theme-industrial .bg-sidebar {
 
 html.theme-industrial.dark .bg-sidebar {
   background:
+    /* Remaches verticales en el borde derecho */
+    radial-gradient(circle at calc(100% - 8px) 40px, rgba(55, 62, 68, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 8px) 40px, rgba(75, 82, 88, 1) 4px, transparent 4px),
+    radial-gradient(circle at calc(100% - 8px) 120px, rgba(55, 62, 68, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 8px) 120px, rgba(75, 82, 88, 1) 4px, transparent 4px),
+    radial-gradient(circle at calc(100% - 8px) 200px, rgba(55, 62, 68, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 8px) 200px, rgba(75, 82, 88, 1) 4px, transparent 4px),
+    radial-gradient(circle at calc(100% - 8px) 280px, rgba(55, 62, 68, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 8px) 280px, rgba(75, 82, 88, 1) 4px, transparent 4px),
+    /* Textura de acero cepillado vertical */
     repeating-linear-gradient(180deg,
-      transparent, transparent 3px,
-      rgba(0, 0, 0, 0.12) 3px, rgba(0, 0, 0, 0.12) 4px,
-      transparent 4px, transparent 12px,
-      rgba(0, 0, 0, 0.08) 12px, rgba(0, 0, 0, 0.08) 13px
+      transparent, transparent 2px,
+      rgba(0, 0, 0, 0.1) 2px, rgba(0, 0, 0, 0.1) 3px
     ),
-    repeating-linear-gradient(90deg,
+    /* Paneles horizontales */
+    repeating-linear-gradient(0deg,
       transparent, transparent 80px,
-      rgba(0, 0, 0, 0.05) 80px, rgba(0, 0, 0, 0.05) 82px
+      rgba(0, 0, 0, 0.12) 80px, rgba(0, 0, 0, 0.12) 82px
     ),
     linear-gradient(180deg, rgba(28, 26, 24, 1), rgba(18, 16, 14, 1)) !important;
   border-right: 4px solid rgba(60, 50, 40, 1) !important;
@@ -1251,14 +1308,25 @@ html.theme-industrial textarea:focus {
     0 0 0 3px rgba(var(--color-primary), 0.2) !important;
 }
 
-/* Cards internas - Metal sobre metal OPACO */
+/* Cards internas - Metal sobre metal OPACO con TORNILLOS pequeños */
 html.theme-industrial .bg-gray-800\/50,
 html.theme-industrial [class*="bg-gray-800"] {
   background:
-    radial-gradient(circle at 6px 6px, rgba(60, 68, 76, 1) 1.5px, transparent 1.5px),
-    radial-gradient(circle at calc(100% - 6px) 6px, rgba(60, 68, 76, 1) 1.5px, transparent 1.5px),
-    radial-gradient(circle at 6px calc(100% - 6px), rgba(60, 68, 76, 1) 1.5px, transparent 1.5px),
-    radial-gradient(circle at calc(100% - 6px) calc(100% - 6px), rgba(60, 68, 76, 1) 1.5px, transparent 1.5px),
+    /* Tornillos pequeños en las esquinas */
+    radial-gradient(circle at 8px 8px, rgba(52, 58, 64, 1) 2px, transparent 2px),
+    radial-gradient(circle at 8px 8px, rgba(72, 80, 88, 1) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 8px 8px, rgba(40, 46, 52, 1) 3.5px, transparent 3.5px),
+    radial-gradient(circle at calc(100% - 8px) 8px, rgba(52, 58, 64, 1) 2px, transparent 2px),
+    radial-gradient(circle at calc(100% - 8px) 8px, rgba(72, 80, 88, 1) 2.5px, transparent 2.5px),
+    radial-gradient(circle at calc(100% - 8px) 8px, rgba(40, 46, 52, 1) 3.5px, transparent 3.5px),
+    radial-gradient(circle at 8px calc(100% - 8px), rgba(52, 58, 64, 1) 2px, transparent 2px),
+    radial-gradient(circle at 8px calc(100% - 8px), rgba(72, 80, 88, 1) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 8px calc(100% - 8px), rgba(40, 46, 52, 1) 3.5px, transparent 3.5px),
+    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(52, 58, 64, 1) 2px, transparent 2px),
+    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(72, 80, 88, 1) 2.5px, transparent 2.5px),
+    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(40, 46, 52, 1) 3.5px, transparent 3.5px),
+    /* Textura diagonal de acero cepillado */
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 3px),
     repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.04) 1px, rgba(0,0,0,0.04) 2px),
     linear-gradient(135deg, rgb(42, 48, 54), rgb(32, 38, 44)) !important;
   border: 3px solid rgb(68, 76, 84) !important;
@@ -1271,10 +1339,21 @@ html.theme-industrial [class*="bg-gray-800"] {
 html.theme-industrial.dark .bg-gray-800\/50,
 html.theme-industrial.dark [class*="bg-gray-800"] {
   background:
-    radial-gradient(circle at 6px 6px, rgba(50, 58, 66, 1) 1.5px, transparent 1.5px),
-    radial-gradient(circle at calc(100% - 6px) 6px, rgba(50, 58, 66, 1) 1.5px, transparent 1.5px),
-    radial-gradient(circle at 6px calc(100% - 6px), rgba(50, 58, 66, 1) 1.5px, transparent 1.5px),
-    radial-gradient(circle at calc(100% - 6px) calc(100% - 6px), rgba(50, 58, 66, 1) 1.5px, transparent 1.5px),
+    /* Tornillos pequeños en las esquinas */
+    radial-gradient(circle at 8px 8px, rgba(45, 52, 58, 1) 2px, transparent 2px),
+    radial-gradient(circle at 8px 8px, rgba(65, 73, 81, 1) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 8px 8px, rgba(30, 36, 42, 1) 3.5px, transparent 3.5px),
+    radial-gradient(circle at calc(100% - 8px) 8px, rgba(45, 52, 58, 1) 2px, transparent 2px),
+    radial-gradient(circle at calc(100% - 8px) 8px, rgba(65, 73, 81, 1) 2.5px, transparent 2.5px),
+    radial-gradient(circle at calc(100% - 8px) 8px, rgba(30, 36, 42, 1) 3.5px, transparent 3.5px),
+    radial-gradient(circle at 8px calc(100% - 8px), rgba(45, 52, 58, 1) 2px, transparent 2px),
+    radial-gradient(circle at 8px calc(100% - 8px), rgba(65, 73, 81, 1) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 8px calc(100% - 8px), rgba(30, 36, 42, 1) 3.5px, transparent 3.5px),
+    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(45, 52, 58, 1) 2px, transparent 2px),
+    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(65, 73, 81, 1) 2.5px, transparent 2.5px),
+    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(30, 36, 42, 1) 3.5px, transparent 3.5px),
+    /* Textura diagonal de acero cepillado */
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 3px),
     repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.06) 1px, rgba(0,0,0,0.06) 2px),
     linear-gradient(135deg, rgb(30, 36, 42), rgb(20, 26, 32)) !important;
   border: 3px solid rgb(58, 66, 74) !important;
