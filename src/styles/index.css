@@ -1047,43 +1047,44 @@ html.theme-industrial .bg-base,
 html.theme-industrial.dark .bg-base {
   background-color: #2b1f1c !important;
   background-image:
-    /* SVG con ladrillos estilo juego: sombras marcadas, grietas, colores cálidos uniformes */
-    url("data:image/svg+xml,%3Csvg width='380' height='190' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ffffff' stop-opacity='0.25'/%3E%3Cstop offset='70%25' stop-color='%23000000' stop-opacity='0'/%3E%3Cstop offset='100%25' stop-color='%23000000' stop-opacity='0.35'/%3E%3C/linearGradient%3E%3C/defs%3E%3C!-- FILA 1 --%3E%3Cg%3E%3Crect x='4' y='4' width='84' height='38' rx='4' fill='%23c96d52'/%3E%3Crect x='4' y='4' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3Cpath d='M10 12 Q18 15 25 12' stroke='%23000000' stroke-width='1.2' opacity='0.4' fill='none'/%3E%3Cpath d='M70 28 L77 35' stroke='%23000000' stroke-width='1' opacity='0.35'/%3E%3Cline x1='88' y1='4' x2='88' y2='42' stroke='%23000000' stroke-width='2' opacity='0.5'/%3E%3Cline x1='4' y1='42' x2='88' y2='42' stroke='%23000000' stroke-width='2.5' opacity='0.6'/%3E%3C/g%3E%3Cg%3E%3Crect x='98' y='4' width='84' height='38' rx='4' fill='%23a8543e'/%3E%3Crect x='98' y='4' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3Cpath d='M105 18 L112 24 M115 30 L120 35' stroke='%23000000' stroke-width='1' opacity='0.4'/%3E%3Cline x1='182' y1='4' x2='182' y2='42' stroke='%23000000' stroke-width='2' opacity='0.5'/%3E%3Cline x1='98' y1='42' x2='182' y2='42' stroke='%23000000' stroke-width='2.5' opacity='0.6'/%3E%3C/g%3E%3Cg%3E%3Crect x='192' y='4' width='84' height='38' rx='4' fill='%23e07856'/%3E%3Crect x='192' y='4' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3Cpath d='M200 15 Q210 18 220 15 M230 25 L235 30' stroke='%23000000' stroke-width='1.1' opacity='0.4' fill='none'/%3E%3Cline x1='276' y1='4' x2='276' y2='42' stroke='%23000000' stroke-width='2' opacity='0.5'/%3E%3Cline x1='192' y1='42' x2='276' y2='42' stroke='%23000000' stroke-width='2.5' opacity='0.6'/%3E%3C/g%3E%3Cg%3E%3Crect x='286' y='4' width='84' height='38' rx='4' fill='%23b5634a'/%3E%3Crect x='286' y='4' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3Cpath d='M295 20 L300 25' stroke='%23000000' stroke-width='1' opacity='0.35'/%3E%3Cline x1='370' y1='4' x2='370' y2='42' stroke='%23000000' stroke-width='2' opacity='0.5'/%3E%3Cline x1='286' y1='42' x2='370' y2='42' stroke='%23000000' stroke-width='2.5' opacity='0.6'/%3E%3C/g%3E%3C!-- FILA 2 offset --%3E%3Cg%3E%3Crect x='-43' y='51' width='84' height='38' rx='4' fill='%239d4d38'/%3E%3Crect x='-43' y='51' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3C/g%3E%3Cg%3E%3Crect x='51' y='51' width='84' height='38' rx='4' fill='%23d16b4f'/%3E%3Crect x='51' y='51' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3Cpath d='M60 63 Q70 66 80 63 M90 75 L95 80' stroke='%23000000' stroke-width='1.1' opacity='0.4' fill='none'/%3E%3Cline x1='135' y1='51' x2='135' y2='89' stroke='%23000000' stroke-width='2' opacity='0.5'/%3E%3Cline x1='51' y1='89' x2='135' y2='89' stroke='%23000000' stroke-width='2.5' opacity='0.6'/%3E%3C/g%3E%3Cg%3E%3Crect x='145' y='51' width='84' height='38' rx='4' fill='%23a35840'/%3E%3Crect x='145' y='51' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3Cpath d='M155 68 L162 74' stroke='%23000000' stroke-width='1' opacity='0.35'/%3E%3Cline x1='229' y1='51' x2='229' y2='89' stroke='%23000000' stroke-width='2' opacity='0.5'/%3E%3Cline x1='145' y1='89' x2='229' y2='89' stroke='%23000000' stroke-width='2.5' opacity='0.6'/%3E%3C/g%3E%3Cg%3E%3Crect x='239' y='51' width='84' height='38' rx='4' fill='%23c96d52'/%3E%3Crect x='239' y='51' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3Cpath d='M250 65 Q260 68 270 65' stroke='%23000000' stroke-width='1' opacity='0.4' fill='none'/%3E%3Cline x1='323' y1='51' x2='323' y2='89' stroke='%23000000' stroke-width='2' opacity='0.5'/%3E%3Cline x1='239' y1='89' x2='323' y2='89' stroke='%23000000' stroke-width='2.5' opacity='0.6'/%3E%3C/g%3E%3Cg%3E%3Crect x='333' y='51' width='84' height='38' rx='4' fill='%23e07856'/%3E%3Crect x='333' y='51' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3C/g%3E%3C!-- FILA 3 --%3E%3Cg%3E%3Crect x='4' y='98' width='84' height='38' rx='4' fill='%23b5634a'/%3E%3Crect x='4' y='98' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3Cpath d='M15 110 L22 116 M30 120 Q40 123 50 120' stroke='%23000000' stroke-width='1.1' opacity='0.4' fill='none'/%3E%3Cline x1='88' y1='98' x2='88' y2='136' stroke='%23000000' stroke-width='2' opacity='0.5'/%3E%3Cline x1='4' y1='136' x2='88' y2='136' stroke='%23000000' stroke-width='2.5' opacity='0.6'/%3E%3C/g%3E%3Cg%3E%3Crect x='98' y='98' width='84' height='38' rx='4' fill='%23d16b4f'/%3E%3Crect x='98' y='98' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3Cpath d='M110 115 L115 120' stroke='%23000000' stroke-width='1' opacity='0.35'/%3E%3Cline x1='182' y1='98' x2='182' y2='136' stroke='%23000000' stroke-width='2' opacity='0.5'/%3E%3Cline x1='98' y1='136' x2='182' y2='136' stroke='%23000000' stroke-width='2.5' opacity='0.6'/%3E%3C/g%3E%3Cg%3E%3Crect x='192' y='98' width='84' height='38' rx='4' fill='%23a8543e'/%3E%3Crect x='192' y='98' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3Cpath d='M200 112 Q210 115 220 112' stroke='%23000000' stroke-width='1' opacity='0.4' fill='none'/%3E%3Cline x1='276' y1='98' x2='276' y2='136' stroke='%23000000' stroke-width='2' opacity='0.5'/%3E%3Cline x1='192' y1='136' x2='276' y2='136' stroke='%23000000' stroke-width='2.5' opacity='0.6'/%3E%3C/g%3E%3Cg%3E%3Crect x='286' y='98' width='84' height='38' rx='4' fill='%23e07856'/%3E%3Crect x='286' y='98' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3Cpath d='M295 120 L302 126' stroke='%23000000' stroke-width='1' opacity='0.35'/%3E%3Cline x1='370' y1='98' x2='370' y2='136' stroke='%23000000' stroke-width='2' opacity='0.5'/%3E%3Cline x1='286' y1='136' x2='370' y2='136' stroke='%23000000' stroke-width='2.5' opacity='0.6'/%3E%3C/g%3E%3C!-- FILA 4 offset --%3E%3Cg%3E%3Crect x='-43' y='145' width='84' height='38' rx='4' fill='%23c96d52'/%3E%3Crect x='-43' y='145' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3C/g%3E%3Cg%3E%3Crect x='51' y='145' width='84' height='38' rx='4' fill='%23a35840'/%3E%3Crect x='51' y='145' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3Cpath d='M65 158 Q75 161 85 158' stroke='%23000000' stroke-width='1' opacity='0.4' fill='none'/%3E%3Cline x1='135' y1='145' x2='135' y2='183' stroke='%23000000' stroke-width='2' opacity='0.5'/%3E%3Cline x1='51' y1='183' x2='135' y2='183' stroke='%23000000' stroke-width='2.5' opacity='0.6'/%3E%3C/g%3E%3Cg%3E%3Crect x='145' y='145' width='84' height='38' rx='4' fill='%239d4d38'/%3E%3Crect x='145' y='145' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3Cpath d='M155 165 L160 170 M170 160 L175 165' stroke='%23000000' stroke-width='1' opacity='0.35'/%3E%3Cline x1='229' y1='145' x2='229' y2='183' stroke='%23000000' stroke-width='2' opacity='0.5'/%3E%3Cline x1='145' y1='183' x2='229' y2='183' stroke='%23000000' stroke-width='2.5' opacity='0.6'/%3E%3C/g%3E%3Cg%3E%3Crect x='239' y='145' width='84' height='38' rx='4' fill='%23b5634a'/%3E%3Crect x='239' y='145' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3Cline x1='323' y1='145' x2='323' y2='183' stroke='%23000000' stroke-width='2' opacity='0.5'/%3E%3Cline x1='239' y1='183' x2='323' y2='183' stroke='%23000000' stroke-width='2.5' opacity='0.6'/%3E%3C/g%3E%3Cg%3E%3Crect x='333' y='145' width='84' height='38' rx='4' fill='%23d16b4f'/%3E%3Crect x='333' y='145' width='84' height='38' rx='4' fill='url(%23g1)'/%3E%3C/g%3E%3C/svg%3E");
+    /* SVG con ladrillos: espaciado uniforme, gradientes mejorados, sombras en bordes */
+    url("data:image/svg+xml,%3Csvg width='376' height='188' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ffffff' stop-opacity='0.3'/%3E%3Cstop offset='50%25' stop-color='%23ffffff' stop-opacity='0'/%3E%3Cstop offset='100%25' stop-color='%23000000' stop-opacity='0.4'/%3E%3C/linearGradient%3E%3C/defs%3E%3C!-- FILA 1 --%3E%3Cg%3E%3Crect x='0' y='0' width='86' height='40' rx='3' fill='%23c96d52'/%3E%3Crect x='0' y='0' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='84' y1='2' x2='84' y2='38' stroke='%23000000' stroke-width='2.5' opacity='0.55'/%3E%3Cline x1='2' y1='38' x2='84' y2='38' stroke='%23000000' stroke-width='3' opacity='0.65'/%3E%3Cpath d='M10 12 Q20 15 30 12' stroke='%23000000' stroke-width='1.3' opacity='0.45' fill='none'/%3E%3C/g%3E%3Cg%3E%3Crect x='94' y='0' width='86' height='40' rx='3' fill='%23e07856'/%3E%3Crect x='94' y='0' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='178' y1='2' x2='178' y2='38' stroke='%23000000' stroke-width='2.5' opacity='0.55'/%3E%3Cline x1='96' y1='38' x2='178' y2='38' stroke='%23000000' stroke-width='3' opacity='0.65'/%3E%3Cpath d='M100 18 L108 25' stroke='%23000000' stroke-width='1.2' opacity='0.4'/%3E%3C/g%3E%3Cg%3E%3Crect x='188' y='0' width='86' height='40' rx='3' fill='%23a8543e'/%3E%3Crect x='188' y='0' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='272' y1='2' x2='272' y2='38' stroke='%23000000' stroke-width='2.5' opacity='0.55'/%3E%3Cline x1='190' y1='38' x2='272' y2='38' stroke='%23000000' stroke-width='3' opacity='0.65'/%3E%3Cpath d='M200 15 Q210 17 220 15' stroke='%23000000' stroke-width='1.2' opacity='0.4' fill='none'/%3E%3C/g%3E%3Cg%3E%3Crect x='282' y='0' width='86' height='40' rx='3' fill='%23b5634a'/%3E%3Crect x='282' y='0' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='366' y1='2' x2='366' y2='38' stroke='%23000000' stroke-width='2.5' opacity='0.55'/%3E%3Cline x1='284' y1='38' x2='366' y2='38' stroke='%23000000' stroke-width='3' opacity='0.65'/%3E%3C/g%3E%3C!-- FILA 2 offset --%3E%3Cg%3E%3Crect x='-47' y='48' width='86' height='40' rx='3' fill='%23d16b4f'/%3E%3Crect x='-47' y='48' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3C/g%3E%3Cg%3E%3Crect x='47' y='48' width='86' height='40' rx='3' fill='%239d4d38'/%3E%3Crect x='47' y='48' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='131' y1='50' x2='131' y2='86' stroke='%23000000' stroke-width='2.5' opacity='0.55'/%3E%3Cline x1='49' y1='86' x2='131' y2='86' stroke='%23000000' stroke-width='3' opacity='0.65'/%3E%3Cpath d='M55 60 Q65 63 75 60 M85 70 L92 77' stroke='%23000000' stroke-width='1.3' opacity='0.45' fill='none'/%3E%3C/g%3E%3Cg%3E%3Crect x='141' y='48' width='86' height='40' rx='3' fill='%23a35840'/%3E%3Crect x='141' y='48' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='225' y1='50' x2='225' y2='86' stroke='%23000000' stroke-width='2.5' opacity='0.55'/%3E%3Cline x1='143' y1='86' x2='225' y2='86' stroke='%23000000' stroke-width='3' opacity='0.65'/%3E%3Cpath d='M150 68 L158 75' stroke='%23000000' stroke-width='1.2' opacity='0.4'/%3E%3C/g%3E%3Cg%3E%3Crect x='235' y='48' width='86' height='40' rx='3' fill='%23c96d52'/%3E%3Crect x='235' y='48' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='319' y1='50' x2='319' y2='86' stroke='%23000000' stroke-width='2.5' opacity='0.55'/%3E%3Cline x1='237' y1='86' x2='319' y2='86' stroke='%23000000' stroke-width='3' opacity='0.65'/%3E%3Cpath d='M245 63 Q255 66 265 63' stroke='%23000000' stroke-width='1.2' opacity='0.4' fill='none'/%3E%3C/g%3E%3Cg%3E%3Crect x='329' y='48' width='86' height='40' rx='3' fill='%23e07856'/%3E%3Crect x='329' y='48' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3C/g%3E%3C!-- FILA 3 --%3E%3Cg%3E%3Crect x='0' y='96' width='86' height='40' rx='3' fill='%23b5634a'/%3E%3Crect x='0' y='96' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='84' y1='98' x2='84' y2='134' stroke='%23000000' stroke-width='2.5' opacity='0.55'/%3E%3Cline x1='2' y1='134' x2='84' y2='134' stroke='%23000000' stroke-width='3' opacity='0.65'/%3E%3Cpath d='M15 108 L23 115 M30 118 Q40 121 50 118' stroke='%23000000' stroke-width='1.3' opacity='0.45' fill='none'/%3E%3C/g%3E%3Cg%3E%3Crect x='94' y='96' width='86' height='40' rx='3' fill='%23d16b4f'/%3E%3Crect x='94' y='96' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='178' y1='98' x2='178' y2='134' stroke='%23000000' stroke-width='2.5' opacity='0.55'/%3E%3Cline x1='96' y1='134' x2='178' y2='134' stroke='%23000000' stroke-width='3' opacity='0.65'/%3E%3Cpath d='M105 113 L112 120' stroke='%23000000' stroke-width='1.2' opacity='0.4'/%3E%3C/g%3E%3Cg%3E%3Crect x='188' y='96' width='86' height='40' rx='3' fill='%23a8543e'/%3E%3Crect x='188' y='96' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='272' y1='98' x2='272' y2='134' stroke='%23000000' stroke-width='2.5' opacity='0.55'/%3E%3Cline x1='190' y1='134' x2='272' y2='134' stroke='%23000000' stroke-width='3' opacity='0.65'/%3E%3Cpath d='M200 110 Q210 113 220 110' stroke='%23000000' stroke-width='1.2' opacity='0.4' fill='none'/%3E%3C/g%3E%3Cg%3E%3Crect x='282' y='96' width='86' height='40' rx='3' fill='%23e07856'/%3E%3Crect x='282' y='96' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='366' y1='98' x2='366' y2='134' stroke='%23000000' stroke-width='2.5' opacity='0.55'/%3E%3Cline x1='284' y1='134' x2='366' y2='134' stroke='%23000000' stroke-width='3' opacity='0.65'/%3E%3Cpath d='M295 118 L302 125' stroke='%23000000' stroke-width='1.2' opacity='0.4'/%3E%3C/g%3E%3C!-- FILA 4 offset --%3E%3Cg%3E%3Crect x='-47' y='144' width='86' height='40' rx='3' fill='%23c96d52'/%3E%3Crect x='-47' y='144' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3C/g%3E%3Cg%3E%3Crect x='47' y='144' width='86' height='40' rx='3' fill='%23a35840'/%3E%3Crect x='47' y='144' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='131' y1='146' x2='131' y2='182' stroke='%23000000' stroke-width='2.5' opacity='0.55'/%3E%3Cline x1='49' y1='182' x2='131' y2='182' stroke='%23000000' stroke-width='3' opacity='0.65'/%3E%3Cpath d='M60 156 Q70 159 80 156' stroke='%23000000' stroke-width='1.2' opacity='0.4' fill='none'/%3E%3C/g%3E%3Cg%3E%3Crect x='141' y='144' width='86' height='40' rx='3' fill='%239d4d38'/%3E%3Crect x='141' y='144' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='225' y1='146' x2='225' y2='182' stroke='%23000000' stroke-width='2.5' opacity='0.55'/%3E%3Cline x1='143' y1='182' x2='225' y2='182' stroke='%23000000' stroke-width='3' opacity='0.65'/%3E%3Cpath d='M150 163 L157 170 M165 158 L172 165' stroke='%23000000' stroke-width='1.2' opacity='0.4'/%3E%3C/g%3E%3Cg%3E%3Crect x='235' y='144' width='86' height='40' rx='3' fill='%23b5634a'/%3E%3Crect x='235' y='144' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='319' y1='146' x2='319' y2='182' stroke='%23000000' stroke-width='2.5' opacity='0.55'/%3E%3Cline x1='237' y1='182' x2='319' y2='182' stroke='%23000000' stroke-width='3' opacity='0.65'/%3E%3C/g%3E%3Cg%3E%3Crect x='329' y='144' width='86' height='40' rx='3' fill='%23d16b4f'/%3E%3Crect x='329' y='144' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: repeat;
-  background-size: 380px 190px;
+  background-size: 376px 188px;
+  min-height: 100vh;
 }
 
-/* Cards - Textura de hierro con remaches */
+/* Cards - Placas de acero opacas con remaches */
 html.theme-industrial .bg-card {
   background:
-    radial-gradient(circle at 8px 8px, rgba(70, 80, 90, 0.4) 2px, transparent 2px),
-    radial-gradient(circle at calc(100% - 8px) 8px, rgba(70, 80, 90, 0.4) 2px, transparent 2px),
-    radial-gradient(circle at 8px calc(100% - 8px), rgba(70, 80, 90, 0.4) 2px, transparent 2px),
-    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(70, 80, 90, 0.4) 2px, transparent 2px),
+    radial-gradient(circle at 8px 8px, rgba(70, 80, 90, 1) 2px, transparent 2px),
+    radial-gradient(circle at calc(100% - 8px) 8px, rgba(70, 80, 90, 1) 2px, transparent 2px),
+    radial-gradient(circle at 8px calc(100% - 8px), rgba(70, 80, 90, 1) 2px, transparent 2px),
+    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(70, 80, 90, 1) 2px, transparent 2px),
     repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.05) 1px, rgba(0,0,0,0.05) 2px),
-    linear-gradient(145deg, rgba(50, 58, 66, 0.95), rgba(38, 45, 52, 0.98)) !important;
-  border: 3px solid rgba(85, 95, 105, 0.7) !important;
+    linear-gradient(145deg, rgb(50, 58, 66), rgb(38, 45, 52)) !important;
+  border: 3px solid rgb(85, 95, 105) !important;
   box-shadow:
     5px 5px 0px rgba(0, 0, 0, 0.5),
-    inset 2px 2px 0px rgba(255, 255, 255, 0.08),
-    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
+    inset 3px 3px 0px rgba(255, 255, 255, 0.12),
+    inset -3px -3px 0px rgba(0, 0, 0, 0.4) !important;
   transition: all 0.2s ease;
   position: relative;
 }
 
 html.theme-industrial.dark .bg-card {
   background:
-    radial-gradient(circle at 8px 8px, rgba(60, 70, 80, 0.5) 2px, transparent 2px),
-    radial-gradient(circle at calc(100% - 8px) 8px, rgba(60, 70, 80, 0.5) 2px, transparent 2px),
-    radial-gradient(circle at 8px calc(100% - 8px), rgba(60, 70, 80, 0.5) 2px, transparent 2px),
-    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(60, 70, 80, 0.5) 2px, transparent 2px),
+    radial-gradient(circle at 8px 8px, rgba(60, 70, 80, 1) 2px, transparent 2px),
+    radial-gradient(circle at calc(100% - 8px) 8px, rgba(60, 70, 80, 1) 2px, transparent 2px),
+    radial-gradient(circle at 8px calc(100% - 8px), rgba(60, 70, 80, 1) 2px, transparent 2px),
+    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), rgba(60, 70, 80, 1) 2px, transparent 2px),
     repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.08) 1px, rgba(0,0,0,0.08) 2px),
-    linear-gradient(145deg, rgba(38, 44, 50, 0.98), rgba(28, 34, 40, 1)) !important;
-  border: 3px solid rgba(75, 85, 95, 0.8) !important;
+    linear-gradient(145deg, rgb(38, 44, 50), rgb(28, 34, 40)) !important;
+  border: 3px solid rgb(75, 85, 95) !important;
   box-shadow:
     5px 5px 0px rgba(0, 0, 0, 0.6),
-    inset 2px 2px 0px rgba(255, 255, 255, 0.05),
-    inset -2px -2px 0px rgba(0, 0, 0, 0.4) !important;
+    inset 3px 3px 0px rgba(255, 255, 255, 0.08),
+    inset -3px -3px 0px rgba(0, 0, 0, 0.5) !important;
 }
 
 html.theme-industrial .bg-card:hover {
@@ -1102,16 +1103,16 @@ html.theme-industrial.dark .bg-card:hover {
     inset -2px -2px 0px rgba(0, 0, 0, 0.35) !important;
 }
 
-/* Botones - Textura de hierro pesado */
+/* Botones - Textura de hierro pesado OPACO */
 html.theme-industrial .btn-primary {
   background:
     repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px),
-    linear-gradient(145deg, rgba(var(--color-primary), 0.95), rgba(var(--color-primary), 0.75)) !important;
-  border: 3px solid rgba(var(--color-primary), 0.7) !important;
+    linear-gradient(145deg, rgb(var(--color-primary)), rgba(var(--color-primary), 0.85)) !important;
+  border: 3px solid rgb(var(--color-primary)) !important;
   box-shadow:
     4px 4px 0px rgba(0, 0, 0, 0.4),
-    inset 2px 2px 0px rgba(255, 255, 255, 0.15),
-    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
+    inset 3px 3px 0px rgba(255, 255, 255, 0.2),
+    inset -3px -3px 0px rgba(0, 0, 0, 0.4) !important;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 800;
@@ -1121,12 +1122,12 @@ html.theme-industrial .btn-primary {
 html.theme-industrial.dark .btn-primary {
   background:
     repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px),
-    linear-gradient(145deg, rgba(var(--color-primary), 0.9), rgba(var(--color-primary), 0.7)) !important;
-  border: 3px solid rgba(var(--color-primary), 0.8) !important;
+    linear-gradient(145deg, rgb(var(--color-primary)), rgba(var(--color-primary), 0.8)) !important;
+  border: 3px solid rgb(var(--color-primary)) !important;
   box-shadow:
     4px 4px 0px rgba(0, 0, 0, 0.5),
-    inset 2px 2px 0px rgba(255, 255, 255, 0.12),
-    inset -2px -2px 0px rgba(0, 0, 0, 0.4) !important;
+    inset 3px 3px 0px rgba(255, 255, 255, 0.15),
+    inset -3px -3px 0px rgba(0, 0, 0, 0.5) !important;
 }
 
 html.theme-industrial .btn-primary:hover {
@@ -1250,67 +1251,110 @@ html.theme-industrial textarea:focus {
     0 0 0 3px rgba(var(--color-primary), 0.2) !important;
 }
 
-/* Cards internas - Textura de ladrillo */
+/* Cards internas - Metal sobre metal OPACO */
 html.theme-industrial .bg-gray-800\/50,
 html.theme-industrial [class*="bg-gray-800"] {
   background:
-    repeating-linear-gradient(0deg,
-      transparent, transparent 16px,
-      rgba(0, 0, 0, 0.15) 16px, rgba(0, 0, 0, 0.15) 17px
-    ),
-    repeating-linear-gradient(90deg,
-      transparent, transparent 60px,
-      rgba(0, 0, 0, 0.12) 60px, rgba(0, 0, 0, 0.12) 61px
-    ),
-    repeating-linear-gradient(90deg,
-      transparent 0px, transparent 30px,
-      rgba(0, 0, 0, 0.08) 30px, rgba(0, 0, 0, 0.08) 31px,
-      transparent 31px, transparent 91px,
-      rgba(0, 0, 0, 0.08) 91px, rgba(0, 0, 0, 0.08) 92px
-    ),
-    linear-gradient(135deg, rgba(48, 44, 40, 0.9), rgba(38, 34, 30, 0.95)) !important;
-  border: 3px solid rgba(75, 65, 55, 0.6) !important;
+    radial-gradient(circle at 6px 6px, rgba(60, 68, 76, 1) 1.5px, transparent 1.5px),
+    radial-gradient(circle at calc(100% - 6px) 6px, rgba(60, 68, 76, 1) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 6px calc(100% - 6px), rgba(60, 68, 76, 1) 1.5px, transparent 1.5px),
+    radial-gradient(circle at calc(100% - 6px) calc(100% - 6px), rgba(60, 68, 76, 1) 1.5px, transparent 1.5px),
+    repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.04) 1px, rgba(0,0,0,0.04) 2px),
+    linear-gradient(135deg, rgb(42, 48, 54), rgb(32, 38, 44)) !important;
+  border: 3px solid rgb(68, 76, 84) !important;
   box-shadow:
-    4px 4px 0px rgba(0, 0, 0, 0.4),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.04) !important;
+    3px 3px 0px rgba(0, 0, 0, 0.4),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.08),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
 }
 
 html.theme-industrial.dark .bg-gray-800\/50,
 html.theme-industrial.dark [class*="bg-gray-800"] {
   background:
-    repeating-linear-gradient(0deg,
-      transparent, transparent 16px,
-      rgba(0, 0, 0, 0.2) 16px, rgba(0, 0, 0, 0.2) 17px
-    ),
-    repeating-linear-gradient(90deg,
-      transparent, transparent 60px,
-      rgba(0, 0, 0, 0.15) 60px, rgba(0, 0, 0, 0.15) 61px
-    ),
-    repeating-linear-gradient(90deg,
-      transparent 0px, transparent 30px,
-      rgba(0, 0, 0, 0.1) 30px, rgba(0, 0, 0, 0.1) 31px,
-      transparent 31px, transparent 91px,
-      rgba(0, 0, 0, 0.1) 91px, rgba(0, 0, 0, 0.1) 92px
-    ),
-    linear-gradient(135deg, rgba(32, 30, 28, 0.95), rgba(22, 20, 18, 1)) !important;
-  border: 3px solid rgba(65, 55, 45, 0.7) !important;
+    radial-gradient(circle at 6px 6px, rgba(50, 58, 66, 1) 1.5px, transparent 1.5px),
+    radial-gradient(circle at calc(100% - 6px) 6px, rgba(50, 58, 66, 1) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 6px calc(100% - 6px), rgba(50, 58, 66, 1) 1.5px, transparent 1.5px),
+    radial-gradient(circle at calc(100% - 6px) calc(100% - 6px), rgba(50, 58, 66, 1) 1.5px, transparent 1.5px),
+    repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.06) 1px, rgba(0,0,0,0.06) 2px),
+    linear-gradient(135deg, rgb(30, 36, 42), rgb(20, 26, 32)) !important;
+  border: 3px solid rgb(58, 66, 74) !important;
   box-shadow:
-    4px 4px 0px rgba(0, 0, 0, 0.5),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.02) !important;
+    3px 3px 0px rgba(0, 0, 0, 0.5),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.05),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* Badge - Placa de hierro */
-html.theme-industrial .badge-primary {
+/* Badge - Placa de hierro OPACO */
+html.theme-industrial .badge-primary,
+html.theme-industrial [class*="badge"] {
   background:
     repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px),
-    linear-gradient(135deg, rgba(var(--color-primary), 0.95), rgba(var(--color-primary), 0.75)) !important;
-  border: 2px solid rgba(var(--color-primary), 0.6);
+    linear-gradient(135deg, rgb(var(--color-primary)), rgba(var(--color-primary), 0.85)) !important;
+  border: 2px solid rgb(var(--color-primary)) !important;
   box-shadow:
     3px 3px 0px rgba(0, 0, 0, 0.4),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.15),
-    inset -1px -1px 0px rgba(0, 0, 0, 0.2);
+    inset 2px 2px 0px rgba(255, 255, 255, 0.2),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Badges con colores específicos OPACOS para buen contraste */
+html.theme-industrial .bg-blue-500\/20,
+html.theme-industrial [class*="bg-blue-500"] {
+  background:
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px),
+    linear-gradient(135deg, rgb(59, 130, 246), rgb(37, 99, 235)) !important;
+  border: 2px solid rgb(59, 130, 246) !important;
+  box-shadow:
+    3px 3px 0px rgba(0, 0, 0, 0.4),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.2),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
+  font-weight: 800 !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.theme-industrial .text-blue-400 {
+  color: rgb(255, 255, 255) !important;
+}
+
+html.theme-industrial .bg-yellow-500\/20,
+html.theme-industrial [class*="bg-yellow-500"] {
+  background:
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px),
+    linear-gradient(135deg, rgb(234, 179, 8), rgb(202, 138, 4)) !important;
+  border: 2px solid rgb(234, 179, 8) !important;
+  box-shadow:
+    3px 3px 0px rgba(0, 0, 0, 0.4),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.2),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
+  font-weight: 800 !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.theme-industrial .text-yellow-400,
+html.theme-industrial .text-yellow-500 {
+  color: rgb(255, 255, 255) !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+  font-weight: 800 !important;
+}
+
+html.theme-industrial .bg-red-500\/20,
+html.theme-industrial [class*="bg-red-500"] {
+  background:
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px),
+    linear-gradient(135deg, rgb(239, 68, 68), rgb(220, 38, 38)) !important;
+  border: 2px solid rgb(239, 68, 68) !important;
+  box-shadow:
+    3px 3px 0px rgba(0, 0, 0, 0.4),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.2),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
+  font-weight: 800 !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.theme-industrial .text-red-400 {
+  color: rgb(255, 255, 255) !important;
 }
