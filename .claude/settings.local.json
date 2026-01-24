@@ -28,7 +28,12 @@
       "Bash(timeout:*)",
       "Bash(react-scripts build)",
       "Bash(cd:*)",
-      "Bash(del nul)"
+      "Bash(del nul)",
+      "Bash(grep:*)",
+      "Bash(done)",
+      "Bash(for file in src/pages/*.js)",
+      "Bash(do grep -l \"await addDoc\\(collection\\(db,\" \"$file\")",
+      "Bash(SET CI=false:*)"
     ]
   }
 }

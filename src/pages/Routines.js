@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, ClipboardList, MoreVertical, Edit, Trash2, Users, Lock, Globe, Dumbbell, Play, Flame, Copy, Clock } from 'lucide-react';
+import { Plus, ClipboardList, MoreVertical, Edit, Trash2, Users, Lock, Globe, Dumbbell, Play, Flame, Copy, Clock, Video } from 'lucide-react';
 import { Button, Card, Modal, Input, Select, Textarea, SearchInput, EmptyState, LoadingState, ConfirmDialog, Badge, Dropdown, DropdownItem, Avatar, GymRequired, Tabs, Autocomplete } from '../components/Common';
 import RoutineTimer from '../components/Common/RoutineTimer';
 import { useAuth } from '../contexts/AuthContext';
@@ -1159,9 +1159,12 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
 };
 
 const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, wods, getClassName, getMemberNames, members, onStartTimer }) => {
+  const [showNoVideoWarning, setShowNoVideoWarning] = useState(false);
+
   if (!routine) return null;
 
   const getExerciseName = (id) => exercises.find(e => e.id === id)?.name || 'Ejercicio';
+  const getExerciseData = (id) => exercises.find(e => e.id === id);
   const getWodName = (id) => wods.find(w => w.id === id)?.name || 'WOD';
   const assignedMembers = routine.memberIds?.map(id => members.find(m => m.id === id)).filter(Boolean) || [];
 
@@ -1216,26 +1219,54 @@ const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, wods, getClassN
                     Ejercicios ({block.exercises.length})
                   </p>
                 )}
-                {block.exercises.map((ex, idx) => (
-                  <div key={idx} className="flex items-center gap-4 p-3 bg-gray-800 rounded-xl">
-                    <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-blue-400">
-                      {idx + 1}
+                {block.exercises.map((ex, idx) => {
+                  const exerciseData = getExerciseData(ex.exerciseId);
+                  return (
+                    <div key={idx} className="p-3 bg-gray-800 rounded-xl">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-blue-400">
+                          {idx + 1}
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium">{getExerciseName(ex.exerciseId)}</p>
+                          <p className="text-sm text-gray-400">
+                            {ex.sets} series × {ex.reps} reps • {ex.rest}s descanso
+                            {ex.intensity && ex.intensity !== 100 && <span className="text-yellow-400"> • {ex.intensity}% intensidad</span>}
+                          </p>
+                          {ex.notes && <p className="text-xs text-gray-500 mt-1">{ex.notes}</p>}
+                          {routine.hasRestBetweenExercises && ex.restDuration && (
+                            <p className="text-xs text-yellow-400 mt-1">
+                              Descanso después: {ex.restDuration}s
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      {/* Botón de video */}
+                      <div className="mt-3 pt-3 border-t border-gray-700">
+                        {exerciseData?.videoUrl ? (
+                          <a
+                            href={exerciseData.videoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 px-4 py-2 bg-primary/20 text-primary hover:bg-primary/30 rounded-lg transition-colors text-sm font-medium"
+                          >
+                            <Video size={16} />
+                            Ver Video del Ejercicio
+                          </a>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setShowNoVideoWarning(true)}
+                            className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-700/50 text-gray-400 hover:bg-gray-700 rounded-lg transition-colors text-sm w-full"
+                          >
+                            <Video size={16} />
+                            Ver Video del Ejercicio
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="font-medium">{getExerciseName(ex.exerciseId)}</p>
-                      <p className="text-sm text-gray-400">
-                        {ex.sets} series × {ex.reps} reps • {ex.rest}s descanso
-                        {ex.intensity && ex.intensity !== 100 && <span className="text-yellow-400"> • {ex.intensity}% intensidad</span>}
-                      </p>
-                      {ex.notes && <p className="text-xs text-gray-500 mt-1">{ex.notes}</p>}
-                      {routine.hasRestBetweenExercises && ex.restDuration && (
-                        <p className="text-xs text-yellow-400 mt-1">
-                          Descanso después: {ex.restDuration}s
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
@@ -1302,6 +1333,26 @@ const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, wods, getClassN
           </p>
         )}
       </div>
+
+      {/* Modal de advertencia: Video no disponible */}
+      <Modal isOpen={showNoVideoWarning} onClose={() => setShowNoVideoWarning(false)} title="Video no disponible" size="sm">
+        <div className="space-y-4">
+          <div className="w-20 h-20 mx-auto bg-gray-700/50 rounded-full flex items-center justify-center">
+            <Video className="text-gray-400" size={40} />
+          </div>
+          <div className="text-center">
+            <p className="text-gray-300 mb-2">
+              Este ejercicio no tiene un video de demostración cargado.
+            </p>
+            <p className="text-sm text-gray-400">
+              Contactá a tu entrenador para que agregue un enlace de video para este ejercicio.
+            </p>
+          </div>
+          <Button onClick={() => setShowNoVideoWarning(false)} className="w-full">
+            Entendido
+          </Button>
+        </div>
+      </Modal>
     </Modal>
   );
 };
