@@ -14,7 +14,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.30.3",
-    "react-scripts": "5.0.1",
     "recharts": "^2.10.0"
   },
   "scripts": {
@@ -42,6 +41,7 @@
     ]
   },
   "devDependencies": {
+    "react-scripts": "^5.0.1",
     "sharp": "^0.34.5"
   },
   "overrides": {

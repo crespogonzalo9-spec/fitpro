@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Lock, Phone, ArrowRight, Dumbbell, CheckCircle, Building2, ChevronDown, AlertCircle } from 'lucide-react';
+import { User, Mail, Lock, Phone, ArrowRight, Dumbbell, CheckCircle, Building2, ChevronDown, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { db } from '../../firebase';
 import { collection, getDocs, query, where, limit, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
@@ -9,11 +9,15 @@ const Register = ({ onToggle }) => {
   const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', confirmPassword: '', gymId: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
+  // Estados para mostrar/ocultar contraseñas
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   // Lista de gimnasios disponibles
   const [gyms, setGyms] = useState([]);
   const [loadingGyms, setLoadingGyms] = useState(true);
-  
+
   // Datos de invitación
   const [inviteData, setInviteData] = useState(null);
   const [inviteCode, setInviteCode] = useState('');
@@ -373,14 +377,21 @@ const Register = ({ onToggle }) => {
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-primary"
+                  className="w-full pl-10 pr-12 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-primary"
                   placeholder="••••••••"
                   required
                   minLength={8}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
               <p className="text-xs text-gray-500 mt-1">
                 Mínimo 8 caracteres, con mayúsculas, minúsculas y números
@@ -393,13 +404,20 @@ const Register = ({ onToggle }) => {
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                 <input
-                  type="password"
+                  type={showConfirmPassword ? 'text' : 'password'}
                   value={form.confirmPassword}
                   onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
-                  className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-primary"
+                  className="w-full pl-10 pr-12 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-primary"
                   placeholder="••••••••"
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+                >
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
             </div>
 

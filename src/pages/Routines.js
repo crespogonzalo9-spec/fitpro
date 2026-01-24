@@ -811,6 +811,12 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
                       }}
                       options={[
                         { value: 'regular', label: 'Regular' },
+                        { value: 'fuerza', label: 'Fuerza' },
+                        { value: 'potencia', label: 'Potencia' },
+                        { value: 'zona_media', label: 'Zona Media / Core' },
+                        { value: 'metcon', label: 'MetCon' },
+                        { value: 'gimnasia', label: 'Gimnasia' },
+                        { value: 'movilidad', label: 'Movilidad / Activación' },
                         { value: 'esd', label: 'ESD (Every X Seconds/Minutes)' }
                       ]}
                     />

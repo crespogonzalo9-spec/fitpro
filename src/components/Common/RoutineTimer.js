@@ -2,6 +2,21 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, SkipForward, X, Check, Timer, Coffee, Dumbbell, AlertCircle, CheckCircle2, Flame, StopCircle, FastForward, Video } from 'lucide-react';
 import { Button, Modal, Card } from './index';
 
+// Helper para obtener estilo del bloque según tipo
+const getBlockStyle = (blockType) => {
+  const styles = {
+    fuerza: { bg: 'bg-red-500/10', border: 'border-red-500/30', iconBg: 'bg-red-500/20', iconColor: 'text-red-400', badge: 'bg-red-500/20 text-red-400' },
+    potencia: { bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', iconBg: 'bg-yellow-500/20', iconColor: 'text-yellow-400', badge: 'bg-yellow-500/20 text-yellow-400' },
+    zona_media: { bg: 'bg-green-500/10', border: 'border-green-500/30', iconBg: 'bg-green-500/20', iconColor: 'text-green-400', badge: 'bg-green-500/20 text-green-400' },
+    metcon: { bg: 'bg-orange-500/10', border: 'border-orange-500/30', iconBg: 'bg-orange-500/20', iconColor: 'text-orange-400', badge: 'bg-orange-500/20 text-orange-400' },
+    gimnasia: { bg: 'bg-purple-500/10', border: 'border-purple-500/30', iconBg: 'bg-purple-500/20', iconColor: 'text-purple-400', badge: 'bg-purple-500/20 text-purple-400' },
+    movilidad: { bg: 'bg-cyan-500/10', border: 'border-cyan-500/30', iconBg: 'bg-cyan-500/20', iconColor: 'text-cyan-400', badge: 'bg-cyan-500/20 text-cyan-400' },
+    esd: { bg: 'bg-purple-500/10', border: 'border-purple-500/30', iconBg: 'bg-purple-500/20', iconColor: 'text-purple-400', badge: 'bg-purple-500/20 text-purple-400' },
+    regular: { bg: 'bg-blue-500/10', border: 'border-blue-500/30', iconBg: 'bg-blue-500/20', iconColor: 'text-blue-400', badge: 'bg-blue-500/20 text-blue-400' }
+  };
+  return styles[blockType] || styles.regular;
+};
+
 const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
   // Soportar tanto formato antiguo (exercises/wods directos) como nuevo (bloques)
   const blocks = routine.blocks || [
@@ -50,6 +65,7 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
   // Estados para ESD
   const [esdCurrentRound, setEsdCurrentRound] = useState(1); // Ronda actual de ESD
   const [esdIntervalTime, setEsdIntervalTime] = useState(0); // Tiempo dentro del intervalo actual
+  const [showNoVideoWarning, setShowNoVideoWarning] = useState(false); // Advertencia sin video
 
   const timerRef = useRef(null);
   const currentElement = allElements[currentElementIndex];
@@ -523,30 +539,51 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
               </Card>
             ) : (
               /* Ejercicio o WOD normal */
-              <Card className={`${isCurrentWod ? 'bg-orange-500/10 border-orange-500/30' : 'bg-blue-500/10 border-blue-500/30'} mb-6`}>
-                <div className="flex items-start gap-4">
-                  <div className={`w-16 h-16 ${isCurrentWod ? 'bg-orange-500/20' : 'bg-blue-500/20'} rounded-xl flex items-center justify-center flex-shrink-0`}>
-                    {isCurrentWod ? (
-                      <Flame className="text-orange-400" size={32} />
-                    ) : (
-                      <Dumbbell className="text-blue-400" size={32} />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                      <h3 className="text-2xl font-bold">
-                        {isCurrentWod ? (wodData?.name || 'WOD') : (exerciseData?.name || 'Ejercicio')}
-                      </h3>
-                      {!isCurrentWod && exerciseData?.videoUrl && (
-                        <a
-                          href={exerciseData.videoUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 px-3 py-2 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg text-sm font-medium transition-colors flex-shrink-0"
-                        >
-                          <Video size={16} />
-                          Ver Video
-                        </a>
+              (() => {
+                const blockStyle = getBlockStyle(currentElement?.blockType || 'regular');
+                return (
+                  <Card className={`${isCurrentWod ? 'bg-orange-500/10 border-orange-500/30' : `${blockStyle.bg} ${blockStyle.border}`} mb-6`}>
+                    <div className="flex items-start gap-4">
+                      <div className={`w-16 h-16 ${isCurrentWod ? 'bg-orange-500/20' : blockStyle.iconBg} rounded-xl flex items-center justify-center flex-shrink-0`}>
+                        {isCurrentWod ? (
+                          <Flame className="text-orange-400" size={32} />
+                        ) : (
+                          <Dumbbell className={blockStyle.iconColor} size={32} />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between gap-3 mb-2">
+                          <div className="flex-1">
+                            {currentElement?.blockName && currentElement.blockType !== 'regular' && (
+                              <span className={`px-3 py-1 ${blockStyle.badge} rounded-full text-xs font-bold mr-2`}>
+                                {currentElement.blockName}
+                              </span>
+                            )}
+                            <h3 className="text-2xl font-bold inline">
+                              {isCurrentWod ? (wodData?.name || 'WOD') : (exerciseData?.name || 'Ejercicio')}
+                            </h3>
+                          </div>
+                      {!isCurrentWod && (
+                        exerciseData?.videoUrl ? (
+                          <a
+                            href={exerciseData.videoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-3 py-2 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg text-sm font-medium transition-colors flex-shrink-0"
+                          >
+                            <Video size={16} />
+                            Ver Video
+                          </a>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setShowNoVideoWarning(true)}
+                            className="flex items-center gap-2 px-3 py-2 bg-gray-700/50 hover:bg-gray-700 text-gray-400 rounded-lg text-sm font-medium transition-colors flex-shrink-0"
+                          >
+                            <Video size={16} />
+                            Ver Video
+                          </button>
+                        )
                       )}
                     </div>
                     {!isCurrentWod && (
@@ -577,9 +614,11 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
                     {currentElement.notes && (
                       <p className="text-sm text-gray-400 mt-2 italic">{currentElement.notes}</p>
                     )}
-                  </div>
-                </div>
-              </Card>
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })()
             )}
 
             {/* Series checklist para ejercicios de reps */}
@@ -859,6 +898,31 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
               Volver
             </Button>
           </div>
+        </div>
+      </Modal>
+
+      {/* Advertencia de video no disponible */}
+      <Modal isOpen={showNoVideoWarning} onClose={() => setShowNoVideoWarning(false)} title="Video no disponible" size="sm">
+        <div className="space-y-4">
+          <div className="w-20 h-20 mx-auto bg-gray-700/50 rounded-full flex items-center justify-center">
+            <Video className="text-gray-400" size={40} />
+          </div>
+
+          <div className="text-center">
+            <p className="text-gray-300 mb-2">
+              Este ejercicio no tiene un video de demostración cargado.
+            </p>
+            <p className="text-sm text-gray-400">
+              Contactá a tu entrenador para que agregue un enlace de video para este ejercicio.
+            </p>
+          </div>
+
+          <Button
+            onClick={() => setShowNoVideoWarning(false)}
+            className="w-full"
+          >
+            Entendido
+          </Button>
         </div>
       </Modal>
     </Modal>

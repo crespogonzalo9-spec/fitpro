@@ -19,7 +19,16 @@
       "Bash(npm run build:*)",
       "Bash(set CI=false)",
       "Bash(npx react-scripts build:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(timeout 10 cmd:*)",
+      "Bash(set DISABLE_NEW_JSX_TRANSFORM=true)",
+      "Bash(ping:*)",
+      "Bash(npm install:*)",
+      "Bash(set:*)",
+      "Bash(timeout:*)",
+      "Bash(react-scripts build)",
+      "Bash(cd:*)",
+      "Bash(del nul)"
     ]
   }
 }
