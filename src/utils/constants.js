@@ -42,15 +42,196 @@ export const DAYS_OF_WEEK = [
   { id: 6, name: 'Sábado', short: 'Sáb' }
 ];
 
-// Tipos de WOD
+// ESTRUCTURAS DE ENTRENAMIENTO (Contenedores de Tiempo)
 export const WOD_TYPES = [
-  { id: 'for_time', name: 'For Time', description: 'Completar lo más rápido posible' },
-  { id: 'amrap', name: 'AMRAP', description: 'Máximas rondas en tiempo' },
-  { id: 'emom', name: 'EMOM', description: 'Every Minute On the Minute' },
-  { id: 'esd', name: 'ESD', description: 'Every X Seconds/Minutes/Hours Day' },
-  { id: 'tabata', name: 'Tabata', description: '20s trabajo / 10s descanso' },
-  { id: 'chipper', name: 'Chipper', description: 'Lista secuencial de ejercicios' },
-  { id: 'ladder', name: 'Ladder', description: 'Incremento/decremento progresivo' }
+  {
+    id: 'emom',
+    name: 'EMOM',
+    description: 'Every Minute on the Minute',
+    fullDescription: 'Tarea específica al inicio del minuto; el tiempo sobrante es descanso',
+    logic: 'Tiempo Fijo (60s) | Tarea Fija',
+    measurement_unit: 'pass_fail', // Pass/Fail por ronda
+    scoring_type: 'pass_fail',
+    rest_protocol: 'remainder_of_minute'
+  },
+  {
+    id: 'amrap',
+    name: 'AMRAP',
+    description: 'As Many Rounds/Reps As Possible',
+    fullDescription: 'Maximizar volumen de trabajo en una ventana de tiempo inamovible',
+    logic: 'Tiempo Fijo | Tarea Variable (Max)',
+    measurement_unit: 'reps', // Suma total de Rondas + Repeticiones
+    scoring_type: 'reps_higher_better',
+    rest_protocol: 'continuous_self_regulated'
+  },
+  {
+    id: 'for_time',
+    name: 'For Time',
+    description: 'Por Tiempo',
+    fullDescription: 'Completar una carga de trabajo predefinida lo más rápido posible',
+    logic: 'Tarea Fija | Tiempo Variable (Min)',
+    measurement_unit: 'seconds', // Tiempo Total
+    scoring_type: 'time_lower_better',
+    rest_protocol: 'none_only_forced_pause'
+  },
+  {
+    id: 'tabata',
+    name: 'Tabata',
+    description: '20s trabajo / 10s descanso',
+    fullDescription: 'Protocolo interválico de muy alta intensidad (8 ciclos)',
+    logic: 'Intervalo Fijo (20s/10s) | Rondas Fijas (8)',
+    measurement_unit: 'reps', // Menor número de reps en el peor intervalo o Suma total
+    scoring_type: 'reps_higher_better',
+    rest_protocol: 'fixed_10s',
+    work_time: 20,
+    rest_time: 10,
+    rounds: 8,
+    ratio: '2:1'
+  },
+  {
+    id: 'chipper',
+    name: 'Chipper',
+    description: 'Lista secuencial de ejercicios',
+    fullDescription: 'Volumen alto de ejercicios variados ejecutados secuencialmente una sola vez',
+    logic: 'Tarea Fija (Lineal) | Tiempo Variable',
+    measurement_unit: 'seconds', // Tiempo Total
+    scoring_type: 'time_lower_better',
+    rest_protocol: 'self_regulated_for_time'
+  },
+  {
+    id: 'ladder',
+    name: 'Ladder',
+    description: 'Escalera (incremento/decremento progresivo)',
+    fullDescription: 'Incremento o descenso progresivo de carga o repeticiones (ej. 1-2-3-4...)',
+    logic: 'Tarea Progresiva | Tiempo Fijo o Variable',
+    measurement_unit: 'rounds', // Última ronda completada o Tiempo Total
+    scoring_type: 'rounds_higher_better',
+    rest_protocol: 'variable_by_fatigue'
+  },
+  {
+    id: 'e2mom',
+    name: 'E2MOM',
+    description: 'Every 2 Minutes',
+    fullDescription: 'Similar al EMOM pero con ventanas amplias (120s)',
+    logic: 'Intervalo Fijo (120s) | Tarea Fija',
+    measurement_unit: 'kg', // Carga levantada o Pass/Fail
+    scoring_type: 'weight_higher_better',
+    rest_protocol: 'remainder_of_2min',
+    interval: 120,
+    ratio: '1:3 o 1:4'
+  },
+  {
+    id: 'e3mom',
+    name: 'E3MOM',
+    description: 'Every 3 Minutes',
+    fullDescription: 'Similar al EMOM pero con ventanas amplias (180s)',
+    logic: 'Intervalo Fijo (180s) | Tarea Fija',
+    measurement_unit: 'kg', // Carga levantada o Pass/Fail
+    scoring_type: 'weight_higher_better',
+    rest_protocol: 'remainder_of_3min',
+    interval: 180,
+    ratio: '1:3 o 1:4'
+  }
+];
+
+// BLOQUES DE TRABAJO (Dominios Físicos)
+export const BLOCK_TYPES = [
+  {
+    id: 'fuerza',
+    name: 'Fuerza (Strength)',
+    description: 'Cargas altas (>80% 1RM), pocas repeticiones',
+    fullDescription: 'Busca adaptaciones neuronales y reclutamiento de fibras motoras',
+    execution: 'Series x Repeticiones (ej. 5x5)',
+    variable_key: 'weight', // Peso (Kg/Lbs)
+    measurement_unit: 'kg',
+    rest: 'Largo y Completo (2 a 5 minutos)',
+    rest_min: 120,
+    rest_max: 300
+  },
+  {
+    id: 'potencia',
+    name: 'Potencia (Power/Olympic)',
+    description: 'Aplicación de fuerza a máxima velocidad',
+    fullDescription: 'Movimientos técnicos complejos que requieren frescura neurológica',
+    execution: 'Series x Repeticiones bajas (1-3)',
+    variable_key: 'speed', // Velocidad de barra y Técnica
+    measurement_unit: 'kg',
+    rest: 'Completo (recuperación del SNC)',
+    rest_min: 120,
+    rest_max: 300
+  },
+  {
+    id: 'metcon',
+    name: 'MetCon (Metabolic Conditioning)',
+    description: 'Acondicionamiento metabólico mixto',
+    fullDescription: 'Eficiencia en vías glucolíticas y oxidativas bajo fatiga sistémica',
+    execution: 'Estructuras variadas (AMRAP, For Time)',
+    variable_key: 'intensity', // Intensidad (RPM, Watt, Ritmo)
+    measurement_unit: 'seconds',
+    rest: 'Incompleto o Nulo',
+    rest_min: 0,
+    rest_max: 60
+  },
+  {
+    id: 'gimnasia',
+    name: 'Gimnasia (Gymnastics)',
+    description: 'Control del peso corporal en el espacio',
+    fullDescription: 'Desarrolla fuerza relativa, propiocepción y estabilidad',
+    execution: 'Repeticiones por calidad o tiempo bajo tensión',
+    variable_key: 'difficulty', // Dificultad del movimiento (Progresiones)
+    measurement_unit: 'reps',
+    rest: 'Autoregulado para evitar fallo técnico',
+    rest_min: 30,
+    rest_max: 120
+  },
+  {
+    id: 'zona_media',
+    name: 'Core / Midline',
+    description: 'Estabilización del tronco',
+    fullDescription: 'Trabajo de anti-rotación, anti-extensión y flexión isométrica',
+    execution: 'Tiempo (holds) o Repeticiones lentas',
+    variable_key: 'tension', // Tensión y Calidad
+    measurement_unit: 'seconds',
+    rest: 'Corto (30-60s)',
+    rest_min: 30,
+    rest_max: 60
+  },
+  {
+    id: 'movilidad',
+    name: 'Movilidad / Activación',
+    description: 'Preparación articular y liberación miofascial',
+    fullDescription: 'Mejora el Rango de Movimiento (ROM) activo',
+    execution: 'Tiempo por posición (ej. 2 min hold) o Pases dinámicos',
+    variable_key: 'rom', // Rango de movimiento
+    measurement_unit: 'seconds',
+    rest: 'N/A (Flujo continuo)',
+    rest_min: 0,
+    rest_max: 0
+  },
+  {
+    id: 'monostructural',
+    name: 'Monoestructural (Cardio)',
+    description: 'Esfuerzo cíclico repetitivo de baja complejidad',
+    fullDescription: 'Desarrollo puro de la capacidad aeróbica y el umbral de lactato',
+    execution: 'Distancia (m), Calorías (cal) o Tiempo (min)',
+    variable_key: 'pace', // Pace (Ritmo por km/min)
+    measurement_unit: 'meters', // o 'calories' o 'seconds'
+    rest: 'Intervalado (ej. 1:1) o Continuo',
+    rest_min: 0,
+    rest_max: 300
+  },
+  {
+    id: 'regular',
+    name: 'Regular',
+    description: 'Bloque estándar sin categorización específica',
+    fullDescription: 'Bloque genérico para rutinas tradicionales',
+    execution: 'Variable',
+    variable_key: 'mixed',
+    measurement_unit: 'reps',
+    rest: 'Variable',
+    rest_min: 60,
+    rest_max: 180
+  }
 ];
 
 // Intervalos de tiempo para ESD
