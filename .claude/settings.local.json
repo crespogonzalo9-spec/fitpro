@@ -33,7 +33,10 @@
       "Bash(done)",
       "Bash(for file in src/pages/*.js)",
       "Bash(do grep -l \"await addDoc\\(collection\\(db,\" \"$file\")",
-      "Bash(SET CI=false:*)"
+      "Bash(SET CI=false:*)",
+      "Bash(node --check:*)",
+      "Bash(find:*)",
+      "Bash(taskkill:*)"
     ]
   }
 }

@@ -18,6 +18,7 @@ const RoutinesContent = () => {
   const [members, setMembers] = useState([]);
   const [exercises, setExercises] = useState([]);
   const [wods, setWods] = useState([]);
+  const [esds, setEsds] = useState([]);
   const [myEnrollments, setMyEnrollments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -38,6 +39,7 @@ const RoutinesContent = () => {
     setMembers([]);
     setExercises([]);
     setWods([]);
+    setEsds([]);
     setMyEnrollments([]);
     setLoading(true);
     setSearch('');
@@ -75,11 +77,19 @@ const RoutinesContent = () => {
     });
 
     // Cargar WODs
-    const wodsQuery = query(collection(db, 'wods'), where('gymId', '==', currentGym.id));
+    const wodsQuery = query(collection(db, 'wods'), where('gymId', '==', currentGym.id), where('type', '!=', 'esd'));
     const unsubWods = onSnapshot(wodsQuery, (snap) => {
       const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       items.sort((a, b) => a.name?.localeCompare(b.name));
       setWods(items);
+    });
+
+    // Cargar ESDs
+    const esdsQuery = query(collection(db, 'wods'), where('gymId', '==', currentGym.id), where('type', '==', 'esd'));
+    const unsubEsds = onSnapshot(esdsQuery, (snap) => {
+      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      items.sort((a, b) => a.name?.localeCompare(b.name));
+      setEsds(items);
     });
 
     // Cargar miembros (para profesores/admin)
@@ -90,7 +100,7 @@ const RoutinesContent = () => {
         // Filtrar solo miembros
         setMembers(allMembers.filter(m => m.roles?.includes('miembro') || !m.roles || m.roles.length === 0));
       });
-      return () => { unsubRoutines(); unsubClasses(); unsubEx(); unsubWods(); unsubMembers(); };
+      return () => { unsubRoutines(); unsubClasses(); unsubEx(); unsubWods(); unsubEsds(); unsubMembers(); };
     }
 
     // Para miembros: cargar inscripciones
@@ -99,10 +109,10 @@ const RoutinesContent = () => {
       const unsubEnroll = onSnapshot(enrollQuery, (snap) => {
         setMyEnrollments(snap.docs.map(d => d.data().classId));
       });
-      return () => { unsubRoutines(); unsubClasses(); unsubEx(); unsubWods(); unsubEnroll(); };
+      return () => { unsubRoutines(); unsubClasses(); unsubEx(); unsubWods(); unsubEsds(); unsubEnroll(); };
     }
 
-    return () => { unsubRoutines(); unsubClasses(); unsubEx(); unsubWods(); };
+    return () => { unsubRoutines(); unsubClasses(); unsubEx(); unsubWods(); unsubEsds(); };
   }, [currentGym, userData, canEdit, isMiembro]);
 
   const getVisibleRoutines = () => {
@@ -351,6 +361,7 @@ const RoutinesContent = () => {
         members={members}
         exercises={exercises}
         wods={wods}
+        esds={esds}
       />
       <ViewRoutineModal
         isOpen={showView}
@@ -358,6 +369,7 @@ const RoutinesContent = () => {
         routine={selected}
         exercises={exercises}
         wods={wods}
+        esds={esds}
         getClassName={getClassName}
         getMemberNames={getMemberNames}
         members={members}
@@ -371,6 +383,7 @@ const RoutinesContent = () => {
           routine={selected}
           exercises={exercises}
           wods={wods}
+          esds={esds}
           onClose={() => { setShowTimer(false); setSelected(null); }}
           onComplete={handleCompleteRoutine}
         />
@@ -387,7 +400,7 @@ const RoutinesContent = () => {
   );
 };
 
-const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exercises, wods }) => {
+const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exercises, wods, esds }) => {
   const [form, setForm] = useState({
     name: '',
     description: '',
@@ -413,7 +426,8 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
       name: 'Bloque 1',
       type: 'regular',
       exercises: oldRoutine.exercises || [],
-      wods: oldRoutine.wods || []
+      wods: oldRoutine.wods || [],
+      esds: oldRoutine.esds || []
     };
 
     return [defaultBlock];
@@ -438,7 +452,7 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
         assignmentType: 'general',
         classId: '',
         memberIds: [],
-        blocks: [{ name: 'Bloque 1', type: 'regular', exercises: [], wods: [] }],
+        blocks: [{ name: 'Bloque 1', type: 'regular', exercises: [], wods: [], esds: [] }],
         hasRestBetweenExercises: true
       });
       setCurrentBlockIndex(0);
@@ -471,7 +485,8 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
         name: `Bloque ${prev.blocks.length + 1}`,
         type: 'regular',
         exercises: [],
-        wods: []
+        wods: [],
+        esds: []
       }]
     }));
     setCurrentBlockIndex(form.blocks.length);
@@ -1158,7 +1173,7 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
   );
 };
 
-const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, wods, getClassName, getMemberNames, members, onStartTimer }) => {
+const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, wods, esds, getClassName, getMemberNames, members, onStartTimer }) => {
   const [showNoVideoWarning, setShowNoVideoWarning] = useState(false);
 
   if (!routine) return null;
@@ -1166,6 +1181,7 @@ const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, wods, getClassN
   const getExerciseName = (id) => exercises.find(e => e.id === id)?.name || 'Ejercicio';
   const getExerciseData = (id) => exercises.find(e => e.id === id);
   const getWodName = (id) => wods.find(w => w.id === id)?.name || 'WOD';
+  const getEsdName = (id) => esds.find(e => e.id === id)?.name || 'ESD';
   const assignedMembers = routine.memberIds?.map(id => members.find(m => m.id === id)).filter(Boolean) || [];
 
   // Soportar tanto formato antiguo como nuevo con bloques
@@ -1174,11 +1190,12 @@ const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, wods, getClassN
       name: 'Rutina',
       type: 'regular',
       exercises: routine.exercises || [],
-      wods: routine.wods || []
+      wods: routine.wods || [],
+      esds: routine.esds || []
     }
   ];
 
-  const hasContent = blocks.some(b => (b.exercises?.length > 0 || b.wods?.length > 0));
+  const hasContent = blocks.some(b => (b.exercises?.length > 0 || b.wods?.length > 0 || b.esds?.length > 0));
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={routine.name} size="lg">
@@ -1290,6 +1307,34 @@ const ViewRoutineModal = ({ isOpen, onClose, routine, exercises, wods, getClassN
                       {routine.hasRestBetweenExercises && wod.restDuration && (
                         <p className="text-xs text-yellow-400 mt-1">
                           Descanso después: {wod.restDuration}s
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* ESDs del bloque */}
+            {block.esds && block.esds.length > 0 && (
+              <div className="space-y-2">
+                {blocks.length === 1 && (
+                  <p className="text-sm font-medium text-gray-300">
+                    <Clock size={16} className="inline mr-2" />
+                    ESDs ({block.esds.length})
+                  </p>
+                )}
+                {block.esds.map((esd, idx) => (
+                  <div key={idx} className="flex items-center gap-4 p-3 bg-gray-800 rounded-xl">
+                    <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-sm font-bold text-blue-400">
+                      {idx + 1}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium">{getEsdName(esd.esdId)}</p>
+                      {esd.notes && <p className="text-xs text-gray-500 mt-1">{esd.notes}</p>}
+                      {routine.hasRestBetweenExercises && esd.restDuration && (
+                        <p className="text-xs text-yellow-400 mt-1">
+                          Descanso después: {esd.restDuration}s
                         </p>
                       )}
                     </div>
