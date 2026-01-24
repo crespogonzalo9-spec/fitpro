@@ -1053,9 +1053,10 @@ html.theme-industrial.dark body {
   min-height: 100vh;
 }
 
-/* Fondo base de contenido - Textura de ladrillo caricaturizado */
+/* Fondo base de contenido - Textura de ladrillo personalizable con overlay de color primario */
 html.theme-industrial .bg-base,
 html.theme-industrial.dark .bg-base {
+  position: relative;
   background-color: #2b1f1c !important;
   background-image:
     /* SVG con ladrillos: espaciado uniforme, gradientes mejorados, sombras en bordes */
@@ -1065,35 +1066,50 @@ html.theme-industrial.dark .bg-base {
   min-height: 100vh;
 }
 
-/* Cards - Placas de acero opacas con TORNILLOS en las esquinas */
+/* Overlay de color primario para personalizar ladrillos */
+html.theme-industrial .bg-base::before,
+html.theme-industrial.dark .bg-base::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 50%, rgba(var(--color-primary), 0.08) 0%, transparent 60%);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Cards - Placas de acero opacas con TORNILLOS personalizables en las esquinas */
 html.theme-industrial .bg-card {
   background:
-    /* Tornillos esquina superior izquierda */
-    radial-gradient(circle at 12px 12px, rgba(45, 52, 58, 1) 3px, transparent 3px),
+    /* Tornillos esquina superior izquierda - tintados con color primario */
+    radial-gradient(circle at 12px 12px, rgba(calc(var(--color-primary, 45) * 0.3), calc(var(--color-primary, 52) * 0.3), calc(var(--color-primary, 58) * 0.3), 1) 3px, transparent 3px),
     radial-gradient(circle at 12px 12px, rgba(85, 95, 105, 1) 4px, transparent 4px),
     radial-gradient(circle at 12px 12px, rgba(35, 42, 48, 1) 5px, transparent 5px),
     /* Tornillos esquina superior derecha */
-    radial-gradient(circle at calc(100% - 12px) 12px, rgba(45, 52, 58, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 12px) 12px, rgba(calc(var(--color-primary, 45) * 0.3), calc(var(--color-primary, 52) * 0.3), calc(var(--color-primary, 58) * 0.3), 1) 3px, transparent 3px),
     radial-gradient(circle at calc(100% - 12px) 12px, rgba(85, 95, 105, 1) 4px, transparent 4px),
     radial-gradient(circle at calc(100% - 12px) 12px, rgba(35, 42, 48, 1) 5px, transparent 5px),
     /* Tornillos esquina inferior izquierda */
-    radial-gradient(circle at 12px calc(100% - 12px), rgba(45, 52, 58, 1) 3px, transparent 3px),
+    radial-gradient(circle at 12px calc(100% - 12px), rgba(calc(var(--color-primary, 45) * 0.3), calc(var(--color-primary, 52) * 0.3), calc(var(--color-primary, 58) * 0.3), 1) 3px, transparent 3px),
     radial-gradient(circle at 12px calc(100% - 12px), rgba(85, 95, 105, 1) 4px, transparent 4px),
     radial-gradient(circle at 12px calc(100% - 12px), rgba(35, 42, 48, 1) 5px, transparent 5px),
     /* Tornillos esquina inferior derecha */
-    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(45, 52, 58, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(calc(var(--color-primary, 45) * 0.3), calc(var(--color-primary, 52) * 0.3), calc(var(--color-primary, 58) * 0.3), 1) 3px, transparent 3px),
     radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(85, 95, 105, 1) 4px, transparent 4px),
     radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(35, 42, 48, 1) 5px, transparent 5px),
-    /* Textura de acero rayado */
+    /* Textura de acero rayado con tinte de color primario */
     repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.05) 1px, rgba(0,0,0,0.05) 2px),
-    repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(0,0,0,0.02) 50px, rgba(0,0,0,0.02) 51px),
+    repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(var(--color-primary), 0.015) 50px, rgba(var(--color-primary), 0.015) 51px),
     linear-gradient(145deg, rgb(50, 58, 66), rgb(38, 45, 52)) !important;
   border: 3px solid rgb(85, 95, 105) !important;
   box-shadow:
     5px 5px 0px rgba(0, 0, 0, 0.5),
     inset 3px 3px 0px rgba(255, 255, 255, 0.12),
     inset -3px -3px 0px rgba(0, 0, 0, 0.4) !important;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
 
@@ -1126,20 +1142,28 @@ html.theme-industrial.dark .bg-card {
     inset -3px -3px 0px rgba(0, 0, 0, 0.5) !important;
 }
 
+/* Hover mejorado - Levantamiento de placa metálica pesada con brillo industrial */
 html.theme-industrial .bg-card:hover {
-  transform: translate(-2px, -2px);
+  transform: translate(-3px, -3px);
   box-shadow:
-    7px 7px 0px rgba(0, 0, 0, 0.6),
-    inset 2px 2px 0px rgba(255, 255, 255, 0.12),
-    inset -2px -2px 0px rgba(0, 0, 0, 0.25) !important;
-  border-color: rgba(var(--color-primary), 0.6) !important;
+    8px 8px 0px rgba(0, 0, 0, 0.65),
+    3px 3px 12px rgba(var(--color-primary), 0.25),
+    inset 3px 3px 0px rgba(255, 255, 255, 0.18),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.3),
+    0 0 0 2px rgba(var(--color-primary), 0.4) !important;
+  border-color: rgba(var(--color-primary), 0.85) !important;
+  filter: brightness(1.05);
 }
 
 html.theme-industrial.dark .bg-card:hover {
   box-shadow:
-    7px 7px 0px rgba(0, 0, 0, 0.7),
-    inset 2px 2px 0px rgba(255, 255, 255, 0.08),
-    inset -2px -2px 0px rgba(0, 0, 0, 0.35) !important;
+    8px 8px 0px rgba(0, 0, 0, 0.75),
+    3px 3px 12px rgba(var(--color-primary), 0.2),
+    inset 3px 3px 0px rgba(255, 255, 255, 0.12),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.4),
+    0 0 0 2px rgba(var(--color-primary), 0.35) !important;
+  border-color: rgba(var(--color-primary), 0.75) !important;
+  filter: brightness(1.08);
 }
 
 /* Botones - Textura de hierro pesado OPACO */
@@ -1202,6 +1226,93 @@ html.theme-industrial.dark h3 {
 html.theme-industrial .text-primary {
   font-weight: 700;
   text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
+}
+
+/* Mejoras de legibilidad para modo claro en Industrial */
+html.theme-industrial.light body {
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px),
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px),
+    linear-gradient(180deg, #e8e4e0 0%, #d4d0cc 100%) !important;
+  color: #1a1410 !important;
+}
+
+html.theme-industrial.light .bg-base {
+  background-color: #f5f1ed !important;
+  background-image:
+    /* SVG con ladrillos en tonos claros - personalizables con color primario */
+    url("data:image/svg+xml,%3Csvg width='376' height='188' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ffffff' stop-opacity='0.5'/%3E%3Cstop offset='50%25' stop-color='%23ffffff' stop-opacity='0'/%3E%3Cstop offset='100%25' stop-color='%23000000' stop-opacity='0.15'/%3E%3C/linearGradient%3E%3C/defs%3E%3C!-- FILA 1 --%3E%3Cg%3E%3Crect x='0' y='0' width='86' height='40' rx='3' fill='%23e8d4c8'/%3E%3Crect x='0' y='0' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='84' y1='2' x2='84' y2='38' stroke='%23a08070' stroke-width='2' opacity='0.4'/%3E%3Cline x1='2' y1='38' x2='84' y2='38' stroke='%23a08070' stroke-width='2.5' opacity='0.45'/%3E%3C/g%3E%3Cg%3E%3Crect x='94' y='0' width='86' height='40' rx='3' fill='%23f0ddd1'/%3E%3Crect x='94' y='0' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='178' y1='2' x2='178' y2='38' stroke='%23a08070' stroke-width='2' opacity='0.4'/%3E%3Cline x1='96' y1='38' x2='178' y2='38' stroke='%23a08070' stroke-width='2.5' opacity='0.45'/%3E%3C/g%3E%3Cg%3E%3Crect x='188' y='0' width='86' height='40' rx='3' fill='%23d8c4b8'/%3E%3Crect x='188' y='0' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='272' y1='2' x2='272' y2='38' stroke='%23a08070' stroke-width='2' opacity='0.4'/%3E%3Cline x1='190' y1='38' x2='272' y2='38' stroke='%23a08070' stroke-width='2.5' opacity='0.45'/%3E%3C/g%3E%3Cg%3E%3Crect x='282' y='0' width='86' height='40' rx='3' fill='%23e0ccc0'/%3E%3Crect x='282' y='0' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='366' y1='2' x2='366' y2='38' stroke='%23a08070' stroke-width='2' opacity='0.4'/%3E%3Cline x1='284' y1='38' x2='366' y2='38' stroke='%23a08070' stroke-width='2.5' opacity='0.45'/%3E%3C/g%3E%3C!-- FILA 2 offset --%3E%3Cg%3E%3Crect x='-47' y='48' width='86' height='40' rx='3' fill='%23ecddd1'/%3E%3Crect x='-47' y='48' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3C/g%3E%3Cg%3E%3Crect x='47' y='48' width='86' height='40' rx='3' fill='%23d0bdb0'/%3E%3Crect x='47' y='48' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='131' y1='50' x2='131' y2='86' stroke='%23a08070' stroke-width='2' opacity='0.4'/%3E%3Cline x1='49' y1='86' x2='131' y2='86' stroke='%23a08070' stroke-width='2.5' opacity='0.45'/%3E%3C/g%3E%3Cg%3E%3Crect x='141' y='48' width='86' height='40' rx='3' fill='%23dcc8bc'/%3E%3Crect x='141' y='48' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='225' y1='50' x2='225' y2='86' stroke='%23a08070' stroke-width='2' opacity='0.4'/%3E%3Cline x1='143' y1='86' x2='225' y2='86' stroke='%23a08070' stroke-width='2.5' opacity='0.45'/%3E%3C/g%3E%3Cg%3E%3Crect x='235' y='48' width='86' height='40' rx='3' fill='%23e8d4c8'/%3E%3Crect x='235' y='48' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='319' y1='50' x2='319' y2='86' stroke='%23a08070' stroke-width='2' opacity='0.4'/%3E%3Cline x1='237' y1='86' x2='319' y2='86' stroke='%23a08070' stroke-width='2.5' opacity='0.45'/%3E%3C/g%3E%3Cg%3E%3Crect x='329' y='48' width='86' height='40' rx='3' fill='%23f0ddd1'/%3E%3Crect x='329' y='48' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3C/g%3E%3C!-- FILA 3 --%3E%3Cg%3E%3Crect x='0' y='96' width='86' height='40' rx='3' fill='%23e0ccc0'/%3E%3Crect x='0' y='96' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='84' y1='98' x2='84' y2='134' stroke='%23a08070' stroke-width='2' opacity='0.4'/%3E%3Cline x1='2' y1='134' x2='84' y2='134' stroke='%23a08070' stroke-width='2.5' opacity='0.45'/%3E%3C/g%3E%3Cg%3E%3Crect x='94' y='96' width='86' height='40' rx='3' fill='%23ecddd1'/%3E%3Crect x='94' y='96' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='178' y1='98' x2='178' y2='134' stroke='%23a08070' stroke-width='2' opacity='0.4'/%3E%3Cline x1='96' y1='134' x2='178' y2='134' stroke='%23a08070' stroke-width='2.5' opacity='0.45'/%3E%3C/g%3E%3Cg%3E%3Crect x='188' y='96' width='86' height='40' rx='3' fill='%23d8c4b8'/%3E%3Crect x='188' y='96' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='272' y1='98' x2='272' y2='134' stroke='%23a08070' stroke-width='2' opacity='0.4'/%3E%3Cline x1='190' y1='134' x2='272' y2='134' stroke='%23a08070' stroke-width='2.5' opacity='0.45'/%3E%3C/g%3E%3Cg%3E%3Crect x='282' y='96' width='86' height='40' rx='3' fill='%23f0ddd1'/%3E%3Crect x='282' y='96' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='366' y1='98' x2='366' y2='134' stroke='%23a08070' stroke-width='2' opacity='0.4'/%3E%3Cline x1='284' y1='134' x2='366' y2='134' stroke='%23a08070' stroke-width='2.5' opacity='0.45'/%3E%3C/g%3E%3C!-- FILA 4 offset --%3E%3Cg%3E%3Crect x='-47' y='144' width='86' height='40' rx='3' fill='%23e8d4c8'/%3E%3Crect x='-47' y='144' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3C/g%3E%3Cg%3E%3Crect x='47' y='144' width='86' height='40' rx='3' fill='%23dcc8bc'/%3E%3Crect x='47' y='144' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='131' y1='146' x2='131' y2='182' stroke='%23a08070' stroke-width='2' opacity='0.4'/%3E%3Cline x1='49' y1='182' x2='131' y2='182' stroke='%23a08070' stroke-width='2.5' opacity='0.45'/%3E%3C/g%3E%3Cg%3E%3Crect x='141' y='144' width='86' height='40' rx='3' fill='%23d0bdb0'/%3E%3Crect x='141' y='144' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='225' y1='146' x2='225' y2='182' stroke='%23a08070' stroke-width='2' opacity='0.4'/%3E%3Cline x1='143' y1='182' x2='225' y2='182' stroke='%23a08070' stroke-width='2.5' opacity='0.45'/%3E%3C/g%3E%3Cg%3E%3Crect x='235' y='144' width='86' height='40' rx='3' fill='%23e0ccc0'/%3E%3Crect x='235' y='144' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3Cline x1='319' y1='146' x2='319' y2='182' stroke='%23a08070' stroke-width='2' opacity='0.4'/%3E%3Cline x1='237' y1='182' x2='319' y2='182' stroke='%23a08070' stroke-width='2.5' opacity='0.45'/%3E%3C/g%3E%3Cg%3E%3Crect x='329' y='144' width='86' height='40' rx='3' fill='%23ecddd1'/%3E%3Crect x='329' y='144' width='86' height='40' rx='3' fill='url(%23g1)'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 376px 188px;
+  min-height: 100vh;
+}
+
+/* Texto en modo claro - Alto contraste */
+html.theme-industrial.light h1,
+html.theme-industrial.light h2,
+html.theme-industrial.light h3,
+html.theme-industrial.light h4,
+html.theme-industrial.light h5,
+html.theme-industrial.light h6 {
+  color: #1a1410 !important;
+  text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+}
+
+html.theme-industrial.light .text-gray-100,
+html.theme-industrial.light .text-gray-200,
+html.theme-industrial.light .text-gray-300,
+html.theme-industrial.light .text-gray-400 {
+  color: #2d2520 !important;
+}
+
+html.theme-industrial.light .text-gray-500,
+html.theme-industrial.light .text-gray-600 {
+  color: #554840 !important;
+}
+
+html.theme-industrial.light p,
+html.theme-industrial.light span,
+html.theme-industrial.light div {
+  color: #1a1410 !important;
+}
+
+html.theme-industrial.light .text-white {
+  color: #1a1410 !important;
+}
+
+/* Cards en modo claro - Acero pulido claro */
+html.theme-industrial.light .bg-card {
+  background:
+    radial-gradient(circle at 12px 12px, rgba(140, 130, 120, 1) 3px, transparent 3px),
+    radial-gradient(circle at 12px 12px, rgba(170, 160, 150, 1) 4px, transparent 4px),
+    radial-gradient(circle at 12px 12px, rgba(120, 110, 100, 1) 5px, transparent 5px),
+    radial-gradient(circle at calc(100% - 12px) 12px, rgba(140, 130, 120, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 12px) 12px, rgba(170, 160, 150, 1) 4px, transparent 4px),
+    radial-gradient(circle at calc(100% - 12px) 12px, rgba(120, 110, 100, 1) 5px, transparent 5px),
+    radial-gradient(circle at 12px calc(100% - 12px), rgba(140, 130, 120, 1) 3px, transparent 3px),
+    radial-gradient(circle at 12px calc(100% - 12px), rgba(170, 160, 150, 1) 4px, transparent 4px),
+    radial-gradient(circle at 12px calc(100% - 12px), rgba(120, 110, 100, 1) 5px, transparent 5px),
+    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(140, 130, 120, 1) 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(170, 160, 150, 1) 4px, transparent 4px),
+    radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(120, 110, 100, 1) 5px, transparent 5px),
+    repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.03) 1px, rgba(0,0,0,0.03) 2px),
+    repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(0,0,0,0.02) 50px, rgba(0,0,0,0.02) 51px),
+    linear-gradient(145deg, rgb(220, 216, 212), rgb(205, 201, 197)) !important;
+  border: 3px solid rgb(150, 145, 140) !important;
+  box-shadow:
+    3px 3px 0px rgba(0, 0, 0, 0.15),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.6),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.1) !important;
+}
+
+html.theme-industrial.light .bg-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow:
+    5px 5px 0px rgba(0, 0, 0, 0.2),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.7),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.08),
+    0 0 0 3px rgba(var(--color-primary), 0.3) !important;
+  border-color: rgba(var(--color-primary), 0.8) !important;
 }
 
 /* Sidebar - Panel de acero con textura cepillada y remaches laterales */
@@ -1363,54 +1474,74 @@ html.theme-industrial.dark [class*="bg-gray-800"] {
     inset -2px -2px 0px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* Badge - Placa de hierro OPACO */
+/* BADGES UNIFORMES - Placas de hierro OPACAS con estilo consistente */
+/* Estilo base compartido por todos los badges */
 html.theme-industrial .badge-primary,
-html.theme-industrial [class*="badge"] {
-  background:
-    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px),
-    linear-gradient(135deg, rgb(var(--color-primary)), rgba(var(--color-primary), 0.85)) !important;
-  border: 2px solid rgb(var(--color-primary)) !important;
-  box-shadow:
-    3px 3px 0px rgba(0, 0, 0, 0.4),
-    inset 2px 2px 0px rgba(255, 255, 255, 0.2),
-    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-/* Badges con colores específicos OPACOS para buen contraste */
+html.theme-industrial [class*="badge"],
 html.theme-industrial .bg-blue-500\/20,
-html.theme-industrial [class*="bg-blue-500"] {
-  background:
-    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px),
-    linear-gradient(135deg, rgb(59, 130, 246), rgb(37, 99, 235)) !important;
-  border: 2px solid rgb(59, 130, 246) !important;
+html.theme-industrial [class*="bg-blue-500"],
+html.theme-industrial .bg-yellow-500\/20,
+html.theme-industrial [class*="bg-yellow-500"],
+html.theme-industrial .bg-red-500\/20,
+html.theme-industrial [class*="bg-red-500"],
+html.theme-industrial .bg-green-500\/20,
+html.theme-industrial [class*="bg-green-500"],
+html.theme-industrial .bg-purple-500\/20,
+html.theme-industrial [class*="bg-purple-500"] {
+  /* Textura metálica uniforme */
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px) !important;
+  /* Borde uniforme */
+  border-width: 2.5px !important;
+  border-style: solid !important;
+  /* Sombra 3D uniforme */
   box-shadow:
-    3px 3px 0px rgba(0, 0, 0, 0.4),
-    inset 2px 2px 0px rgba(255, 255, 255, 0.2),
-    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
+    3px 3px 0px rgba(0, 0, 0, 0.45),
+    inset 2px 2px 0px rgba(255, 255, 255, 0.25),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.35) !important;
+  /* Tipografía uniforme */
   font-weight: 800 !important;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+  /* Tamaño y padding uniforme */
+  padding: 0.375rem 0.75rem !important;
+  font-size: 0.75rem !important;
+  line-height: 1.2 !important;
+  border-radius: 0.375rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-html.theme-industrial .text-blue-400 {
+/* Badge primario - Color del gym */
+html.theme-industrial .badge-primary,
+html.theme-industrial [class*="badge"]:not([class*="bg-blue"]):not([class*="bg-yellow"]):not([class*="bg-red"]):not([class*="bg-green"]):not([class*="bg-purple"]) {
+  background-color: rgb(var(--color-primary)) !important;
+  border-color: rgba(var(--color-primary), 1) !important;
   color: rgb(255, 255, 255) !important;
 }
 
+/* Badge azul - Sysadmin, Info */
+html.theme-industrial .bg-blue-500\/20,
+html.theme-industrial [class*="bg-blue-500"] {
+  background-color: rgb(59, 130, 246) !important;
+  border-color: rgb(59, 130, 246) !important;
+  color: rgb(255, 255, 255) !important;
+}
+
+html.theme-industrial .text-blue-400,
+html.theme-industrial .text-blue-500 {
+  color: rgb(255, 255, 255) !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+  font-weight: 800 !important;
+}
+
+/* Badge amarillo - Admin, Warning */
 html.theme-industrial .bg-yellow-500\/20,
 html.theme-industrial [class*="bg-yellow-500"] {
-  background:
-    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px),
-    linear-gradient(135deg, rgb(234, 179, 8), rgb(202, 138, 4)) !important;
-  border: 2px solid rgb(234, 179, 8) !important;
-  box-shadow:
-    3px 3px 0px rgba(0, 0, 0, 0.4),
-    inset 2px 2px 0px rgba(255, 255, 255, 0.2),
-    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
-  font-weight: 800 !important;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5) !important;
+  background-color: rgb(234, 179, 8) !important;
+  border-color: rgb(234, 179, 8) !important;
+  color: rgb(255, 255, 255) !important;
 }
 
 html.theme-industrial .text-yellow-400,
@@ -1420,20 +1551,47 @@ html.theme-industrial .text-yellow-500 {
   font-weight: 800 !important;
 }
 
+/* Badge rojo - Bloqueado, Error */
 html.theme-industrial .bg-red-500\/20,
 html.theme-industrial [class*="bg-red-500"] {
-  background:
-    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px),
-    linear-gradient(135deg, rgb(239, 68, 68), rgb(220, 38, 38)) !important;
-  border: 2px solid rgb(239, 68, 68) !important;
-  box-shadow:
-    3px 3px 0px rgba(0, 0, 0, 0.4),
-    inset 2px 2px 0px rgba(255, 255, 255, 0.2),
-    inset -2px -2px 0px rgba(0, 0, 0, 0.3) !important;
-  font-weight: 800 !important;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5) !important;
+  background-color: rgb(239, 68, 68) !important;
+  border-color: rgb(239, 68, 68) !important;
+  color: rgb(255, 255, 255) !important;
 }
 
-html.theme-industrial .text-red-400 {
+html.theme-industrial .text-red-400,
+html.theme-industrial .text-red-500 {
   color: rgb(255, 255, 255) !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+  font-weight: 800 !important;
+}
+
+/* Badge verde - Profesor, Success */
+html.theme-industrial .bg-green-500\/20,
+html.theme-industrial [class*="bg-green-500"] {
+  background-color: rgb(34, 197, 94) !important;
+  border-color: rgb(34, 197, 94) !important;
+  color: rgb(255, 255, 255) !important;
+}
+
+html.theme-industrial .text-green-400,
+html.theme-industrial .text-green-500 {
+  color: rgb(255, 255, 255) !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+  font-weight: 800 !important;
+}
+
+/* Badge morado - Alumno */
+html.theme-industrial .bg-purple-500\/20,
+html.theme-industrial [class*="bg-purple-500"] {
+  background-color: rgb(168, 85, 247) !important;
+  border-color: rgb(168, 85, 247) !important;
+  color: rgb(255, 255, 255) !important;
+}
+
+html.theme-industrial .text-purple-400,
+html.theme-industrial .text-purple-500 {
+  color: rgb(255, 255, 255) !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+  font-weight: 800 !important;
 }
