@@ -282,47 +282,44 @@ export const Dropdown = ({ trigger, children }) => {
     if (!isOpen) return;
 
     const handleClickOutside = (e) => {
-      if (triggerRef.current && triggerRef.current.contains(e.target)) {
-        return; // Click en el trigger, no hacer nada
-      }
-      if (menuRef.current && menuRef.current.contains(e.target)) {
-        return; // Click en el menu, no hacer nada
+      // Si el click fue en el trigger o el menú, no cerrar
+      if (
+        (triggerRef.current && triggerRef.current.contains(e.target)) ||
+        (menuRef.current && menuRef.current.contains(e.target))
+      ) {
+        return;
       }
       setIsOpen(false);
     };
 
-    // Pequeño delay para evitar que el click que abrió el dropdown lo cierre inmediatamente
-    const timer = setTimeout(() => {
-      document.addEventListener('click', handleClickOutside, true);
-      document.addEventListener('touchstart', handleClickOutside, true);
-    }, 10);
+    // Agregar listener inmediatamente
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
 
     return () => {
-      clearTimeout(timer);
-      document.removeEventListener('click', handleClickOutside, true);
-      document.removeEventListener('touchstart', handleClickOutside, true);
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
     };
   }, [isOpen]);
 
-  // Actualizar posición cuando se abre o cuando se hace scroll
+  // Actualizar posición cuando se abre o cambia el scroll
   useEffect(() => {
     if (!isOpen || !triggerRef.current) return;
 
     const updatePosition = () => {
-      if (triggerRef.current) {
-        const rect = triggerRef.current.getBoundingClientRect();
-        const menuWidth = 192; // 12rem = 192px
+      if (!triggerRef.current) return;
 
-        setPosition({
-          top: rect.bottom + 4,
-          left: Math.max(8, rect.right - menuWidth) // Evitar que se salga por la izquierda
-        });
-      }
+      const rect = triggerRef.current.getBoundingClientRect();
+      const menuWidth = 192; // 12rem = 192px
+
+      setPosition({
+        top: rect.bottom + 4,
+        left: Math.max(8, Math.min(rect.right - menuWidth, window.innerWidth - menuWidth - 8))
+      });
     };
 
     updatePosition();
 
-    // Actualizar posición al hacer scroll
     window.addEventListener('scroll', updatePosition, true);
     window.addEventListener('resize', updatePosition);
 
@@ -334,57 +331,43 @@ export const Dropdown = ({ trigger, children }) => {
 
   const handleTriggerClick = (e) => {
     e.stopPropagation();
-    e.preventDefault();
-    console.log('Dropdown trigger clicked, current state:', isOpen);
-    setIsOpen(prev => {
-      console.log('Dropdown state changing from', prev, 'to', !prev);
-      return !prev;
-    });
+    setIsOpen(prev => !prev);
   };
 
-  // Clone children to add close functionality
+  // Clone children para agregar funcionalidad de cierre
   const childrenWithClose = React.Children.map(children, child => {
     if (React.isValidElement(child)) {
       return React.cloneElement(child, {
         onClickWrapper: (originalOnClick) => (e) => {
+          e.stopPropagation();
           setIsOpen(false);
-          if (originalOnClick) originalOnClick(e);
+          if (originalOnClick) {
+            originalOnClick(e);
+          }
         }
       });
     }
     return child;
   });
 
-  // Debug: log when isOpen changes
-  useEffect(() => {
-    console.log('Dropdown isOpen changed to:', isOpen);
-    if (isOpen) {
-      console.log('Dropdown position:', position);
-    }
-  }, [isOpen, position]);
-
   return (
     <>
       <div
         ref={triggerRef}
         onClick={handleTriggerClick}
-        style={{ display: 'inline-block' }}
+        style={{ display: 'inline-block', cursor: 'pointer' }}
       >
         {trigger}
       </div>
       {isOpen && createPortal(
         <div
           ref={menuRef}
-          className="fixed w-48 bg-card border border-gray-700 rounded-xl shadow-2xl py-1"
+          className="fixed w-48 bg-card border border-gray-700 rounded-xl shadow-2xl py-1 z-[9999]"
           style={{
             top: `${position.top}px`,
-            left: `${position.left}px`,
-            zIndex: 9999,
-            animation: 'fadeIn 0.15s ease-out'
+            left: `${position.left}px`
           }}
-          onClick={(e) => e.stopPropagation()}
         >
-          {console.log('Rendering dropdown menu with', React.Children.count(children), 'children')}
           {childrenWithClose}
         </div>,
         document.body
@@ -396,20 +379,21 @@ export const Dropdown = ({ trigger, children }) => {
 // DropdownItem
 export const DropdownItem = ({ icon: Icon, children, danger, onClick, onClickWrapper }) => {
   const handleClick = (e) => {
-    e.stopPropagation();
     if (onClickWrapper) {
       onClickWrapper(onClick)(e);
     } else if (onClick) {
       onClick(e);
     }
   };
-  
+
   return (
-    <button 
-      onClick={handleClick} 
+    <button
+      type="button"
+      onClick={handleClick}
       className={`flex items-center gap-2 w-full px-3 py-2 text-sm text-left hover:bg-gray-700 transition-colors ${danger ? 'text-red-400 hover:bg-red-500/10' : 'text-gray-300'}`}
     >
-      {Icon && <Icon size={16} />}{children}
+      {Icon && <Icon size={16} />}
+      {children}
     </button>
   );
 };

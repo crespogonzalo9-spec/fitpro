@@ -283,7 +283,7 @@ const ESDsContent = () => {
                   </p>
                 </div>
                 {canEdit && (
-                  <Dropdown trigger={<button className="p-1.5 hover:bg-gray-700 rounded" onClick={e => e.stopPropagation()}><MoreVertical size={16} /></button>}>
+                  <Dropdown trigger={<button type="button" className="p-1.5 hover:bg-gray-700 rounded"><MoreVertical size={16} /></button>}>
                     <DropdownItem icon={Edit} onClick={() => { setSelected(esd); setShowModal(true); }}>Editar</DropdownItem>
                     <DropdownItem icon={Trash2} danger onClick={() => { setSelected(esd); setShowDelete(true); }}>Eliminar</DropdownItem>
                   </Dropdown>
