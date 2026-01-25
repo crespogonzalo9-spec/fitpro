@@ -308,15 +308,20 @@ const WODModal = ({ isOpen, onClose, onSave, wod, classes, members }) => {
     assignmentType: 'general',
     classId: '',
     memberIds: [],
-    // Campos específicos para ESD
-    esdInterval: 60,
-    esdRounds: 10,
-    // Campos específicos para AMRAP
+    // AMRAP
     amrapTime: 20,
-    // Campos específicos para For Time
+    // For Time
     forTimeRounds: 1,
-    // Campos específicos para Tabata
-    tabataRounds: 8
+    // EMOM
+    esdInterval: 60,
+    // Tabata
+    tabataRounds: 8,
+    // Ladder
+    ladderType: 'ascending',
+    ladderIncrement: 1,
+    // ESD
+    esdRounds: 5,
+    esdRest: 90
   });
   const [loading, setLoading] = useState(false);
   const [showBenchmarks, setShowBenchmarks] = useState(false);
@@ -332,11 +337,14 @@ const WODModal = ({ isOpen, onClose, onSave, wod, classes, members }) => {
         assignmentType: wod.assignmentType || 'general',
         classId: wod.classId || '',
         memberIds: wod.memberIds || [],
-        esdInterval: wod.esdInterval || 60,
-        esdRounds: wod.esdRounds || 10,
         amrapTime: wod.amrapTime || 20,
         forTimeRounds: wod.forTimeRounds || 1,
-        tabataRounds: wod.tabataRounds || 8
+        esdInterval: wod.esdInterval || 60,
+        tabataRounds: wod.tabataRounds || 8,
+        ladderType: wod.ladderType || 'ascending',
+        ladderIncrement: wod.ladderIncrement || 1,
+        esdRounds: wod.esdRounds || 5,
+        esdRest: wod.esdRest || 90
       });
     } else {
       setForm({
@@ -347,11 +355,14 @@ const WODModal = ({ isOpen, onClose, onSave, wod, classes, members }) => {
         assignmentType: 'general',
         classId: '',
         memberIds: [],
-        esdInterval: 60,
-        esdRounds: 10,
         amrapTime: 20,
         forTimeRounds: 1,
-        tabataRounds: 8
+        esdInterval: 60,
+        tabataRounds: 8,
+        ladderType: 'ascending',
+        ladderIncrement: 1,
+        esdRounds: 5,
+        esdRest: 90
       });
     }
     setMemberSearch('');
@@ -434,114 +445,224 @@ const WODModal = ({ isOpen, onClose, onSave, wod, classes, members }) => {
           </div>
         )}
 
-        <div className="grid grid-cols-2 gap-4">
-          <Select
-            label="Tipo"
-            value={form.type}
-            onChange={e => setForm({ ...form, type: e.target.value })}
-            options={WOD_TYPES.map(t => ({ value: t.id, label: t.name }))}
-          />
-          <Input
-            label="Time Cap (min)"
-            type="number"
-            value={form.timeLimit}
-            onChange={e => setForm({ ...form, timeLimit: e.target.value })}
-            placeholder="20"
-          />
-        </div>
+        <Select
+          label="Tipo de WOD *"
+          value={form.type}
+          onChange={e => setForm({ ...form, type: e.target.value })}
+          options={WOD_TYPES.map(t => ({ value: t.id, label: t.name }))}
+        />
 
-        {/* Campos específicos para ESD */}
-        {form.type === 'esd' && (
-          <Card className="bg-blue-500/10 border-blue-500/30">
-            <h4 className="text-sm font-medium text-blue-400 mb-3 flex items-center gap-2">
-              <Clock size={16} />
-              Configuración ESD
-            </h4>
-            <div className="grid grid-cols-2 gap-4">
-              <Select
-                label="Intervalo"
-                value={form.esdInterval}
-                onChange={e => setForm({ ...form, esdInterval: parseInt(e.target.value) })}
-                options={ESD_INTERVALS.map(i => ({ value: i.value, label: i.label }))}
-              />
-              <Input
-                label="Rondas"
-                type="number"
-                min="1"
-                max="60"
-                value={form.esdRounds}
-                onChange={e => setForm({ ...form, esdRounds: parseInt(e.target.value) || 1 })}
-                placeholder="10"
-              />
-            </div>
-            <p className="text-xs text-gray-400 mt-2">
-              Ejemplo: Intervalo de 1 minuto con 10 rondas = E1MOM 10
-            </p>
-          </Card>
-        )}
-
-        {/* Campos específicos para AMRAP */}
+        {/* AMRAP: Tiempo Fijo (no lleva Time Cap) */}
         {form.type === 'amrap' && (
           <Card className="bg-green-500/10 border-green-500/30">
-            <h4 className="text-sm font-medium text-green-400 mb-3 flex items-center gap-2">
-              <Clock size={16} />
-              Configuración AMRAP
-            </h4>
+            <h4 className="text-sm font-medium text-green-400 mb-3">AMRAP - As Many Rounds As Possible</h4>
             <Input
-              label="Tiempo (minutos)"
+              label="Tiempo Fijo (minutos) *"
               type="number"
               min="1"
               max="60"
               value={form.amrapTime}
               onChange={e => setForm({ ...form, amrapTime: parseInt(e.target.value) || 1 })}
               placeholder="20"
+              required
             />
             <p className="text-xs text-gray-400 mt-2">
-              As Many Rounds As Possible - Máximas rondas en el tiempo indicado
+              ✓ Resultado esperado: Rondas + Repeticiones extra
             </p>
           </Card>
         )}
 
-        {/* Campos específicos para For Time */}
+        {/* For Time: Trabajo Fijo + Time Cap */}
         {form.type === 'for_time' && (
           <Card className="bg-purple-500/10 border-purple-500/30">
-            <h4 className="text-sm font-medium text-purple-400 mb-3 flex items-center gap-2">
-              <Clock size={16} />
-              Configuración For Time
-            </h4>
-            <Input
-              label="Rondas"
-              type="number"
-              min="1"
-              max="10"
-              value={form.forTimeRounds}
-              onChange={e => setForm({ ...form, forTimeRounds: parseInt(e.target.value) || 1 })}
-              placeholder="3"
-            />
+            <h4 className="text-sm font-medium text-purple-400 mb-3">For Time - Completar lo más rápido posible</h4>
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Rondas *"
+                type="number"
+                min="1"
+                max="10"
+                value={form.forTimeRounds}
+                onChange={e => setForm({ ...form, forTimeRounds: parseInt(e.target.value) || 1 })}
+                placeholder="3"
+                required
+              />
+              <Input
+                label="Time Cap (minutos) *"
+                type="number"
+                min="1"
+                max="60"
+                value={form.timeLimit}
+                onChange={e => setForm({ ...form, timeLimit: e.target.value })}
+                placeholder="20"
+                required
+              />
+            </div>
             <p className="text-xs text-gray-400 mt-2">
-              Completar todas las rondas lo más rápido posible
+              ✓ Resultado esperado: Tiempo final empleado
             </p>
           </Card>
         )}
 
-        {/* Campos específicos para Tabata */}
+        {/* EMOM: Duración + Intervalo */}
+        {form.type === 'emom' && (
+          <Card className="bg-blue-500/10 border-blue-500/30">
+            <h4 className="text-sm font-medium text-blue-400 mb-3">EMOM - Every Minute on the Minute</h4>
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Duración Total (minutos) *"
+                type="number"
+                min="1"
+                max="60"
+                value={form.amrapTime}
+                onChange={e => setForm({ ...form, amrapTime: parseInt(e.target.value) || 1 })}
+                placeholder="12"
+                required
+              />
+              <Select
+                label="Intervalo *"
+                value={form.esdInterval}
+                onChange={e => setForm({ ...form, esdInterval: parseInt(e.target.value) })}
+                options={[
+                  { value: 60, label: 'Cada 1 min (EMOM)' },
+                  { value: 120, label: 'Cada 2 min (E2MOM)' },
+                  { value: 180, label: 'Cada 3 min (E3MOM)' },
+                  { value: 240, label: 'Cada 4 min (E4MOM)' }
+                ]}
+              />
+            </div>
+            <p className="text-xs text-gray-400 mt-2">
+              ✓ Resultado esperado: Completado (Sí/No) o Peso usado
+            </p>
+          </Card>
+        )}
+
+        {/* Tabata: Ciclos Work/Rest */}
         {form.type === 'tabata' && (
           <Card className="bg-red-500/10 border-red-500/30">
-            <h4 className="text-sm font-medium text-red-400 mb-3 flex items-center gap-2">
-              <Clock size={16} />
-              Configuración Tabata
-            </h4>
+            <h4 className="text-sm font-medium text-red-400 mb-3">Tabata - Alta Intensidad</h4>
+            <div className="grid grid-cols-3 gap-4">
+              <Input
+                label="Rondas *"
+                type="number"
+                min="4"
+                max="12"
+                value={form.tabataRounds}
+                onChange={e => setForm({ ...form, tabataRounds: parseInt(e.target.value) || 8 })}
+                placeholder="8"
+                required
+              />
+              <Input
+                label="Trabajo (seg)"
+                type="number"
+                value={20}
+                disabled
+              />
+              <Input
+                label="Descanso (seg)"
+                type="number"
+                value={10}
+                disabled
+              />
+            </div>
+            <p className="text-xs text-gray-400 mt-2">
+              ✓ Estructura fija: 20 seg trabajo / 10 seg descanso<br/>
+              ✓ Resultado esperado: Reps totales
+            </p>
+          </Card>
+        )}
+
+        {/* Chipper: Time Cap + Lista larga */}
+        {form.type === 'chipper' && (
+          <Card className="bg-orange-500/10 border-orange-500/30">
+            <h4 className="text-sm font-medium text-orange-400 mb-3">Chipper - Triturar uno tras otro</h4>
             <Input
-              label="Rondas"
+              label="Time Cap (minutos) *"
               type="number"
-              min="4"
-              max="12"
-              value={form.tabataRounds}
-              onChange={e => setForm({ ...form, tabataRounds: parseInt(e.target.value) || 8 })}
-              placeholder="8"
+              min="1"
+              max="60"
+              value={form.timeLimit}
+              onChange={e => setForm({ ...form, timeLimit: e.target.value })}
+              placeholder="30"
+              required
             />
             <p className="text-xs text-gray-400 mt-2">
-              Protocolo Tabata: 20 segundos trabajo / 10 segundos descanso
+              ✓ Lista larga de ejercicios con reps altas que no se repiten<br/>
+              ✓ Resultado esperado: Tiempo o ejercicios completados
+            </p>
+          </Card>
+        )}
+
+        {/* Ladder: Reps iniciales/finales + Time Cap */}
+        {form.type === 'ladder' && (
+          <Card className="bg-yellow-500/10 border-yellow-500/30">
+            <h4 className="text-sm font-medium text-yellow-400 mb-3">Ladder - Escaleras</h4>
+            <div className="grid grid-cols-2 gap-4">
+              <Select
+                label="Tipo de Escalera *"
+                value={form.ladderType || 'ascending'}
+                onChange={e => setForm({ ...form, ladderType: e.target.value })}
+                options={[
+                  { value: 'ascending', label: 'Ascendente (1-2-3...)' },
+                  { value: 'descending', label: 'Descendente (10-9-8...)' }
+                ]}
+              />
+              <Input
+                label="Incremento"
+                type="number"
+                min="1"
+                max="10"
+                value={form.ladderIncrement || 1}
+                onChange={e => setForm({ ...form, ladderIncrement: parseInt(e.target.value) || 1 })}
+                placeholder="1"
+              />
+            </div>
+            <Input
+              label="Time Cap (minutos) *"
+              type="number"
+              min="1"
+              max="60"
+              value={form.timeLimit}
+              onChange={e => setForm({ ...form, timeLimit: e.target.value })}
+              placeholder="20"
+              required
+              className="mt-3"
+            />
+            <p className="text-xs text-gray-400 mt-2">
+              ✓ Resultado esperado: Rondas completadas o Tiempo
+            </p>
+          </Card>
+        )}
+
+        {/* ESD: Series/Sets + Distancia/Tiempo + Descanso */}
+        {form.type === 'esd' && (
+          <Card className="bg-cyan-500/10 border-cyan-500/30">
+            <h4 className="text-sm font-medium text-cyan-400 mb-3">ESD - Intervalos de Potencia/Capacidad</h4>
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Series/Sets *"
+                type="number"
+                min="1"
+                max="20"
+                value={form.esdRounds}
+                onChange={e => setForm({ ...form, esdRounds: parseInt(e.target.value) || 1 })}
+                placeholder="5"
+                required
+              />
+              <Input
+                label="Descanso entre series (seg) *"
+                type="number"
+                min="10"
+                max="600"
+                value={form.esdRest || 90}
+                onChange={e => setForm({ ...form, esdRest: parseInt(e.target.value) || 90 })}
+                placeholder="90"
+                required
+              />
+            </div>
+            <p className="text-xs text-gray-400 mt-2">
+              ✓ Para carrera, remo, Wattbike, etc.<br/>
+              ✓ Resultado esperado: Tiempos o distancias por serie
             </p>
           </Card>
         )}
