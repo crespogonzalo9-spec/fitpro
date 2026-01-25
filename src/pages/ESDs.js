@@ -346,7 +346,13 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
     name: '',
     description: '',
     type: 'esd',
+    // Campos específicos por tipo (mismo que WODs.js)
+    amrapTime: 20,
+    forTimeRounds: 1,
     esdInterval: 60,
+    tabataRounds: 8,
+    ladderType: 'ascending',
+    ladderIncrement: 1,
     esdRounds: 5,
     esdRest: 90,
     timeLimit: '',
@@ -364,7 +370,12 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
         name: esd.name || '',
         description: esd.description || '',
         type: esd.type || 'esd',
+        amrapTime: esd.amrapTime || 20,
+        forTimeRounds: esd.forTimeRounds || 1,
         esdInterval: esd.esdInterval || 60,
+        tabataRounds: esd.tabataRounds || 8,
+        ladderType: esd.ladderType || 'ascending',
+        ladderIncrement: esd.ladderIncrement || 1,
         esdRounds: esd.esdRounds || 5,
         esdRest: esd.esdRest || 90,
         timeLimit: esd.timeLimit || '',
@@ -378,7 +389,12 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
         name: '',
         description: '',
         type: 'esd',
+        amrapTime: 20,
+        forTimeRounds: 1,
         esdInterval: 60,
+        tabataRounds: 8,
+        ladderType: 'ascending',
+        ladderIncrement: 1,
         esdRounds: 5,
         esdRest: 90,
         timeLimit: '',
@@ -438,6 +454,28 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
     }));
   };
 
+  // Valores por defecto para cada tipo (mismo patrón que WODs.js)
+  const getDefaultsForType = (type) => {
+    const defaults = {
+      amrap: { amrapTime: 20, timeLimit: '', forTimeRounds: 1, esdInterval: 60, tabataRounds: 8, ladderType: 'ascending', ladderIncrement: 1, esdRounds: 5, esdRest: 90 },
+      for_time: { forTimeRounds: 1, timeLimit: '20', amrapTime: 20, esdInterval: 60, tabataRounds: 8, ladderType: 'ascending', ladderIncrement: 1, esdRounds: 5, esdRest: 90 },
+      emom: { amrapTime: 12, esdInterval: 60, timeLimit: '', forTimeRounds: 1, tabataRounds: 8, ladderType: 'ascending', ladderIncrement: 1, esdRounds: 5, esdRest: 90 },
+      tabata: { tabataRounds: 8, timeLimit: '', amrapTime: 20, forTimeRounds: 1, esdInterval: 60, ladderType: 'ascending', ladderIncrement: 1, esdRounds: 5, esdRest: 90 },
+      chipper: { timeLimit: '30', amrapTime: 20, forTimeRounds: 1, esdInterval: 60, tabataRounds: 8, ladderType: 'ascending', ladderIncrement: 1, esdRounds: 5, esdRest: 90 },
+      ladder: { ladderType: 'ascending', ladderIncrement: 1, timeLimit: '20', amrapTime: 20, forTimeRounds: 1, esdInterval: 60, tabataRounds: 8, esdRounds: 5, esdRest: 90 },
+      esd: { esdRounds: 5, esdRest: 90, timeLimit: '', amrapTime: 20, forTimeRounds: 1, esdInterval: 60, tabataRounds: 8, ladderType: 'ascending', ladderIncrement: 1 }
+    };
+    return defaults[type] || defaults.esd;
+  };
+
+  const handleTypeChange = (newType) => {
+    setForm(prev => ({
+      ...prev,
+      type: newType,
+      ...getDefaultsForType(newType)
+    }));
+  };
+
   const filteredMembers = members.filter(m =>
     m.name?.toLowerCase().includes(memberSearch.toLowerCase()) ||
     m.email?.toLowerCase().includes(memberSearch.toLowerCase())
@@ -454,23 +492,196 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
           required
         />
 
-        <div className="grid grid-cols-2 gap-4">
-          <Select
-            label="Tipo"
-            value={form.type}
-            onChange={e => setForm({ ...form, type: e.target.value })}
-            options={WOD_TYPES.map(t => ({ value: t.id, label: t.name }))}
-          />
-          <Input
-            label="Time Cap (min)"
-            type="number"
-            value={form.timeLimit}
-            onChange={e => setForm({ ...form, timeLimit: e.target.value })}
-            placeholder="20"
-          />
-        </div>
+        <Select
+          label="Tipo *"
+          value={form.type}
+          onChange={e => handleTypeChange(e.target.value)}
+          options={WOD_TYPES.map(t => ({ value: t.id, label: t.name }))}
+        />
 
-        {/* Configuración ESD - Intervalos de Potencia/Capacidad */}
+        {/* AMRAP: Tiempo Fijo (no lleva Time Cap) */}
+        {form.type === 'amrap' && (
+          <Card className="bg-green-500/10 border-green-500/30">
+            <h4 className="text-sm font-medium text-green-400 mb-3">AMRAP - As Many Rounds As Possible</h4>
+            <Input
+              label="Tiempo Fijo (minutos) *"
+              type="number"
+              min="1"
+              max="60"
+              value={form.amrapTime}
+              onChange={e => setForm({ ...form, amrapTime: parseInt(e.target.value) || 1 })}
+              placeholder="20"
+              required
+            />
+            <p className="text-xs text-gray-400 mt-2">
+              ✓ Resultado esperado: Rondas + Repeticiones extra
+            </p>
+          </Card>
+        )}
+
+        {/* For Time: Trabajo Fijo + Time Cap */}
+        {form.type === 'for_time' && (
+          <Card className="bg-purple-500/10 border-purple-500/30">
+            <h4 className="text-sm font-medium text-purple-400 mb-3">For Time - Completar lo más rápido posible</h4>
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Rondas *"
+                type="number"
+                min="1"
+                max="10"
+                value={form.forTimeRounds}
+                onChange={e => setForm({ ...form, forTimeRounds: parseInt(e.target.value) || 1 })}
+                placeholder="3"
+                required
+              />
+              <Input
+                label="Time Cap (minutos) *"
+                type="number"
+                min="1"
+                max="60"
+                value={form.timeLimit}
+                onChange={e => setForm({ ...form, timeLimit: e.target.value })}
+                placeholder="20"
+                required
+              />
+            </div>
+            <p className="text-xs text-gray-400 mt-2">
+              ✓ Resultado esperado: Tiempo final empleado
+            </p>
+          </Card>
+        )}
+
+        {/* EMOM: Duración + Intervalo */}
+        {form.type === 'emom' && (
+          <Card className="bg-blue-500/10 border-blue-500/30">
+            <h4 className="text-sm font-medium text-blue-400 mb-3">EMOM - Every Minute on the Minute</h4>
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Duración Total (minutos) *"
+                type="number"
+                min="1"
+                max="60"
+                value={form.amrapTime}
+                onChange={e => setForm({ ...form, amrapTime: parseInt(e.target.value) || 1 })}
+                placeholder="12"
+                required
+              />
+              <Select
+                label="Intervalo *"
+                value={form.esdInterval}
+                onChange={e => setForm({ ...form, esdInterval: parseInt(e.target.value) })}
+                options={[
+                  { value: 60, label: 'Cada 1 min (EMOM)' },
+                  { value: 120, label: 'Cada 2 min (E2MOM)' },
+                  { value: 180, label: 'Cada 3 min (E3MOM)' },
+                  { value: 240, label: 'Cada 4 min (E4MOM)' }
+                ]}
+              />
+            </div>
+            <p className="text-xs text-gray-400 mt-2">
+              ✓ Resultado esperado: Completado (Sí/No) o Peso usado
+            </p>
+          </Card>
+        )}
+
+        {/* Tabata: Ciclos Work/Rest */}
+        {form.type === 'tabata' && (
+          <Card className="bg-red-500/10 border-red-500/30">
+            <h4 className="text-sm font-medium text-red-400 mb-3">Tabata - Alta Intensidad</h4>
+            <div className="grid grid-cols-3 gap-4">
+              <Input
+                label="Rondas *"
+                type="number"
+                min="4"
+                max="12"
+                value={form.tabataRounds}
+                onChange={e => setForm({ ...form, tabataRounds: parseInt(e.target.value) || 8 })}
+                placeholder="8"
+                required
+              />
+              <Input
+                label="Trabajo (seg)"
+                type="number"
+                value={20}
+                disabled
+              />
+              <Input
+                label="Descanso (seg)"
+                type="number"
+                value={10}
+                disabled
+              />
+            </div>
+            <p className="text-xs text-gray-400 mt-2">
+              ✓ Estructura fija: 20 seg trabajo / 10 seg descanso<br/>
+              ✓ Resultado esperado: Reps totales
+            </p>
+          </Card>
+        )}
+
+        {/* Chipper: Time Cap + Lista larga */}
+        {form.type === 'chipper' && (
+          <Card className="bg-orange-500/10 border-orange-500/30">
+            <h4 className="text-sm font-medium text-orange-400 mb-3">Chipper - Triturar uno tras otro</h4>
+            <Input
+              label="Time Cap (minutos) *"
+              type="number"
+              min="1"
+              max="60"
+              value={form.timeLimit}
+              onChange={e => setForm({ ...form, timeLimit: e.target.value })}
+              placeholder="30"
+              required
+            />
+            <p className="text-xs text-gray-400 mt-2">
+              ✓ Lista larga de ejercicios con reps altas que no se repiten<br/>
+              ✓ Resultado esperado: Tiempo o ejercicios completados
+            </p>
+          </Card>
+        )}
+
+        {/* Ladder: Reps iniciales/finales + Time Cap */}
+        {form.type === 'ladder' && (
+          <Card className="bg-yellow-500/10 border-yellow-500/30">
+            <h4 className="text-sm font-medium text-yellow-400 mb-3">Ladder - Escaleras</h4>
+            <div className="grid grid-cols-2 gap-4">
+              <Select
+                label="Tipo de Escalera *"
+                value={form.ladderType || 'ascending'}
+                onChange={e => setForm({ ...form, ladderType: e.target.value })}
+                options={[
+                  { value: 'ascending', label: 'Ascendente (1-2-3...)' },
+                  { value: 'descending', label: 'Descendente (10-9-8...)' }
+                ]}
+              />
+              <Input
+                label="Incremento"
+                type="number"
+                min="1"
+                max="10"
+                value={form.ladderIncrement || 1}
+                onChange={e => setForm({ ...form, ladderIncrement: parseInt(e.target.value) || 1 })}
+                placeholder="1"
+              />
+            </div>
+            <Input
+              label="Time Cap (minutos) *"
+              type="number"
+              min="1"
+              max="60"
+              value={form.timeLimit}
+              onChange={e => setForm({ ...form, timeLimit: e.target.value })}
+              placeholder="20"
+              required
+              className="mt-3"
+            />
+            <p className="text-xs text-gray-400 mt-2">
+              ✓ Resultado esperado: Rondas completadas o Tiempo
+            </p>
+          </Card>
+        )}
+
+        {/* ESD: Series/Sets + Descanso */}
         {form.type === 'esd' && (
           <Card className="bg-cyan-500/10 border-cyan-500/30">
             <h4 className="text-sm font-medium text-cyan-400 mb-3 flex items-center gap-2">

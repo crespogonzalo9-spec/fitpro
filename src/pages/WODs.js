@@ -406,7 +406,29 @@ const WODModal = ({ isOpen, onClose, onSave, wod, classes, members }) => {
     setForm(prev => ({ ...prev, memberIds: [] }));
   };
 
-  const filteredMembers = members.filter(m => 
+  // Valores por defecto para cada tipo de WOD
+  const getDefaultsForType = (type) => {
+    const defaults = {
+      amrap: { amrapTime: 20, timeLimit: '', forTimeRounds: 1, esdInterval: 60, tabataRounds: 8, ladderType: 'ascending', ladderIncrement: 1, esdRounds: 5, esdRest: 90 },
+      for_time: { forTimeRounds: 1, timeLimit: '20', amrapTime: 20, esdInterval: 60, tabataRounds: 8, ladderType: 'ascending', ladderIncrement: 1, esdRounds: 5, esdRest: 90 },
+      emom: { amrapTime: 12, esdInterval: 60, timeLimit: '', forTimeRounds: 1, tabataRounds: 8, ladderType: 'ascending', ladderIncrement: 1, esdRounds: 5, esdRest: 90 },
+      tabata: { tabataRounds: 8, timeLimit: '', amrapTime: 20, forTimeRounds: 1, esdInterval: 60, ladderType: 'ascending', ladderIncrement: 1, esdRounds: 5, esdRest: 90 },
+      chipper: { timeLimit: '30', amrapTime: 20, forTimeRounds: 1, esdInterval: 60, tabataRounds: 8, ladderType: 'ascending', ladderIncrement: 1, esdRounds: 5, esdRest: 90 },
+      ladder: { ladderType: 'ascending', ladderIncrement: 1, timeLimit: '20', amrapTime: 20, forTimeRounds: 1, esdInterval: 60, tabataRounds: 8, esdRounds: 5, esdRest: 90 },
+      esd: { esdRounds: 5, esdRest: 90, timeLimit: '', amrapTime: 20, forTimeRounds: 1, esdInterval: 60, tabataRounds: 8, ladderType: 'ascending', ladderIncrement: 1 }
+    };
+    return defaults[type] || defaults.for_time;
+  };
+
+  const handleTypeChange = (newType) => {
+    setForm(prev => ({
+      ...prev,
+      type: newType,
+      ...getDefaultsForType(newType)
+    }));
+  };
+
+  const filteredMembers = members.filter(m =>
     m.name?.toLowerCase().includes(memberSearch.toLowerCase()) ||
     m.email?.toLowerCase().includes(memberSearch.toLowerCase())
   );
@@ -448,7 +470,7 @@ const WODModal = ({ isOpen, onClose, onSave, wod, classes, members }) => {
         <Select
           label="Tipo de WOD *"
           value={form.type}
-          onChange={e => setForm({ ...form, type: e.target.value })}
+          onChange={e => handleTypeChange(e.target.value)}
           options={WOD_TYPES.map(t => ({ value: t.id, label: t.name }))}
         />
 
