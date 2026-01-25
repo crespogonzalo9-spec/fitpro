@@ -347,7 +347,8 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
     description: '',
     type: 'esd',
     esdInterval: 60,
-    esdRounds: 10,
+    esdRounds: 5,
+    esdRest: 90,
     timeLimit: '',
     exercises: [],
     assignmentType: 'general',
@@ -364,7 +365,8 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
         description: esd.description || '',
         type: esd.type || 'esd',
         esdInterval: esd.esdInterval || 60,
-        esdRounds: esd.esdRounds || 10,
+        esdRounds: esd.esdRounds || 5,
+        esdRest: esd.esdRest || 90,
         timeLimit: esd.timeLimit || '',
         exercises: esd.exercises || [],
         assignmentType: esd.assignmentType || 'general',
@@ -377,7 +379,8 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
         description: '',
         type: 'esd',
         esdInterval: 60,
-        esdRounds: 10,
+        esdRounds: 5,
+        esdRest: 90,
         timeLimit: '',
         exercises: [],
         assignmentType: 'general',
@@ -467,32 +470,38 @@ const ESDModal = ({ isOpen, onClose, onSave, esd, classes, members, exercises })
           />
         </div>
 
-        {/* Configuración ESD - Solo visible cuando type === 'esd' */}
+        {/* Configuración ESD - Intervalos de Potencia/Capacidad */}
         {form.type === 'esd' && (
-          <Card className="bg-blue-500/10 border-blue-500/30">
-            <h4 className="text-sm font-medium text-blue-400 mb-3 flex items-center gap-2">
+          <Card className="bg-cyan-500/10 border-cyan-500/30">
+            <h4 className="text-sm font-medium text-cyan-400 mb-3 flex items-center gap-2">
               <Clock size={16} />
-              Configuración ESD
+              ESD - Intervalos de Potencia/Capacidad
             </h4>
             <div className="grid grid-cols-2 gap-4">
-              <Select
-                label="Intervalo"
-                value={form.esdInterval}
-                onChange={e => setForm({ ...form, esdInterval: parseInt(e.target.value) })}
-                options={ESD_INTERVALS.map(i => ({ value: i.value, label: i.label }))}
-              />
               <Input
-                label="Rondas"
+                label="Series/Sets *"
                 type="number"
                 min="1"
-                max="60"
+                max="20"
                 value={form.esdRounds}
                 onChange={e => setForm({ ...form, esdRounds: parseInt(e.target.value) || 1 })}
-                placeholder="10"
+                placeholder="5"
+                required
+              />
+              <Input
+                label="Descanso entre series (seg) *"
+                type="number"
+                min="10"
+                max="600"
+                value={form.esdRest}
+                onChange={e => setForm({ ...form, esdRest: parseInt(e.target.value) || 90 })}
+                placeholder="90"
+                required
               />
             </div>
             <p className="text-xs text-gray-400 mt-2">
-              Ejemplo: Intervalo de 1 minuto con 10 rondas = E1MOM 10
+              ✓ Para carrera, remo, Wattbike, etc.<br/>
+              ✓ Resultado esperado: Tiempos o distancias por serie
             </p>
           </Card>
         )}
