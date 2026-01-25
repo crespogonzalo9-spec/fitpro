@@ -1,0 +1,9 @@
+
+> fitpro@1.0.18 start
+> react-scripts start
+
+(node:37284) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Invalid options object. Dev Server has been initialized using an options object that does not match the API schema.
+ - options has an unknown property 'onAfterSetupMiddleware'. These properties are valid:
+   object { allowedHosts?, bonjour?, client?, compress?, devMiddleware?, headers?, historyApiFallback?, host?, hot?, ipc?, liveReload?, onListening?, open?, port?, proxy?, server?, app?, setupExitSignals?, setupMiddlewares?, static?, watchFiles?, webSocketServer? }

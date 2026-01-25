@@ -92,21 +92,24 @@ const RoutinesContent = () => {
       setExercises(items);
     });
 
-    // Cargar WODs
-    const wodsQuery = query(collection(db, 'wods'), where('gymId', '==', currentGym.id), where('type', '!=', 'esd'));
+    // Cargar WODs y ESDs (filtrar localmente para evitar índice compuesto)
+    const wodsQuery = query(collection(db, 'wods'), where('gymId', '==', currentGym.id));
     const unsubWods = onSnapshot(wodsQuery, (snap) => {
-      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      items.sort((a, b) => a.name?.localeCompare(b.name));
-      setWods(items);
+      const allItems = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      // Separar WODs y ESDs
+      const wodItems = allItems.filter(item => item.type !== 'esd');
+      const esdItems = allItems.filter(item => item.type === 'esd');
+
+      wodItems.sort((a, b) => a.name?.localeCompare(b.name));
+      esdItems.sort((a, b) => a.name?.localeCompare(b.name));
+
+      setWods(wodItems);
+      setEsds(esdItems);
     });
 
-    // Cargar ESDs
-    const esdsQuery = query(collection(db, 'wods'), where('gymId', '==', currentGym.id), where('type', '==', 'esd'));
-    const unsubEsds = onSnapshot(esdsQuery, (snap) => {
-      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      items.sort((a, b) => a.name?.localeCompare(b.name));
-      setEsds(items);
-    });
+    // Ya no necesitamos query separado para ESDs
+    const unsubEsds = () => {}; // Placeholder para mantener compatibilidad
 
     // Cargar miembros (para profesores/admin)
     if (canEdit) {
