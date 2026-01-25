@@ -159,6 +159,25 @@ const RoutinesContent = () => {
     return visible;
   };
 
+  // Calcular total de elementos (ejercicios + WODs + ESDs) en una rutina
+  const getTotalElements = (routine) => {
+    // Si usa bloques (nuevo formato)
+    if (routine.blocks && Array.isArray(routine.blocks)) {
+      return routine.blocks.reduce((total, block) => {
+        const exercisesCount = block.exercises?.length || 0;
+        const wodsCount = block.wods?.length || 0;
+        const esdsCount = block.esds?.length || 0;
+        return total + exercisesCount + wodsCount + esdsCount;
+      }, 0);
+    }
+
+    // Si usa formato antiguo (ejercicios/wods directos)
+    const exercisesCount = routine.exercises?.length || 0;
+    const wodsCount = routine.wods?.length || 0;
+    const esdsCount = routine.esds?.length || 0;
+    return exercisesCount + wodsCount + esdsCount;
+  };
+
   const handleSave = async (data) => {
     try {
       const routineData = { ...data, gymId: currentGym.id, updatedAt: serverTimestamp() };
@@ -167,11 +186,11 @@ const RoutinesContent = () => {
         await updateDoc(doc(db, 'routines', selected.id), routineData);
         success('Rutina actualizada');
       } else {
-        await addDoc(collection(db, 'routines'), { 
-          ...routineData, 
-          createdBy: userData.id, 
-          createdByName: userData.name, 
-          createdAt: serverTimestamp() 
+        await addDoc(collection(db, 'routines'), {
+          ...routineData,
+          createdBy: userData.id,
+          createdByName: userData.name,
+          createdAt: serverTimestamp()
         });
         success('Rutina creada');
       }
@@ -313,7 +332,7 @@ const RoutinesContent = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold">{routine.name}</h3>
-                    <p className="text-sm text-gray-400">{routine.exercises?.length || 0} ejercicios</p>
+                    <p className="text-sm text-gray-400">{getTotalElements(routine)} elementos</p>
                   </div>
                 </div>
                 {canEdit && (
@@ -351,7 +370,7 @@ const RoutinesContent = () => {
               </div>
 
               {/* Botón para iniciar rutina con timer */}
-              {((routine.exercises && routine.exercises.length > 0) || (routine.wods && routine.wods.length > 0)) && (
+              {getTotalElements(routine) > 0 && (
                 <Button
                   variant="primary"
                   size="sm"
