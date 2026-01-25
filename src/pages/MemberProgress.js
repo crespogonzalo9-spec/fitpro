@@ -19,17 +19,23 @@ const MemberProgress = () => {
     const loadData = async () => {
       try {
         // Cargar sesiones de rutinas del usuario actual
+        // Ordenar localmente para evitar índice compuesto (userId + gymId + completedAt)
         const sessionsQuery = query(
           collection(db, 'routine_sessions'),
           where('userId', '==', userData.id),
-          where('gymId', '==', currentGym.id),
-          orderBy('completedAt', 'desc')
+          where('gymId', '==', currentGym.id)
         );
         const sessionsSnap = await getDocs(sessionsQuery);
-        const sessionsData = sessionsSnap.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+        const sessionsData = sessionsSnap.docs
+          .map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }))
+          .sort((a, b) => {
+            const dateA = a.completedAt?.toDate?.() || new Date(0);
+            const dateB = b.completedAt?.toDate?.() || new Date(0);
+            return dateB - dateA; // desc order
+          });
 
         // Cargar ejercicios
         const exercisesQuery = query(
