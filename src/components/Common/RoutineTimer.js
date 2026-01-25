@@ -28,7 +28,7 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
     }
   ];
 
-  // Combinar todos los ejercicios y WODs de todos los bloques en un solo array
+  // Combinar todos los ejercicios, WODs y ESDs de todos los bloques en un solo array
   const allElements = blocks.flatMap(block => [
     ...(block.exercises || []).map(ex => ({
       ...ex,
@@ -45,6 +45,12 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
       blockType: block.type,
       esdInterval: block.esdInterval,
       esdRounds: block.esdRounds
+    })),
+    ...(block.esds || []).map(esd => ({
+      ...esd,
+      type: 'esd',
+      blockName: block.name,
+      blockType: block.type
     }))
   ]);
 
@@ -70,9 +76,11 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
   const timerRef = useRef(null);
   const currentElement = allElements[currentElementIndex];
   const isCurrentWod = currentElement?.type === 'wod';
+  const isCurrentEsd = currentElement?.type === 'esd';
   const isEsdBlock = currentElement?.blockType === 'esd';
-  const exerciseData = !isCurrentWod && currentElement ? exercises.find(e => e.id === currentElement.exerciseId) : null;
+  const exerciseData = !isCurrentWod && !isCurrentEsd && currentElement ? exercises.find(e => e.id === currentElement.exerciseId) : null;
   const wodData = isCurrentWod && currentElement ? wods.find(w => w.id === currentElement.wodId) : null;
+  const esdData = isCurrentEsd && currentElement ? wods.find(w => w.id === currentElement.esdId) : null;
 
   // Verificar si el ejercicio actual es de tiempo
   const isTimeBasedExercise = exerciseData?.measureType === 'time';
@@ -560,10 +568,10 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
                               </span>
                             )}
                             <h3 className="text-2xl font-bold inline">
-                              {isCurrentWod ? (wodData?.name || 'WOD') : (exerciseData?.name || 'Ejercicio')}
+                              {isCurrentWod ? (wodData?.name || 'WOD') : isCurrentEsd ? (esdData?.name || 'ESD') : (exerciseData?.name || 'Ejercicio')}
                             </h3>
                           </div>
-                      {!isCurrentWod && (
+                      {!isCurrentWod && !isCurrentEsd && (
                         exerciseData?.videoUrl ? (
                           <a
                             href={exerciseData.videoUrl}
@@ -622,7 +630,7 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
             )}
 
             {/* Series checklist para ejercicios de reps */}
-            {!isCurrentWod && !isTimeBasedExercise && parseInt(currentElement.sets) > 1 && (
+            {!isCurrentWod && !isCurrentEsd && !isTimeBasedExercise && parseInt(currentElement.sets) > 1 && (
               <Card className="mb-6 bg-gray-800/50">
                 <h4 className="text-sm font-medium text-gray-400 mb-3">Marcar series completadas</h4>
                 <div className="grid grid-cols-5 gap-2">
@@ -652,20 +660,20 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
 
             {/* Timer del elemento */}
             <div className="text-center py-8">
-              {isEsdBlock ? (
+              {isCurrentEsd ? (
                 /* Timer especial para ESD */
                 <>
                   <div className="mb-6">
-                    <div className="text-sm text-gray-400 mb-2">Ronda Actual</div>
-                    <div className="text-5xl font-bold text-purple-400 mb-4">
-                      {esdCurrentRound} <span className="text-3xl text-gray-500">de</span> {currentElement.esdRounds || 10}
+                    <div className="text-sm text-gray-400 mb-2">Serie Actual</div>
+                    <div className="text-5xl font-bold text-cyan-400 mb-4">
+                      {esdCurrentRound} <span className="text-3xl text-gray-500">de</span> {esdData?.esdRounds || 5}
                     </div>
-                    {/* Barra de progreso de rondas */}
+                    {/* Barra de progreso de series */}
                     <div className="max-w-md mx-auto">
                       <div className="h-3 bg-gray-800 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-purple-600 to-purple-400 transition-all duration-500"
-                          style={{ width: `${(esdCurrentRound / (currentElement.esdRounds || 10)) * 100}%` }}
+                          className="h-full bg-gradient-to-r from-cyan-600 to-cyan-400 transition-all duration-500"
+                          style={{ width: `${(esdCurrentRound / (esdData?.esdRounds || 5)) * 100}%` }}
                         />
                       </div>
                     </div>
@@ -673,13 +681,13 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
 
                   <div className="flex items-center justify-center gap-2 text-gray-400 mb-4">
                     <Timer size={24} />
-                    <span>Tiempo del intervalo</span>
+                    <span>Tiempo total del ESD</span>
                   </div>
-                  <div className="text-7xl font-bold mb-2 text-purple-400">
-                    {formatTime(esdIntervalTime)}
+                  <div className="text-7xl font-bold mb-2 text-cyan-400">
+                    {formatTime(elementTime)}
                   </div>
-                  <div className="text-sm text-gray-500 mb-8">
-                    / {formatTime(currentElement.esdInterval || 60)}
+                  <div className="text-sm text-gray-500 mb-4">
+                    Descanso entre series: {esdData?.esdRest || 90}s
                   </div>
                 </>
               ) : (
