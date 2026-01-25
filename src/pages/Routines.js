@@ -1145,7 +1145,7 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
                         </Button>
                       </div>
 
-                      {wods.filter(w => w.type === 'esd').length === 0 && (
+                      {esds.length === 0 && (
                         <Card className="bg-yellow-500/10 border-yellow-500/30 mb-2">
                           <p className="text-yellow-400 text-sm">
                             No hay ESDs cargados. Agregá ESDs desde la sección correspondiente.
@@ -1165,7 +1165,7 @@ const RoutineModal = ({ isOpen, onClose, onSave, routine, classes, members, exer
                                 onChange={e => updateEsd(esdIdx, 'esdId', e.target.value)}
                                 options={[
                                   { value: '', label: 'Seleccionar ESD...' },
-                                  ...wods.filter(w => w.type === 'esd').map(w => ({ value: w.id, label: w.name }))
+                                  ...esds.map(e => ({ value: e.id, label: e.name }))
                                 ]}
                                 className="flex-1"
                               />
