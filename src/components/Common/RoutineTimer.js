@@ -317,6 +317,14 @@ const RoutineTimer = ({ routine, exercises, wods, onClose, onComplete }) => {
             completedSets: completedSets[idx]?.completed || [],
             skipped: wasSkipped
           };
+        } else if (el.type === 'esd') {
+          return {
+            type: 'esd',
+            esdId: el.esdId,
+            esdName: wods.find(w => w.id === el.esdId)?.name || 'ESD',
+            timeInSeconds: times[idx] || 0,
+            skipped: wasSkipped
+          };
         } else {
           return {
             type: 'wod',
